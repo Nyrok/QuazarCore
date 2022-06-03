@@ -1,0 +1,55 @@
+messages:
+  shutoff: "Server has shutted down"
+  worlds:
+    test:
+
+      # {killer}, {victim}, {killerPopo}, {victimPopo}, {killerSoup}, {victimSoup}
+      kills: "({killerPopo}) {killer} killed {victim} ({victimPopo})"
+
+  # {kills}, {deaths}, {kdr}, {elo}, {killstreak}
+  stats: "§l§a- Stats -\n
+  {kills} Kills\n
+  {deaths} Deaths\n
+  {kdr} K/D\n
+  {elo} Elo\n
+  {killstreak} KillStreak
+  "
+
+  # {player}, {killstreak}
+  killstreak: "{player} has a killstreak of {killstreak} kills !"
+  success:
+    change: "Language has been switch to English !"
+    discord: "Here is the discord link: discord.gg/discord-testers"
+    teleport-to-spawn: "You have been teleported to spawn"
+  errors:
+    error: "Une erreur s'est produite..."
+    player-not-connected: "Le joueur ciblé n'est pas connecté"
+    spawn-not-found: "Spawn has not been found"
+    not-a-player: "You must be a player"
+
+forms:
+  top:
+    title: "LeaderBoard"
+    # {position} - La position dans le classement
+    # {name} - Le nom de ce joueur
+    # {value} - La valeur effectuée pour ce joueur (exemple pour les kills)
+    format: "§f[§c{position}§f]: §c{name} §f-> §c{value}\n"
+  report:
+    1:
+      title: "Report"
+      1: "Choose a Player"
+    2:
+      # {name} Nom du Joueur
+      title: "Report: {name}"
+      1:
+        text: "Choose the Reason of the Report"
+        types:
+        - Cheating
+        - Insulting
+        - Pub
+        - Other
+      2:
+        header: "Give us some details"
+        default: ""
+        place-holder: "Example: This Player Insulted me"
+

@@ -1,0 +1,132 @@
+prefix: "§4[§cQuazar§4] "
+
+elo:
+  default: 1000
+
+ffas:
+  test:
+    name: §5FFA §dPractice
+    min-x: 350
+    max-x: 369
+    y: 100
+    min-z: 328
+    max-z: 345
+    kit: ffa-practice
+
+positions:
+  spawn:
+    x: 256
+    y: 66
+    z: 266
+    world: world
+
+scoreboard-refresh-time: 20
+scoreboards:
+  world:
+    title: "QuazarMC"
+    # {ping}, {opponentPing}, {playerName}, {opponentName}, {world}, {deaths}, {kills}, {killstreak}, {kdr}, {playersOnline}, {maxPlayersOnline}, {ip}, {port}, {combatTime}, {elo}
+    lines:
+      - "Lobby"
+      - "{playerName}"
+  test:
+    title: "FFA Practice"
+    lines:
+      - " §c{ping} §4MS   "
+      - " §c{kills} §4Kills   "
+      - " §4Adversaire: §c{opponentName}   "
+      - " §4Ping Adversaire: §c{opponentPing}   "
+      - " §4Temps de combat: §c{combatTime}   "
+
+report:
+  message: Il y a un nouveau report @everyone !
+  webhook: https://discord.com/api/webhooks/979811504188702721/5jCAuqB26rnbmnljmUhTmbNbSHE8deNCL85J_smB4jHv1OVgpOyujRPV7rEg1Sy2ujQQ
+
+commands:
+  spawn:
+    description: La commande pour aller au spawn
+    aliases:
+      - lobby
+      - hub
+    permission: null
+  stats:
+    description: Voir vos stats
+    aliases: []
+    permission: null
+  top:
+    description: Voir le classement
+    aliases: []
+    permission: null
+  discord:
+    description: Voir le discord du serveur
+    aliases:
+      - ds
+      - dsc
+    permission: null
+  report:
+    description: Report un joueur
+    aliases: []
+    permission: null
+  rekit:
+    description: Se rekit
+    aliases: []
+    permission: null
+
+actions:
+  golden-apple:
+    effect:
+      id: 1
+      duration: 150
+      amplifier: 0
+      visible: true
+
+utils:
+  soup:
+    id: 353
+    meta: 0
+    heal: 2
+
+messages:
+  # {player} - Nom du joueur
+  join: "[+] {player}"
+  leave: "[-] {player}"
+
+killstreak:
+  rate: 5
+
+floating-texts:
+  Top Kills:
+    position:
+      x: 259
+      y: 67
+      z: 267
+      world: world
+    type: kills
+  Top Deaths:
+    position:
+      x: 251
+      y: 67
+      z: 267
+      world: world
+    type: deaths
+  Top KillStreak:
+    position:
+      x: 251
+      y: 67
+      z: 259
+      world: world
+    type: killstreak
+  Top Elo:
+    position:
+      x: 265
+      y: 67
+      z: 257
+      world: world
+    type: elo
+  Top KDR:
+    position:
+      x: 274
+      y: 67
+      z: 257
+      world: world
+    type: k/d
+

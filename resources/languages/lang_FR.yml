@@ -1,0 +1,52 @@
+messages:
+  shutoff: "Le serveur a fermé !"
+  worlds:
+    test:
+      # {killer}, {victim}, {killerPopo}, {victimPopo}, {killerSoup}, {victimSoup}
+      kills: "({killerPopo}) {killer} a niqué {victim} ({victimPopo})"
+  # {kills}, {deaths}, {kdr}, {elo}, {killstreak}
+  stats: "- Stats -\n
+  {kills} Kills\n
+  {deaths} Morts\n
+  {kdr} K/D\n
+  {elo} Elo\n
+  {killstreak} KillStreak
+  "
+
+  # {player}, {killstreak}
+  killstreak: "{player} a un killstreak de {killstreak} kills!"
+  success:
+    change: "La langue a bien été changée en français !"
+    discord: "Voici le lien du serveur discord: discord.gg/discord-testers"
+    teleport-to-spawn: "Vous avez bien été téléporté au spawn"
+  errors:
+    error: "Une erreur s'est produite..."
+    player-not-connected: "Le joueur ciblé n'est pas connecté"
+    spawn-not-found: "Le spawn n'a pas été trouvé"
+    not-a-player: "Vous devez être un joueur"
+
+forms:
+  top:
+    title: "Classement"
+    # {position} - La position dans le classement
+    # {name} - Le nom de ce joueur
+    # {value} - La valeur effectuée pour ce joueur (exemple pour les kills)
+    format: "§f[§c{position}§f]: §c{name} §f-> §c{value}\n"
+  report:
+    1:
+      title: "Report"
+      1: "Choisir un Joueur"
+    2:
+      # {name} Nom du Joueur
+      title: "Report: {name}"
+      1:
+        text: "Choisir la Raison du Report"
+        types:
+          - Triche
+          - Insulte
+          - Pub
+          - Autre
+      2:
+        header: "Donnez des Détails sur le Report"
+        default: ""
+        place-holder: "Exemple: Ce joueur m'a insulté"
