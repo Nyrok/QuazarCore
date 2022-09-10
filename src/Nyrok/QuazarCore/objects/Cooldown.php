@@ -21,7 +21,7 @@ final class Cooldown
      * @param Level $level
      * @param int $cooldown
      */
-    public function __construct(private string $name, private int $id, private Level $level, private int $cooldown)
+    public function __construct(private string $name, private int $id, private array $levels, private int $cooldown)
     {
     }
 
@@ -52,9 +52,9 @@ final class Cooldown
     /**
      * @return Level
      */
-    public function getLevel(): Level
+    public function getLevels(): array
     {
-        return $this->level;
+        return $this->levels;
     }
 
     /**
