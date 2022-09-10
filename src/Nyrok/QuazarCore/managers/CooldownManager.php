@@ -34,5 +34,14 @@ abstract class CooldownManager
     {
         return self::$cooldowns;
     }
+    
+    /**
+     * @param Player $player
+     * @return void
+     */
+    public static function resetPlayerCooldown(Player $player): void
+    {
+        
+    }
 
 }
