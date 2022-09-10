@@ -6,6 +6,7 @@ use pocketmine\scheduler\Task;
 use pocketmine\Player;
 
 use Nyrok\QuazarCore\Core;
+use Nyrok\QuazarCore\objects\Cooldown;
 
 final class EnderPearlCooldownTask extends Task
 {
