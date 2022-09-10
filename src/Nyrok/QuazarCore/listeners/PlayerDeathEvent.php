@@ -55,7 +55,7 @@ final class PlayerDeathEvent implements Listener
         $event->setDeathMessage("");
         FloatingTextManager::update();
         AntiGlitchPerl::blacklist($player);
-        CooldownManager::$resetPlayerCooldown($player);
+        CooldownManager::resetPlayerCooldown($player);
         Core::getInstance()->getScheduler()->scheduleDelayedTask(new ClosureTask(function (int $currentTick) use ($event): void {
             AntiGlitchPerl::unblacklist($event->getPlayer());
         }), 80);
