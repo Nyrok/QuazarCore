@@ -21,7 +21,7 @@ abstract class CooldownManager
                 $level = Server::getInstance()->getLevelByName($worldName);
                 $levels[$level] = $worldCooldown;
             }
-            $class = new Cooldown($cooldown['name'], (int)$id, $levels, (int)$cooldown['cooldown']);
+            $class = new Cooldown($cooldown['name'], (int)$id, $levels);
             self::$cooldowns[$id] = $class;
             Core::getInstance()->getLogger()->notice("[COOLDOWNS] Cooldown: ({$class->getName()}) ".$class->getItem()->getVanillaName()." seconds Loaded");
         }
