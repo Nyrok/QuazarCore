@@ -5,7 +5,6 @@ namespace Nyrok\QuazarCore\tasks;
 use pocketmine\scheduler\Task;
 use pocketmine\Player;
 
-use Nyrok\QuazarCore\objects\Cooldown;
 use Nyrok\QuazarCore\Core;
 
 final class EnderPearlCooldownTask extends Task
@@ -23,7 +22,7 @@ final class EnderPearlCooldownTask extends Task
     {
         if($this->cooldown->has($this->player))
         {
-            $player->getXpManager()->setXpLevel($this->cooldown->getCooldown());
+            $player->getXpManager()->setXpLevel($this->cooldown->get($player - time());
         }else{
             $player->getXpManager()->setXpLevel(0);
             Core::getInstance()->getScheduler()->cancelTask($this->getTaskId());
