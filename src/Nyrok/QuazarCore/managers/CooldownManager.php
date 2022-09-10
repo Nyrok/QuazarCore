@@ -41,7 +41,9 @@ abstract class CooldownManager
      */
     public static function resetPlayerCooldown(Player $player): void
     {
-        
+        foreach (self::getCooldowns() as $cooldown){
+            $cooldown->resetCooldown($player);
+        }
     }
 
 }
