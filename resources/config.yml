@@ -47,39 +47,100 @@ commands:
     aliases:
       - lobby
       - hub
-    permission: null
+    permission: core.commands.spawn
   stats:
     description: Voir vos stats
     aliases: []
-    permission: null
+    permission: core.commands.stats
   top:
     description: Voir le classement
     aliases: []
-    permission: null
+    permission: core.commands.top
   discord:
     description: Voir le discord du serveur
     aliases:
       - ds
       - dsc
-    permission: null
+    permission: core.commands.discord
   report:
     description: Report un joueur
     aliases: []
-    permission: null
+    permission: core.commands.report
   rekit:
     description: Se rekit
     aliases: []
-    permission: null
+    permission: core.commands.rekit
+  staff:
+    description: StaffMod
+    aliases: []
+    permission: core.commands.staff
+  sanctions:
+    description: Voir les sanctions
+    aliases: []
+    permission: core.commands.sanctions
+  mute:
+    description: Mute un joueur
+    aliases: []
+    permission: core.commands.mute
+    usage: /mute <player> <time> <reason>
+  warn:
+    description: Warn un joueur
+    aliases: []
+    permission: core.commands.warn
+    usage: /warn <player> <reason>
+  tempban:
+    description: Ban temporairement un joueur
+    aliases: []
+    permission: core.commands.tempban
+    usage: /tempban <player> <time> <reason>
+  unmute:
+    description: Unmute un joueur
+    aliases: []
+    permission: core.commands.unmute
+    usage: /unmute <player>
+  unban:
+    description: Unban un joueur
+    aliases: []
+    permission: core.commands.unban
+    usage: /unban <player>
+  ping:
+    description: Voir le ping d'un joueur
+    aliases: []
+    permission: core.commands.unban
+    usage: /ping <player>
+  tps:
+    description: Voir les tps
+    aliases: []
+    permission: core.commands.tps
+    usage: /tps
+  duel:
+    description: Affronter quelqu'un en duel
+    aliases: []
+    permission: core.commands.duel
+    usage: /duel
+
 
 actions:
   golden-apple:
-    effect:
-      id: 1
-      duration: 150
-      amplifier: 0
-      visible: true
+    effects:
+      1:
+        id: 1
+        duration: 150
+        amplifier: 0
+        visible: true
+      2:
+        id: 5
+        duration: 150
+        amplifier: 0
+        visible: true
 
 utils:
+  enderpearl:
+    kb:
+      # IL FAUT QUE LE X ET LE Z SOIT PAREIL SINON SA PROJETTE + DANS UNE DIRECTION QUE DANS UNE AUTRE
+      x: 0.5
+      y: 0.4
+      z: 0.5
   soup:
     id: 353
     meta: 0
@@ -130,3 +191,33 @@ floating-texts:
       world: world
     type: k/d
 
+cooldowns:
+  368: # ID de l'Item
+    name: enderperle # Nom court sans espace non utilisé pour les autres cooldowns
+    cooldown: 15
+
+cps:
+  permission: core.cps.alert
+  text: "§cCPS: {cps}" # {cps}
+  ping: 250
+  alert-ig: 20
+  alert-text: "§f[§c!§f] §4{player} §7({ping} MS) §fest à §c{cps} CPS!" # {player}, {cps}, {ping}
+  alert-webhook: 40
+  webhook-message: "@everyone Alert CPS!"
+  webhook: "https://discord.com/api/webhooks/982922352922869780/pzbvwGBRDzPzBr55trNCEXG9ZLFmgah3l4DgEXqr86N8FG29h7_nzQ1ThA8giltxYaMM"
+
+anti-timer: 15
+
+duels:
+  §aNo Debuff:
+    kit: ffa-practice
+    arenas:
+      arena1:
+        player1:
+          x: 258
+          y: 65
+          z: 259
+        player2:
+          x: 256
+          y: 65
+          z: 256

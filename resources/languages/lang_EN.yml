@@ -1,13 +1,28 @@
 messages:
-  shutoff: "Server has shutted down"
+  staff:
+    # {player}
+    freeze: "You have freeze {player}"
+    freezed: "§aYou have been freezed by {player}.\n§cdeco =§lban\n§r§f§acome to §b§ldiscord.gg/quazar"
+    unfreeze: "You have unfreeze {player}"
+    unfreezed: "you have been unfreeze {player}"
+    randomtp: "You have been teleported to {player}"
+    playerinfo: "Name: {name}\nPing: {ping}\nCPS: {cps}\nPlatform: {platform}"
+    new-player: "Welcome on the server {player} !" # {player}
+
+  shutoff: "The Server has closed\nDon't hesitate to join the discord to know when we will be back !\n§b§lDiscord.gg/quazar"
   worlds:
     test:
-
       # {killer}, {victim}, {killerPopo}, {victimPopo}, {killerSoup}, {victimSoup}
-      kills: "({killerPopo}) {killer} killed {victim} ({victimPopo})"
+      kills: "({killerPopo}) {killer} a niqué {victim} ({victimPopo})"
+    Soupe:
+      kills: "§a{killer} ({killerSoup}) §fkilled §c{victim} ({victimSoup})"
+    Nodebuff:
+      kills: "§a{killer} ({killerPopo}) §fkilled §c{victim} ({victimPopo})"
+    sumo:
+      kills: "§a{killer} §fhave push §c{victim}"
 
   # {kills}, {deaths}, {kdr}, {elo}, {killstreak}
-  stats: "§l§a- Stats -\n
+  stats: "\n- Stats -\n
   {kills} Kills\n
   {deaths} Deaths\n
   {kdr} K/D\n
@@ -17,15 +32,48 @@ messages:
 
   # {player}, {killstreak}
   killstreak: "{player} has a killstreak of {killstreak} kills !"
+
+  cooldowns:
+    # {cooldown}
+    enderperle: "{cooldown} seconds"
+
+  cps:
+    kick: "You have been kicked for having a high CPS."
+    broadcast: "{player} has been kicked for having a high CPS."
+
   success:
-    change: "Language has been switch to English !"
+    sanctions-removed: "Sanction has been removed"
+    mute: "You have muted {player} until {time} for {reason}" # {player}, {time}, {reason}
+    muted: "You have been muted by {staff} until {time} for {reason}" # {staff}, {time}, {reason}
+    unmute: "You have unmuted {player}" # {player}
+    unmuted: "You have been unmuted by {staff}" # {staff}
+    ban: "You have banned {player} until {time} for {reason}" # {player}, {time}, {reason}
+    banned: "You have been banned by {staff} until {time} for {reason}" # {staff}, {time}, {reason}
+    warn: "You have warned {player} for {reason}" # {player}, {reason}
+    warned: "You have been warned by {staff} for {reason}" # {staff}, {reason}
+    staff-help: "\n- §cCommands Staff §4-\n/staff on - Being in Staff mode\n/staff off - Being in Player mode\n/staff help - Show this help page"
+    staff-on: "You are now in Staff mode"
+    staff-off: "You are now in Player mode"
+    change: "Your settings has been updated"
     discord: "Here is the discord link: discord.gg/discord-testers"
     teleport-to-spawn: "You have been teleported to spawn"
+    ping: "The ping of {player} is: {ping}ms" # {player}, {ping}
+    # {ticks}, {tps}, {tps_average}, {ticks_usage}, {ticks_usage_average}
+    tps: "\n- TPS -\n
+    Tick: {ticks}\n
+    TPS: {tps}\n
+    TPS Average: {tps_average}\n
+    Ticks Usage: {ticks_usage}\n
+    Ticks Usage Average: {ticks_usage_average}
+    "
   errors:
-    error: "Une erreur s'est produite..."
-    player-not-connected: "Le joueur ciblé n'est pas connecté"
+    muted: "You are still muted, until {time} for {reason}" # {time}, {reason}
+    error: "An error has occurred..."
+    player-not-connected: "The player is not connected"
+    player-not-found: "The player is not found"
     spawn-not-found: "Spawn has not been found"
     not-a-player: "You must be a player"
+    invalid-argument: "This value is invalid"
 
 forms:
   top:
@@ -44,10 +92,10 @@ forms:
       1:
         text: "Choose the Reason of the Report"
         types:
-        - Cheating
-        - Insulting
-        - Pub
-        - Other
+          - Cheating
+          - Insulting
+          - Pub
+          - Other
       2:
         header: "Give us some details"
         default: ""
