@@ -73,6 +73,10 @@ final class Duel
 
     public function start(): void {
         $arena = $this->mode->getRandomArena();
+        if(!$this->host->isOnline() or !$this->opponent->isOnline()){
+            $this->stop();
+            return;
+        }
         if(($level = $arena->generate($this->host))){
             $this->host->sendMessage("Map chargée");
 
