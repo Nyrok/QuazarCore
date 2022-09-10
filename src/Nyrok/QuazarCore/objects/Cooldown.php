@@ -21,7 +21,7 @@ final class Cooldown
      * @param Level $level
      * @param int $cooldown
      */
-    public function __construct(private string $name, private int $id, private array $levels, private int $cooldown)
+    public function __construct(private string $name, private int $id, private array $levels)
     {
     }
 
@@ -31,14 +31,6 @@ final class Cooldown
     public function getName(): string
     {
         return $this->name;
-    }
-
-    /**
-     * @return int
-     */
-    public function getCooldown(): int
-    {
-        return $this->cooldown;
     }
 
     /**
@@ -56,7 +48,16 @@ final class Cooldown
     {
         return $this->levels;
     }
-
+    
+    /**
+     * @param Level $level
+     * @return int
+     */
+    public function getCooldown(Player $player, Level $level): int
+    {
+        return $this->levels[$level];
+    }
+    
     /**
      * @return Item|null
      */
@@ -85,7 +86,7 @@ final class Cooldown
      * @param Player $player
      */
     public function set(Player $player): void {
-        $this->cooldowns[$player->getName()] = time() + $this->getCooldown();
+        $this->cooldowns[$player->getName()] = time() + $this->getCooldown($player->getLevel());
     }
 
     /**
