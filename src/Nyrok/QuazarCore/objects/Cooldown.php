@@ -63,13 +63,22 @@ final class Cooldown
     public function getItem(): ?Item {
         return new Item($this->getId(), 0, ItemFactory::get($this->getId())->getVanillaName()) ?? null;
     }
-
+    
+    /**
+     * @param Player $player
+     * @return void
+     */
+    public function resetCooldown(Player $player): void
+    {
+        $this->cooldown[$player->getName()] = 0;
+    }
+    
     /**
      * @param Player $player
      * @return bool
      */
     public function has(Player $player): bool {
-        return ($this->cooldowns[$player->getName()] && $player->getLevel() == $this->getLevel() ?? 0) > time();
+        return ($this->cooldowns[$player->getName()] ?? 0) > time();
     }
 
     /**
