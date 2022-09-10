@@ -6,6 +6,7 @@ use JetBrains\PhpStorm\Pure;
 use pocketmine\item\Item;
 use pocketmine\item\ItemFactory;
 use pocketmine\Player;
+use pocketmine\level\Level;
 
 final class Cooldown
 {
@@ -17,9 +18,10 @@ final class Cooldown
     /**
      * @param string $name
      * @param int $id
+     * @param Level $level
      * @param int $cooldown
      */
-    public function __construct(private string $name, private int $id, private int $cooldown)
+    public function __construct(private string $name, private int $id, private Level $level, private int $cooldown)
     {
     }
 
@@ -46,6 +48,14 @@ final class Cooldown
     {
         return $this->id;
     }
+    
+    /**
+     * @return Level
+     */
+    public function getLevel(): Level
+    {
+        return $this->level;
+    }
 
     /**
      * @return Item|null
@@ -59,7 +69,7 @@ final class Cooldown
      * @return bool
      */
     public function has(Player $player): bool {
-        return ($this->cooldowns[$player->getName()] ?? 0) > time();
+        return ($this->cooldowns[$player->getName()] && $player->getLevel() == $this->getLevel() ?? 0) > time();
     }
 
     /**
