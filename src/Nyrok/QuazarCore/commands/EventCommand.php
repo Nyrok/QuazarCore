@@ -90,6 +90,9 @@ final class EventCommand extends QuazarCommands
                     EventsManager::addEvent(new Event($player->getName(), "soup", $player));
                     break;
             }
+            
+            $message = LanguageProvider::getLanguageMessage("messages.events.event-create", PlayerProvider::toQuazarPlayer($player), true));
+            $player->sendMessage($message);
         });
         $player->sendForm($form);
     }
