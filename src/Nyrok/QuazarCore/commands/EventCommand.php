@@ -74,6 +74,25 @@ final class EventCommand extends QuazarCommands
         
         $form->addElement("type", $dropdown);
         
+        
+        $form->setSubmitListener(function (Player $player, FormResponse $formResponse): void {
+            switch($formResponse->getDropdownSubmittedOptionId('type'))
+            {
+                case $dropdown1:
+                    
+                    break;
+                
+                case $dropdown2:
+                    
+                    break;
+                
+                case $dropdown3:
+                    
+                    break;
+            }
+        });
+        
+        
         $player->sendForm($form);
     }
     
