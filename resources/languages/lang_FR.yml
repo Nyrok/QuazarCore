@@ -119,6 +119,8 @@ forms:
             - Soupe
       3:
         title: "Rejoindre Event"
+        
         # {type} Type de l'évent
         # {host} Hébergeur de l'évent
-        button-text: "{type} Évent - {host}"
+        button-event: "{type} Évent - {host}"
+        button-return: "Retour"
