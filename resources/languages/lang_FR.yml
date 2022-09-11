@@ -78,6 +78,9 @@ messages:
     event-ndb-created: "Un event de nodebuff a été lancé"
     event-sumo-created: "Un event de sumo a été lancé"
     event-soup-created: "Un event de soupe a été lancé"
+    event-not-enough-player: "Pas assez de joueurs pour que l'évent commence"
+    event-join: "Vous avez rejoint l'évent"
+    event-quit: "Vous avez quitté l'évent"
 
 forms:
   top:
