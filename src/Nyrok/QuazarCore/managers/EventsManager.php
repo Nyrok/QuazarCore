@@ -2,7 +2,7 @@
 
 namespace Nyrok\QuazarCore\managers;
 
-
+use Nyrok\QuazarCore\providers\LanguageProvider;
 
 abstract class EventsManager
 {
