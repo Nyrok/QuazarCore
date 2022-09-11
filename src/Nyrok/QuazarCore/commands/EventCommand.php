@@ -79,15 +79,15 @@ final class EventCommand extends QuazarCommands
             switch($formResponse->getDropdownSubmittedOptionId('type'))
             {
                 case $dropdown1:
-                    
+                    EventsManager::addEvent(new Event($player->getName(), "nodebuff", $player));
                     break;
                 
                 case $dropdown2:
-                    
+                    EventsManager::addEvent(new Event($player->getName(), "sumo", $player));
                     break;
                 
                 case $dropdown3:
-                    
+                    EventsManager::addEvent(new Event($player->getName(), "soup", $player));
                     break;
             }
         });
