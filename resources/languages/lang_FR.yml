@@ -114,9 +114,9 @@ forms:
         1:
           text: "Type"
           types:
-            - Nodebuff
-            - Sumo
-            - Soupe
+            ndb: "Nodebuff"
+            sumo: "Sumo"
+            soup: "Soupe"
       3:
         title: "Rejoindre Event"
         
