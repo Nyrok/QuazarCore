@@ -35,6 +35,7 @@ abstract class EventsManager
     public static function addEvent(Event $event): void
     {
         self::$events[$event->getHost()->getName()] = $event;
+        Server::getInstance()->broadcastMessage();
     }
     
     /**
