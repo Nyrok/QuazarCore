@@ -56,7 +56,23 @@ final class EventCommand extends QuazarCommands
     public function eventsCreateForm(Player $player): void
     {
         $title = LanguageProvider::getLanguageMessage("forms.events.2.title", PlayerProvider::toQuazarPlayer($player), false);
-        $form = new SimpleForm($title);
+        $form = new CustomForm($title);
+        
+        $dropdownTitle = LanguageProvider::getLanguageMessage("forms.events.2.1.text", PlayerProvider::toQuazarPlayer($player), false));
+        $dropdown = new Dropdown($dropdownTitle);
+        
+        $dropdown1 = LanguageProvider::getLanguageMessage("forms.events.2.1.types.ndb", PlayerProvider::toQuazarPlayer($player), false);
+        $dropdown->addOption(new Option(0, $dropdown1));
+        
+        $dropdown2 = LanguageProvider::getLanguageMessage("forms.events.2.1.types.soup", PlayerProvider::toQuazarPlayer($player), false);
+        $dropdown->addOption(new Option(1, $dropdown2));
+        
+        $dropdown3 = LanguageProvider::getLanguageMessage("forms.events.2.1.types.sumo", PlayerProvider::toQuazarPlayer($player), false);
+        $dropdown->addOption(new Option(2, $dropdown3));
+        
+        $dropdown->setDefaultIndex(0);
+        
+        $form->addElement("type", $dropdown);
         
         $player->sendForm($form);
     }
