@@ -27,9 +27,9 @@ final class EventCommand extends QuazarCommands
     
     public function eventsForm(Player $player): void
     {
-        $title = LanguageProvider::getLanguageMessage("forms.events.1.title", PlayerProvider::toQuazarPlayer($player), true));
+        $title = LanguageProvider::getLanguageMessage("forms.events.1.title", PlayerProvider::toQuazarPlayer($player), false));
         $form = new SimpleForm($title);
-        $form
+        $form->addButton(new Button());
         $player->sendForm($form);
     }
     
@@ -39,5 +39,6 @@ final class EventCommand extends QuazarCommands
         foreach (EventsManager::getEvents() as $event) {
             $form->addButton(new Button($event->getName(), null, ));
         }
+        $player->sendForm($form);
     }
 }
