@@ -8,7 +8,6 @@ use pocketmine\Server;
 use Nyrok\QuazarCore\librairies\EasyUI\element\{Button,Dropdown};
 use Nyrok\QuazarCore\librairies\EasyUI\variant\{SimpleForm,CustomForm};
 use Nyrok\QuazarCore\librairies\EasyUI\utils\FormResponse;
-use Nyrok\QuazarCore\managers\ArenasManager;
 use Nyrok\QuazarCore\providers\LanguageProvider;
 use Nyrok\QuazarCore\providers\PlayerProvider;
 use pocketmine\command\CommandSender;
