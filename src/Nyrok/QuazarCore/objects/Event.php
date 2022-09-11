@@ -59,15 +59,15 @@ final class Event
      */
     public function addPlayer(Player $player): void
     {
-        self::$players[] = $player;
+        array_push(self::$players, $player);
     }
     
     /**
      * @param Player $player
      * @return void
      */
-    public function addPlayer(Player $player): void
+    public function removePlayer(Player $player): void
     {
-        self::$players[] = $player;
+        unset(self::$players[$player]);
     }
 }
