@@ -79,6 +79,7 @@ messages:
     event-sumo-created: "Un event de sumo a été lancé"
     event-soup-created: "Un event de soupe a été lancé"
     event-not-enough-player: "Pas assez de joueurs pour que l'évent commence"
+    event-create: "You have created an event"
     event-join: "Vous avez rejoint l'évent"
     event-quit: "Vous avez quitté l'évent"
 
