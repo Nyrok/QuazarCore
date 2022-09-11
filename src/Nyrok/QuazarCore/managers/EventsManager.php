@@ -3,6 +3,7 @@
 namespace Nyrok\QuazarCore\managers;
 
 use Nyrok\QuazarCore\providers\LanguageProvider;
+use pocketmine\Server;
 
 abstract class EventsManager
 {
