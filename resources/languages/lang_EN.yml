@@ -79,6 +79,9 @@ messages:
     event-ndb-created: "A nodebuff event has been launched"
     event-sumo-created: "A sumo event has been launched"
     event-soup-created: "A soup event has been launched"
+    event-not-enough-player: "Not enough players for the event to start"
+    event-join: "You have joined the event"
+    event-quit: "You have left the event" 
 
 forms:
   top:
@@ -120,7 +123,9 @@ forms:
             - Soup
       3:
         title: "Join Event"
+        
         # {type} Type de l'évent
         # {host} Hébergeur de l'évent
         button-text: "{type} Évent - {host}"
+        button-return: "Return"
 
