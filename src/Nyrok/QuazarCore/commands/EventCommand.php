@@ -27,10 +27,17 @@ final class EventCommand extends QuazarCommands
     
     public function eventsForm(Player $player): void
     {
-        $form = new SimpleForm("§m§aEvents");
-        foreach (EventsManager::getEvents() as $event) {
-            $form->addButton(new Button($mode->getName(), null, ));
-        }
+        $title = LanguageProvider::getLanguageMessage("forms.events.1.title", PlayerProvider::toQuazarPlayer($player), true));
+        $form = new SimpleForm($title);
+        $form
         $player->sendForm($form);
+    }
+    
+    public function eventsJoinForm(Player $player): void
+    {
+        $form = new SimpleForm()
+        foreach (EventsManager::getEvents() as $event) {
+            $form->addButton(new Button($event->getName(), null, ));
+        }
     }
 }
