@@ -74,6 +74,11 @@ messages:
     spawn-not-found: "Spawn has not been found"
     not-a-player: "You must be a player"
     invalid-argument: "This value is invalid"
+    
+  events:
+    event-ndb-created: "A nodebuff event has been launched"
+    event-sumo-created: "A sumo event has been launched"
+    event-soup-created: "A soup event has been launched"
 
 forms:
   top:
