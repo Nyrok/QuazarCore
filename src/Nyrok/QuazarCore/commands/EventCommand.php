@@ -15,6 +15,12 @@ use pocketmine\Player;
 
 final class EventCommand extends QuazarCommands
 {
+    /**
+     * @param CommandSender $sender
+     * @param string $commandLabel
+     * @param array $args
+     * @return void
+     */
     public function execute(CommandSender $sender, string $commandLabel, array $args): void
     {
         if (!$this->testPermissionSilent($sender)) return;
@@ -25,6 +31,10 @@ final class EventCommand extends QuazarCommands
         $this->eventsForm($sender);
     }
     
+    /**
+     * @param Player $player
+     * @return void
+     */
     public function eventsForm(Player $player): void
     {
         $title = LanguageProvider::getLanguageMessage("forms.events.1.title", PlayerProvider::toQuazarPlayer($player), false);
@@ -39,12 +49,27 @@ final class EventCommand extends QuazarCommands
         $player->sendForm($form);
     }
     
+    /**
+     * @param Player $player
+     * @return void
+     */
+    public function eventsCreateForm(Player $player): void
+    {
+        
+    }
+    
+    /**
+     * @param Player $player
+     * @return void
+     */
     public function eventsJoinForm(Player $player): void
     {
-        $form = new SimpleForm()
+        $form = new SimpleForm();
+        
         foreach (EventsManager::getEvents() as $event) {
             $form->addButton(new Button($event->getName(), null, ));
         }
+        
         $player->sendForm($form);
     }
 }
