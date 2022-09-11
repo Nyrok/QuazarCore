@@ -53,7 +53,7 @@ final class Cooldown
      * @param Level $level
      * @return int
      */
-    public function getCooldown(Player $player, Level $level): int
+    public function getCooldown(Level $level): int
     {
         return $this->levels[$level];
     }
