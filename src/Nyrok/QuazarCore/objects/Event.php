@@ -18,7 +18,7 @@ final class Event
      */
     public function __construct(string $name, string $type, Player $host)
     {
-        self::$players[$host];
+        self::addPlayer($host);
     }
     
     /**
@@ -51,5 +51,23 @@ final class Event
     public function getPlayers(): array
     {
         return self::$players;
+    }
+    
+    /**
+     * @param Player $player
+     * @return void
+     */
+    public function addPlayer(Player $player): void
+    {
+        self::$players[] = $player;
+    }
+    
+    /**
+     * @param Player $player
+     * @return void
+     */
+    public function addPlayer(Player $player): void
+    {
+        self::$players[] = $player;
     }
 }
