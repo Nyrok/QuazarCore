@@ -104,3 +104,21 @@ forms:
         header: "Donnez des Détails sur le Report"
         default: ""
         place-holder: "Exemple: Ce joueur m'a insulté"
+    events:
+      1:
+        title: "Events"
+        1: "Créer"
+        2: "Rejoindre"
+      2:
+        title: "Créer Event"
+        1:
+          text: "Type"
+          types:
+            - Nodebuff
+            - Sumo
+            - Soupe
+      3:
+        title: "Rejoindre Event"
+        # {type} Type de l'évent
+        # {host} Hébergeur de l'évent
+        button-text: "{type} Évent - {host}"
