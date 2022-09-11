@@ -32,9 +32,18 @@ abstract class EventsManager
      * @param Event $event
      * @return void
      */
-    public static function createEvent(Event $event): void
+    public static function addEvent(Event $event): void
     {
-        
+        self::$events[$event->getHost()->getName()] = $event;
+    }
+    
+    /**
+     * @param Event $event
+     * @return void
+     */
+    public static function removeEvent(Event $event): void
+    {
+        unset(self::$events[$event->getHost()->getName()]);
     }
     
     /**
