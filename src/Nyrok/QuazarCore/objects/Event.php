@@ -57,9 +57,13 @@ final class Event
      * @param Player $player
      * @return void
      */
-    public function addPlayer(Player $player): void
+    public function addPlayer(Player $player, bool $sendMsg = false): void
     {
         array_push(self::$players, $player);
+        if($sendMsg) {
+            $message = LanguageProvider::getLanguageMessage("messages.events.event-join", PlayerProvider::toQuazarPlayer($player), true));
+            $player->sendMessage($message);
+        }
     }
     
     /**
