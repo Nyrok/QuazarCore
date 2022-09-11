@@ -80,6 +80,7 @@ messages:
     event-sumo-created: "A sumo event has been launched"
     event-soup-created: "A soup event has been launched"
     event-not-enough-player: "Not enough players for the event to start"
+    event-create: "You have created an event"
     event-join: "You have joined the event"
     event-quit: "You have left the event" 
 
