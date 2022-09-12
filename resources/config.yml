@@ -224,6 +224,8 @@ duels:
           z: 256
 
 events:
+  min-players: 6
+  
   ndb-event:
     spectators:
       spawn:
