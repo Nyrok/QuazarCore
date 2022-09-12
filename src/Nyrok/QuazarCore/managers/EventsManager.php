@@ -60,8 +60,26 @@ abstract class EventsManager
      */
     public static function startEvent(Event $event): void
     {
-        if(count($event->getPlayers()) >= 4) {
+        if(count($event->getPlayers()) >= 6) {
+            $event->setStart();
             
+            $worldN = match($event->getType()) {
+                'nodebuff' => 'ndb-event',
+                'sumo' => 'sumo-event',
+                'soup' => 'soup-event',
+            };
+            
+            $configCache = Core::getInstance()->getConfig()->getAll();
+            
+            $posData = $configCache["events"][$worldN]["spectators"]["spawn"];
+            
+            $world = Server::getInstance()->getLevelByName($worldN);
+            $position = new Position($posData["x"], $posData["y"], $posData["z"], $world);
+            
+            foreach($event->getPlayers() as $player)
+            {
+                $player->teleport($position);
+            }
         }else{
             unset(self::$events[$event->getName()]);
             
