@@ -83,5 +83,6 @@ final class Event
     public function removePlayer(Player $player): void
     {
         unset(self::$players[$player]);
+        LobbyManager::load($player);
     }
 }
