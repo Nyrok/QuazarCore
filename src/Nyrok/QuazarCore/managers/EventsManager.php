@@ -4,6 +4,8 @@ namespace Nyrok\QuazarCore\managers;
 
 use Nyrok\QuazarCore\providers\LanguageProvider;
 use Nyrok\QuazarCore\providers\PlayerProvider;
+use AndreasHGK\EasyKits\Kit;
+use AndreasHGK\EasyKits\manager\KitManager;
 use Nyrok\QuazarCore\objects\Event;
 use pocketmine\Server;
 
@@ -148,5 +150,10 @@ abstract class EventsManager
         
         $fighter1->teleport($position1);
         $fighter2->teleport($position2);
+        
+        $kit = KitManager::get($configCache["events"][$worldN]["duel"]["kit"]);
+        
+        $kit->claimFor($fighter1);
+        $kit->claimFor($fighter2);
     }
 }
