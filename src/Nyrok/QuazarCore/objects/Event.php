@@ -98,6 +98,34 @@ final class Event
     }
     
     /**
+     * @return array
+     */
+    public function getFought(): array
+    {
+        return $this->fought;
+    }
+    
+    /**
+     * @param string $pName
+     * @return void
+     */
+    public function setFought(string $pName): void
+    {
+        array_push($this->fought, $pName);
+    }
+    
+    /**
+     * @return void
+     */
+    public function resetFought(): void
+    {
+        foreach($this->fought as $pName)
+        {
+            unset($pname);
+        }
+    }
+    
+    /**
      * @param Player $player
      * @return void
      */
