@@ -20,6 +20,8 @@ final class Event
      */
     public static $startIn;
     
+    public static $start = false;
+    
     /**
      * @param string $name
      * @param string $type
@@ -69,6 +71,14 @@ final class Event
     public function getStartIn(): int
     {
         return self::$startIn;
+    }
+    
+    /**
+     * @return void
+     */
+    public function setStart(): void
+    {
+        self::$start = true;
     }
     
     /**
