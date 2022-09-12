@@ -15,7 +15,6 @@ final class StartEventTask extends Task
         {
             if(!$event->getStart()) {
                 if($event->getStartIn() - time <= 0) {
-                    $event->setStart();
                     EventsManager::startEvent($event);
                 }
             }
