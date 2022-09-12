@@ -74,6 +74,14 @@ final class Event
     }
     
     /**
+     * @return bool
+     */
+    public function getStart(): bool
+    {
+        return self::$start;
+    }
+    
+    /**
      * @return void
      */
     public function setStart(): void
