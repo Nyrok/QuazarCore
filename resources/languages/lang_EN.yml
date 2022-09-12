@@ -83,6 +83,7 @@ messages:
     event-create: "You have created an event"
     event-join: "You have joined the event"
     event-quit: "You have left the event" 
+    event-start: "The event begins"
 
 forms:
   top:
