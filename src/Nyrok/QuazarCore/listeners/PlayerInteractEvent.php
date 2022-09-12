@@ -46,6 +46,7 @@ final class PlayerInteractEvent implements Listener
                     264 => 1,
                     340 => LobbyManager::formStats($event->getPlayer()),
                     347 => LobbyManager::formSettings($event->getPlayer()),
+                    152 => Event::removePlayer($event->getPlayer()),
                     default => null
                 };
             }
