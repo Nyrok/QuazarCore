@@ -3,6 +3,7 @@
 namespace Nyrok\QuazarCore\objects;
 
 use pocketmine\Player;
+use pocketmine\item\Item;
 
 final class Event
 {
@@ -57,6 +58,14 @@ final class Event
     public function getPlayers(): array
     {
         return self::$players;
+    }
+    
+    /**
+     * @return int
+     */
+    public function getStartIn(): int
+    {
+        return self::$startIn;
     }
     
     /**
