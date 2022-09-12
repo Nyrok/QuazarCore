@@ -60,7 +60,18 @@ abstract class EventsManager
      */
     public static function startEvent(Event $event): void
     {
-        
+        if(count($event->getPlayers()) >= 4) {
+            
+        }else{
+            unset(self::$events[$event->getName()]);
+            
+            foreach($event->getPlayers() as $player)
+            {
+                $player->sendMessage(LanguageProvider::getLanguageMessage("messages.events.event-not-enough-player", PlayerProvider::toQuazarPlayer($player), true));
+            }
+            
+            $event->cancel();
+        }
     }
     
     /**
