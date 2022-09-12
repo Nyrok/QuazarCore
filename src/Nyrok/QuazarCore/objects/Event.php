@@ -12,6 +12,11 @@ final class Event
     public static array $players = [];
     
     /**
+     * @var $startIn
+     */
+    public static $startIn;
+    
+    /**
      * @param string $name
      * @param string $type
      * @param Player $host
@@ -19,6 +24,7 @@ final class Event
     public function __construct(string $name, string $type, Player $host)
     {
         self::addPlayer($host);
+        self::$startIn = time() + 120;
     }
     
     /**
