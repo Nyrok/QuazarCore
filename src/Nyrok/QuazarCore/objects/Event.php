@@ -60,6 +60,16 @@ final class Event
     public function addPlayer(Player $player, bool $sendMsg = false): void
     {
         array_push(self::$players, $player);
+        
+        
+        $item = [4 => Item::get(152)->setCustomName("§4Leave")];
+        
+        $player->removeAllEffects();
+        $player->getInventory()->clearAll();
+        $player->getArmorInventory()->clearAll();
+        $player->getInventory()->setContents($item);
+        
+        
         if($sendMsg) {
             $message = LanguageProvider::getLanguageMessage("messages.events.event-join", PlayerProvider::toQuazarPlayer($player), true));
             $player->sendMessage($message);
