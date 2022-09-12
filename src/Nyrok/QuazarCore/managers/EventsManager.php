@@ -129,8 +129,24 @@ abstract class EventsManager
         $fighter2 = $fighters[mt_rand(0, (int)(count($fighters) - 1)];
         $event->setFought($fighter2->getName());
         
-        $position = new Position();
+        $worldN = match($event->getType()) {
+            'nodebuff' => 'ndb-event',
+            'sumo' => 'sumo-event',
+            'soup' => 'soup-event',
+        };
         
-        $fighter1->teleport($position);
+        $configCache = Core::getInstance()->getConfig()->getAll();
+        
+        $posData = $configCache["events"][$worldN]["duel"]["spawn"];
+        $world = Server::getInstance()->getLevelByName($worldN);
+        
+        $posDataF1 = $posData["player1"];
+        $position1 = new Position($posDataF1["x"], $posDataF1["y"], $posDataF1["z"], $world);
+        
+        $posDataF2 = $posData["player2"];
+        $position2 = new Position($posDataF2["x"], $posDataF2["y"], $posDataF2["z"], $world);
+        
+        $fighter1->teleport($position1);
+        $fighter2->teleport($position2);
     }
 }
