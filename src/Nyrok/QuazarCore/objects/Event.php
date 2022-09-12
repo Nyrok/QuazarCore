@@ -13,14 +13,22 @@ final class Event
     /**
      * @var $players[]
      */
-    public static array $players = [];
+    private array $players = [];
     
     /**
      * @var $startIn
      */
-    public static $startIn;
+    private $startIn;
     
-    public static $start = false;
+    /**
+     * @var $start
+     */
+    private $start = false;
+    
+    /**
+     * @var $fought
+     */
+    private array $fought = [];
     
     /**
      * @param string $name
@@ -30,7 +38,7 @@ final class Event
     public function __construct(string $name, string $type, Player $host)
     {
         self::addPlayer($host);
-        self::$startIn = time() + 120;
+        this->startIn = time() + 120;
     }
     
     /**
@@ -62,7 +70,7 @@ final class Event
      */
     public function getPlayers(): array
     {
-        return self::$players;
+        return $this->players;
     }
     
     /**
@@ -70,7 +78,7 @@ final class Event
      */
     public function getStartIn(): int
     {
-        return self::$startIn;
+        return $this->startIn;
     }
     
     /**
@@ -78,7 +86,7 @@ final class Event
      */
     public function getStart(): bool
     {
-        return self::$start;
+        return $this->start;
     }
     
     /**
@@ -86,7 +94,7 @@ final class Event
      */
     public function setStart(): void
     {
-        self::$start = true;
+        $this->start = true;
     }
     
     /**
@@ -95,7 +103,7 @@ final class Event
      */
     public function addPlayer(Player $player, bool $sendMsg = false): void
     {
-        array_push(self::$players, $player);
+        array_push($this->players, $player);
         
         
         $item = [4 => Item::get(152)->setCustomName("§4Leave")];
@@ -118,7 +126,7 @@ final class Event
      */
     public function removePlayer(Player $player): void
     {
-        unset(self::$players[$player]);
+        unset($this->players[$player]);
         LobbyManager::load($player);
     }
     
