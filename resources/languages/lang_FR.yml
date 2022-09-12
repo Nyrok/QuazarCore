@@ -82,6 +82,7 @@ messages:
     event-create: "You have created an event"
     event-join: "Vous avez rejoint l'évent"
     event-quit: "Vous avez quitté l'évent"
+    event-start: "L'évent commence"
 
 forms:
   top:
