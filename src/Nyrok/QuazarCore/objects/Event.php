@@ -121,4 +121,9 @@ final class Event
         unset(self::$players[$player]);
         LobbyManager::load($player);
     }
+    
+    public function cancel(): void
+    {
+        unset($this);
+    }
 }
