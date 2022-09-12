@@ -4,6 +4,9 @@ namespace Nyrok\QuazarCore\objects;
 
 use pocketmine\Player;
 use pocketmine\item\Item;
+use Nyrok\QuazarCore\providers\LanguageProvider;
+use Nyrok\QuazarCore\providers\PlayerProvider;
+use Nyrok\QuazarCore\managers\LobbyManager;
 
 final class Event
 {
