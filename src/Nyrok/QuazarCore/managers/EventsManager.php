@@ -60,7 +60,9 @@ abstract class EventsManager
      */
     public static function startEvent(Event $event): void
     {
-        if(count($event->getPlayers()) >= 6) {
+        $configCache = Core::getInstance()->getConfig()->getAll();
+        
+        if(count($event->getPlayers()) >= (int)$configCache["events"]["min-players"]) {
             $event->setStart();
             
             $worldN = match($event->getType()) {
@@ -68,8 +70,6 @@ abstract class EventsManager
                 'sumo' => 'sumo-event',
                 'soup' => 'soup-event',
             };
-            
-            $configCache = Core::getInstance()->getConfig()->getAll();
             
             $posData = $configCache["events"][$worldN]["spectators"]["spawn"];
             
@@ -79,6 +79,11 @@ abstract class EventsManager
             foreach($event->getPlayers() as $player)
             {
                 $player->teleport($position);
+                
+                $eventStartMsg = LanguageProvider::getLanguageMessage("messages.events.event-start", PlayerProvider::toQuazarPlayer($player), true);
+                $player->sendMessage($eventStartMsg);
+                
+                self::startFights($event);
             }
         }else{
             unset(self::$events[$event->getName()]);
@@ -99,5 +104,33 @@ abstract class EventsManager
     public static function endEvent(Event $event): void
     {
         
+    }
+    
+    /**
+     * @param Event $event
+     * @return void
+     */
+    public static function startFights(Event $event): void
+    {
+        $players = count($event->getPlayers());
+        $fighters = $event->getPlayers();
+        
+        foreach($event->getPlayers() as $player)
+        {
+            if(isset($event->getFought()[$player->getName()])) {
+                unset($fighters[$player->getName()]);
+            }
+        }
+        
+        $fighter1 = $fighters[mt_rand(0, (int)(count($fighters) - 1)];
+        $event->setFought($fighter1->getName());
+        unset($fighters[$fighter1]);
+        
+        $fighter2 = $fighters[mt_rand(0, (int)(count($fighters) - 1)];
+        $event->setFought($fighter2->getName());
+        
+        $position = new Position();
+        
+        $fighter1->teleport($position);
     }
 }
