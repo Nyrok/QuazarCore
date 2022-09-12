@@ -129,4 +129,3 @@ forms:
         # {host} Hébergeur de l'évent
         button-text: "{type} Évent - {host}"
         button-return: "Return"
-
