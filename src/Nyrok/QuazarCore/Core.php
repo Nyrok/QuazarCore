@@ -8,6 +8,7 @@ use Nyrok\QuazarCore\databases\UserDatabase;
 use Nyrok\QuazarCore\managers\ArenasManager;
 use Nyrok\QuazarCore\managers\CommandsManager;
 use Nyrok\QuazarCore\managers\CooldownManager;
+use Nyrok\QuazarCore\managers\CosmeticsManager;
 use Nyrok\QuazarCore\managers\CPSManager;
 use Nyrok\QuazarCore\managers\FFAManager;
 use Nyrok\QuazarCore\managers\FloatingTextManager;
@@ -77,6 +78,7 @@ class Core extends PluginBase
         StaffManager::initItems();
         TimeManager::initTime();
         ArenasManager::initArenas();
+        CosmeticsManager::initCosmetics();
 
         $this->getLogger()->warning("By @Nyrok10 on Twitter.");
     }

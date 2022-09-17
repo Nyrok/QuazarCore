@@ -221,3 +221,6 @@ duels:
           x: 256
           y: 65
           z: 256
+
+cosmetics:
+  Ailes d'Ange: core.cosmetics.angelwings
