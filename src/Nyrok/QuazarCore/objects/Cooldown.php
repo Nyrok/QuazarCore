@@ -6,6 +6,7 @@ use JetBrains\PhpStorm\Pure;
 use pocketmine\item\Item;
 use pocketmine\item\ItemFactory;
 use pocketmine\Player;
+use pocketmine\level\Level;
 
 final class Cooldown
 {
@@ -17,9 +18,10 @@ final class Cooldown
     /**
      * @param string $name
      * @param int $id
+     * @param Level $level
      * @param int $cooldown
      */
-    public function __construct(private string $name, private int $id, private int $cooldown)
+    public function __construct(private string $name, private int $id, private array $levels)
     {
     }
 
@@ -34,26 +36,44 @@ final class Cooldown
     /**
      * @return int
      */
-    public function getCooldown(): int
-    {
-        return $this->cooldown;
-    }
-
-    /**
-     * @return int
-     */
     public function getId(): int
     {
         return $this->id;
     }
-
+    
+    /**
+     * @return Level
+     */
+    public function getLevels(): array
+    {
+        return $this->levels;
+    }
+    
+    /**
+     * @param Level $level
+     * @return int
+     */
+    public function getCooldown(Level $level): int
+    {
+        return $this->levels[$level];
+    }
+    
     /**
      * @return Item|null
      */
     public function getItem(): ?Item {
         return new Item($this->getId(), 0, ItemFactory::get($this->getId())->getVanillaName()) ?? null;
     }
-
+    
+    /**
+     * @param Player $player
+     * @return void
+     */
+    public function resetCooldown(Player $player): void
+    {
+        $this->cooldown[$player->getName()] = 0;
+    }
+    
     /**
      * @param Player $player
      * @return bool
@@ -66,7 +86,7 @@ final class Cooldown
      * @param Player $player
      */
     public function set(Player $player): void {
-        $this->cooldowns[$player->getName()] = time() + $this->getCooldown();
+        $this->cooldowns[$player->getName()] = time() + $this->getCooldown($player->getLevel());
     }
 
     /**

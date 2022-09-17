@@ -18,6 +18,7 @@ final class EntityLevelChangeEvent implements Listener
     public function onEvent(ClassEvent $event){
         if($event->getEntity() instanceof Player){
             FloatingTextManager::update();
+            CooldownManager::resetPlayerCooldown($event->getEntity());
             if(!AntiGlitchPerl::canTeleport($event->getEntity())){
                 if($event->getEntity()->isAlive()) $event->setCancelled(true);
             }

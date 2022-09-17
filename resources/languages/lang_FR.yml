@@ -74,6 +74,15 @@ messages:
     spawn-not-found: "Le spawn n'a pas été trouvé"
     not-a-player: "Vous devez être un joueur"
     invalid-argument: "Cette valeur n'est pas valide"
+  events:
+    event-ndb-created: "Un event de nodebuff a été lancé"
+    event-sumo-created: "Un event de sumo a été lancé"
+    event-soup-created: "Un event de soupe a été lancé"
+    event-not-enough-player: "Pas assez de joueurs pour que l'évent commence"
+    event-create: "You have created an event"
+    event-join: "Vous avez rejoint l'évent"
+    event-quit: "Vous avez quitté l'évent"
+    event-start: "L'évent commence"
 
 forms:
   top:
@@ -100,3 +109,23 @@ forms:
         header: "Donnez des Détails sur le Report"
         default: ""
         place-holder: "Exemple: Ce joueur m'a insulté"
+    events:
+      1:
+        title: "Events"
+        1: "Créer"
+        2: "Rejoindre"
+      2:
+        title: "Créer Event"
+        1:
+          text: "Type"
+          types:
+            ndb: "Nodebuff"
+            sumo: "Sumo"
+            soup: "Soupe"
+      3:
+        title: "Rejoindre Event"
+        
+        # {type} Type de l'évent
+        # {host} Hébergeur de l'évent
+        button-event: "{type} Évent - {host}"
+        button-return: "Retour"

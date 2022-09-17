@@ -194,7 +194,8 @@ floating-texts:
 cooldowns:
   368: # ID de l'Item
     name: enderperle # Nom court sans espace non utilisé pour les autres cooldowns
-    cooldown: 15
+    cooldown:
+      world: 15
 
 cps:
   permission: core.cps.alert
@@ -222,5 +223,59 @@ duels:
           y: 65
           z: 256
 
-cosmetics:
-  Ailes d'Ange: core.cosmetics.angelwings
+events:
+  min-players: 6
+  
+  ndb-event:
+    spectators:
+      spawn:
+        x: 256
+        y: 256
+        z: 256
+    duel:
+      kit: ndb
+      spawn:
+        player1:
+          x: 256
+          y: 256
+          z: 256
+        player2:
+          x: 256
+          y: 256
+          z: 256
+
+  soup-event:
+    spectators:
+      spawn:
+        x: 256
+        y: 255
+        z: 256
+    duel:
+      kit: Soupe
+      spawn:
+        player1:
+          x: 256
+          y: 256
+          z: 256
+        player2:
+          x: 256
+          y: 256
+          z: 256
+
+  sumo-event:
+    spectators:
+      spawn:
+        x: 256
+        y: 255
+        z: 256
+    duel:
+      kit: sumo
+      spawn:
+        player1:
+          x: 256
+          y: 256
+          z: 256
+        player2:
+          x: 256
+          y: 256
+          z: 256

@@ -46,6 +46,7 @@ final class PlayerInteractEvent implements Listener
                     264 => 1,
                     340 => LobbyManager::formStats($event->getPlayer()),
                     347 => LobbyManager::formSettings($event->getPlayer()),
+                    152 => Event::removePlayer($event->getPlayer()),
                     default => null
                 };
             }
@@ -59,15 +60,16 @@ final class PlayerInteractEvent implements Listener
                 foreach (CooldownManager::getCooldowns() as $cooldown){
                     if($cooldown->getItem()->equals($event->getPlayer()->getInventory()->getItemInHand())){
                         if($cooldown->has($event->getPlayer())){
-                            $event->getPlayer()->sendActionBarMessage(str_replace(
+                            /*$event->getPlayer()->sendActionBarMessage(str_replace(
                                 "{cooldown}",
                                 (string)($cooldown->get($event->getPlayer()) - time()),
                                 LanguageProvider::getLanguageMessage("messages.cooldowns.{$cooldown->getName()}", PlayerProvider::toQuazarPlayer($event->getPlayer()), false)
-                            ));
+                            ));*/
                             $event->setCancelled(true);
                         }
                         else {
                             $cooldown->set($event->getPlayer());
+                            Core::getInstance()->getScheduler()->scheduleRepeatingTask(new EnderPearlCooldownTask($cooldown, $event->getPlayer()), 20);
                         }
                     }
                 }
