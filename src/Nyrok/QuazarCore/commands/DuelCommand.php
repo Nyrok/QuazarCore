@@ -34,9 +34,14 @@ final class DuelCommand extends QuazarCommands
                 return;
             }
             $target = Server::getInstance()->getPlayer($args[1]);
-            $duel = DuelsManager::getDuel($sender->getName());
-            if ($target->getName() !== $duel?->getOpponent()?->getName()) {
-                $sender->sendMessage(LanguageProvider::getLanguageMessage("messages.errors.duel-with-host", null, true));
+            $duel = DuelsManager::getDuel($target->getName());
+            if(!$duel){
+                $sender->sendMessage(LanguageProvider::getLanguageMessage("messages.errors.duel-dont-exists", null, true));
+                return;
+            }
+            if ($sender->getName() !== $duel->getOpponent()->getName()) {
+                $message = LanguageProvider::getLanguageMessage("messages.errors.duel-not-opponent", PlayerProvider::toQuazarPlayer($sender), true);
+                $sender->sendMessage(str_replace("{host}", $duel->getHost()->getName(), $message));
                 return;
             }
             $duel->setAccepted($type);

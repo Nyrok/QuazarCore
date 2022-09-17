@@ -216,9 +216,39 @@ anti-timer: 15
 
 duels:
   §aNo Debuff:
-    kit: ffa-practice
+    kit: duel-ndb
     arenas:
-      arena1:
+      ndb1:
+        player1:
+          x: 258
+          y: 65
+          z: 259
+        player2:
+          x: 256
+          y: 65
+          z: 256
+      ndb2:
+        player1:
+          x: 258
+          y: 65
+          z: 259
+        player2:
+          x: 256
+          y: 65
+          z: 256
+  §cSoup:
+    kit: duel-soup
+    arenas:
+      soup1:
+        player1:
+          x: 258
+          y: 65
+          z: 259
+        player2:
+          x: 256
+          y: 65
+          z: 256
+      soup2:
         player1:
           x: 258
           y: 65

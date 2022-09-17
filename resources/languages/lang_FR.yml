@@ -41,7 +41,13 @@ messages:
     # {cooldown}
     enderperle: "{cooldown} secondes"
 
+  duels:
+    decount: "Le duel va commencer dans {count}"
+
   success:
+    duel-request: "Vous avez reçu une demande de duel en {mode} de la part de {host}"
+    duel-accepted-opponent: "Vous avez accepté la demande de duel de {host} !"
+    duel-accepted-host: "{opponent} a accepté votre demande de duel !"
     sanctions-removed: "La sanction a été supprimée"
     mute: "Vous avez mute {player} jusqu'au {time} pour {reason}" # {player}, {time}, {reason}
     muted: "Vous avez été mute par {staff} jusqu'au {time} pour {reason}" # {staff}, {time}, {reason}
@@ -75,6 +81,7 @@ messages:
     not-a-player: "Vous devez être un joueur"
     invalid-argument: "Cette valeur n'est pas valide"
   events:
+    duel-not-opponent: "Vous n'êtes pas l'adversaire de {host}"
     event-ndb-created: "Un event de nodebuff a été lancé"
     event-sumo-created: "Un event de sumo a été lancé"
     event-soup-created: "Un event de soupe a été lancé"

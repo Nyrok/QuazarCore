@@ -4,9 +4,6 @@ namespace Nyrok\QuazarCore\managers;
 
 use Nyrok\QuazarCore\Core;
 use Nyrok\QuazarCore\objects\Duel;
-use pocketmine\level\sound\Sound;
-use pocketmine\network\mcpe\protocol\LevelSoundEventPacket;
-use pocketmine\Player;
 use pocketmine\scheduler\ClosureTask;
 use pocketmine\Server;
 
@@ -27,13 +24,13 @@ abstract class DuelsManager
 
     public static function getDuel(string $name): ?Duel
     {
-        return self::$duels[$name];
+        return self::$duels[$name] ?? null;
     }
 
     public static function addDuel(Duel $duel): void
     {
         self::$duels[$duel->getHost()->getName()] = $duel;
-        Core::getInstance()->getScheduler()->scheduleDelayedTask(new ClosureTask(function (int $currentTick) use ($duel) {
+        Core::getInstance()->getScheduler()->scheduleDelayedTask(new ClosureTask(function (int $currentTick) use ($duel): void {
             if(isset(self::$duels[$duel->getHost()->getName()])){
                 $duel = self::$duels[$duel->getHost()->getName()];
                 if(!$duel->getOpponent()){

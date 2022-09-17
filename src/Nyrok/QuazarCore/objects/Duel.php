@@ -60,8 +60,10 @@ final class Duel
             return;
         }
         if($this->opponent->isOnline() and $this->host->isOnline()){
-            $this->opponent->sendMessage(LanguageProvider::getLanguageMessage("messages.success.duel-accepted", PlayerProvider::toQuazarPlayer($this->opponent), true));
-            $this->host->sendMessage(LanguageProvider::getLanguageMessage("messages.success.duel-accepted", PlayerProvider::toQuazarPlayer($this->host), true));
+            $message = LanguageProvider::getLanguageMessage("messages.success.duel-accepted-opponent", PlayerProvider::toQuazarPlayer($this->opponent), true);
+            $this->opponent->sendMessage(str_replace("{host}", $this->host->getName(), $message));
+            $message = LanguageProvider::getLanguageMessage("messages.success.duel-accepted-host", PlayerProvider::toQuazarPlayer($this->host), true);
+            $this->host->sendMessage(str_replace("{opponent}", $this->opponent->getName(), $message));
         }
         else {
             $this->stop();
