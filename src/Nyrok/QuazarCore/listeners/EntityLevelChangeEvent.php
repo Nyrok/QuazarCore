@@ -7,6 +7,7 @@ use Nyrok\QuazarCore\utils\AntiGlitchPerl;
 use pocketmine\event\entity\EntityLevelChangeEvent as ClassEvent;
 use pocketmine\event\Listener;
 use pocketmine\Player;
+use Nyrok\QuazarCore\managers\CooldownManager;
 
 final class EntityLevelChangeEvent implements Listener
 {

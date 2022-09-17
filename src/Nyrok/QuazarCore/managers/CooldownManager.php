@@ -9,7 +9,6 @@ use pocketmine\Server;
 
 abstract class CooldownManager
 {
-
     /**
      * @var Cooldown[]
      */

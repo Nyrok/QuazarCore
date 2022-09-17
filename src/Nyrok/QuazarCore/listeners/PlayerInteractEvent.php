@@ -5,12 +5,12 @@ namespace Nyrok\QuazarCore\listeners;
 use Nyrok\QuazarCore\Core;
 use Nyrok\QuazarCore\managers\CooldownManager;
 use Nyrok\QuazarCore\managers\CPSManager;
+use Nyrok\QuazarCore\managers\EventsManager;
 use Nyrok\QuazarCore\managers\FFAManager;
 use Nyrok\QuazarCore\managers\LobbyManager;
 use Nyrok\QuazarCore\managers\SoupManager;
 use Nyrok\QuazarCore\managers\StaffManager;
-use Nyrok\QuazarCore\providers\LanguageProvider;
-use Nyrok\QuazarCore\providers\PlayerProvider;
+use Nyrok\QuazarCore\tasks\EnderPearlCooldownTask;
 use pocketmine\block\BlockIds;
 use pocketmine\block\Door;
 use pocketmine\block\FenceGate;
@@ -44,7 +44,7 @@ final class PlayerInteractEvent implements Listener
                     276, 283, 264 => 1,
                     340 => LobbyManager::formStats($event->getPlayer()),
                     347 => LobbyManager::formSettings($event->getPlayer()),
-                    152 => Event::removePlayer($event->getPlayer()),
+                    152 => EventsManager::removePlayer($event->getPlayer()),
                     default => null
                 };
             }
