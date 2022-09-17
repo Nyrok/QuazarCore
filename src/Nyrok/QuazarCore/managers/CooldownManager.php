@@ -4,6 +4,7 @@ namespace Nyrok\QuazarCore\managers;
 
 use Nyrok\QuazarCore\Core;
 use Nyrok\QuazarCore\objects\Cooldown;
+use pocketmine\Player;
 use pocketmine\Server;
 
 abstract class CooldownManager

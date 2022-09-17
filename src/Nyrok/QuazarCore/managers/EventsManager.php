@@ -2,17 +2,19 @@
 
 namespace Nyrok\QuazarCore\managers;
 
+use Nyrok\QuazarCore\Core;
 use Nyrok\QuazarCore\providers\LanguageProvider;
 use Nyrok\QuazarCore\providers\PlayerProvider;
 use AndreasHGK\EasyKits\Kit;
 use AndreasHGK\EasyKits\manager\KitManager;
 use Nyrok\QuazarCore\objects\Event;
+use pocketmine\level\Position;
 use pocketmine\Server;
 
 abstract class EventsManager
 {
     /**
-     * @var Events[]
+     * @var Event[]
      */
     public static array $events = [];
     
@@ -124,11 +126,11 @@ abstract class EventsManager
             }
         }
         
-        $fighter1 = $fighters[mt_rand(0, (int)(count($fighters) - 1)];
+        $fighter1 = $fighters[mt_rand(0, count($fighters) - 1)];
         $event->setFought($fighter1->getName());
-        unset($fighters[$fighter1]);
+        unset($fighters[array_search($fighter1, $fighters)]);
         
-        $fighter2 = $fighters[mt_rand(0, (int)(count($fighters) - 1)];
+        $fighter2 = $fighters[mt_rand(0, count($fighters) - 1)];
         $event->setFought($fighter2->getName());
         
         $worldN = match($event->getType()) {

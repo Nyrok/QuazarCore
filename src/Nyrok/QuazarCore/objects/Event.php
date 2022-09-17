@@ -11,22 +11,22 @@ use Nyrok\QuazarCore\managers\LobbyManager;
 final class Event
 {
     /**
-     * @var $players[]
+     * @var Player[]
      */
     private array $players = [];
-    
+
     /**
-     * @var $startIn
+     * @var int
      */
-    private $startIn;
-    
+    private int $startIn;
+
     /**
-     * @var $start
+     * @var bool
      */
-    private $start = false;
-    
+    private bool $start = false;
+
     /**
-     * @var $fought
+     * @var array
      */
     private array $fought = [];
     
@@ -35,10 +35,10 @@ final class Event
      * @param string $type
      * @param Player $host
      */
-    public function __construct(string $name, string $type, Player $host)
+    public function __construct(private string $name, private string $type, private Player $host)
     {
         self::addPlayer($host);
-        this->startIn = time() + 120;
+        $this->startIn = time() + 120;
     }
     
     /**
@@ -121,12 +121,13 @@ final class Event
     {
         foreach($this->fought as $pName)
         {
-            unset($pname);
+            unset($pName);
         }
     }
-    
+
     /**
      * @param Player $player
+     * @param bool $sendMsg
      * @return void
      */
     public function addPlayer(Player $player, bool $sendMsg = false): void
@@ -143,7 +144,7 @@ final class Event
         
         
         if($sendMsg) {
-            $message = LanguageProvider::getLanguageMessage("messages.events.event-join", PlayerProvider::toQuazarPlayer($player), true));
+            $message = LanguageProvider::getLanguageMessage("messages.events.event-join", PlayerProvider::toQuazarPlayer($player), true);
             $player->sendMessage($message);
         }
     }
@@ -154,12 +155,12 @@ final class Event
      */
     public function removePlayer(Player $player): void
     {
-        unset($this->players[$player]);
+        unset($this->players[array_search($player->getName(), $this->players)]);
         LobbyManager::load($player);
     }
     
     public function cancel(): void
     {
-        unset($this);
+        $this->players = [];
     }
 }

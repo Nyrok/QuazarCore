@@ -4,9 +4,8 @@ namespace Nyrok\QuazarCore\commands;
 
 use Nyrok\QuazarCore\managers\EventsManager;
 use Nyrok\QuazarCore\objects\Event;
-use pocketmine\Server;
-use Nyrok\QuazarCore\librairies\EasyUI\element\{Button,Dropdown};
-use Nyrok\QuazarCore\librairies\EasyUI\variant\{SimpleForm,CustomForm};
+use Nyrok\QuazarCore\librairies\EasyUI\element\{Button, Dropdown, Option};
+use Nyrok\QuazarCore\librairies\EasyUI\variant\{SimpleForm, CustomForm};
 use Nyrok\QuazarCore\librairies\EasyUI\utils\FormResponse;
 use Nyrok\QuazarCore\providers\LanguageProvider;
 use Nyrok\QuazarCore\providers\PlayerProvider;
@@ -30,7 +29,7 @@ final class EventCommand extends QuazarCommands
         }
         $this->eventsForm($sender);
     }
-    
+
     /**
      * @param Player $player
      * @return void
@@ -39,16 +38,20 @@ final class EventCommand extends QuazarCommands
     {
         $title = LanguageProvider::getLanguageMessage("forms.events.1.title", PlayerProvider::toQuazarPlayer($player), false);
         $form = new SimpleForm($title);
-        
+
         $button1 = LanguageProvider::getLanguageMessage("forms.events.1.1", PlayerProvider::toQuazarPlayer($player), false);
-        $form->addButton(new Button($button1, null, $this->eventsCreateForm($player)));
-        
+        $form->addButton(new Button($button1, null, function (Player $player) {
+            $this->eventsCreateForm($player);
+        }));
+
         $button2 = LanguageProvider::getLanguageMessage("forms.events.1.2", PlayerProvider::toQuazarPlayer($player), false);
-        $form->addButton(new Button($button2, null, $this->eventsJoinForm($player)));
-        
+        $form->addButton(new Button($button2, null, function (Player $player) {
+            $this->eventsJoinForm($player);
+        }));
+
         $player->sendForm($form);
     }
-    
+
     /**
      * @param Player $player
      * @return void
@@ -57,46 +60,37 @@ final class EventCommand extends QuazarCommands
     {
         $title = LanguageProvider::getLanguageMessage("forms.events.2.title", PlayerProvider::toQuazarPlayer($player), false);
         $form = new CustomForm($title);
-        
-        $dropdownTitle = LanguageProvider::getLanguageMessage("forms.events.2.1.text", PlayerProvider::toQuazarPlayer($player), false));
+
+        $dropdownTitle = LanguageProvider::getLanguageMessage("forms.events.2.1.text", PlayerProvider::toQuazarPlayer($player), false);
         $dropdown = new Dropdown($dropdownTitle);
-        
+
         $dropdown1 = LanguageProvider::getLanguageMessage("forms.events.2.1.types.ndb", PlayerProvider::toQuazarPlayer($player), false);
         $dropdown->addOption(new Option(0, $dropdown1));
-        
+
         $dropdown2 = LanguageProvider::getLanguageMessage("forms.events.2.1.types.soup", PlayerProvider::toQuazarPlayer($player), false);
         $dropdown->addOption(new Option(1, $dropdown2));
-        
+
         $dropdown3 = LanguageProvider::getLanguageMessage("forms.events.2.1.types.sumo", PlayerProvider::toQuazarPlayer($player), false);
         $dropdown->addOption(new Option(2, $dropdown3));
-        
+
         $dropdown->setDefaultIndex(0);
-        
+
         $form->addElement("type", $dropdown);
-        
-        
-        $form->setSubmitListener(function (Player $player, FormResponse $formResponse): void {
-            switch($formResponse->getDropdownSubmittedOptionId('type'))
-            {
-                case $dropdown1:
-                    EventsManager::addEvent(new Event($player->getName(), "nodebuff", $player));
-                    break;
-                
-                case $dropdown2:
-                    EventsManager::addEvent(new Event($player->getName(), "sumo", $player));
-                    break;
-                
-                case $dropdown3:
-                    EventsManager::addEvent(new Event($player->getName(), "soup", $player));
-                    break;
-            }
-            
-            $message = LanguageProvider::getLanguageMessage("messages.events.event-create", PlayerProvider::toQuazarPlayer($player), true));
+
+
+        $form->setSubmitListener(function (Player $player, FormResponse $formResponse) use ($dropdown1, $dropdown2, $dropdown3): void {
+            match ($formResponse->getDropdownSubmittedOptionId('type')) {
+                $dropdown1 => EventsManager::addEvent(new Event($player->getName(), "nodebuff", $player)),
+                $dropdown2 => EventsManager::addEvent(new Event($player->getName(), "sumo", $player)),
+                $dropdown3 => EventsManager::addEvent(new Event($player->getName(), "soup", $player)),
+                default => null
+            };
+            $message = LanguageProvider::getLanguageMessage("messages.events.event-create", PlayerProvider::toQuazarPlayer($player), true);
             $player->sendMessage($message);
         });
         $player->sendForm($form);
     }
-    
+
     /**
      * @param Player $player
      * @return void
@@ -105,18 +99,22 @@ final class EventCommand extends QuazarCommands
     {
         $title = LanguageProvider::getLanguageMessage("forms.events.3.title", PlayerProvider::toQuazarPlayer($player), false);
         $form = new SimpleForm($title);
-        
+
         $joinButton = LanguageProvider::getLanguageMessage("forms.events.3.button-event", PlayerProvider::toQuazarPlayer($player), false);
-        
+
         foreach (EventsManager::getEvents() as $event) {
             $button = str_replace("{host}", $event->getHost(), $joinButton);
             $button = str_replace("{type}", $event->getType(), $button);
-            $form->addButton(new Button($button, null, $event->addPlayer($player, true)));
+            $form->addButton(new Button($button, null, function (Player $player) use ($event){
+                $event->addPlayer($player, true);
+            }));
         }
-        
+
         $returnButton = LanguageProvider::getLanguageMessage("forms.events.3.button-return", PlayerProvider::toQuazarPlayer($player), false);
-        $form->addButton($returnButton, null, $this->eventsForm($player));
-        
+        $form->addButton(new Button($returnButton, null, function (Player $player){
+            $this->eventsForm($player);
+        }));
+
         $player->sendForm($form);
     }
 }

@@ -2,6 +2,7 @@
 
 namespace Nyrok\QuazarCore\tasks;
 
+use Nyrok\QuazarCore\managers\EventsManager;
 use pocketmine\scheduler\Task;
 
 final class StartEventTask extends Task
@@ -14,7 +15,7 @@ final class StartEventTask extends Task
         foreach(EventsManager::getEvents() as $event)
         {
             if(!$event->getStart()) {
-                if($event->getStartIn() - time <= 0) {
+                if($event->getStartIn() - time() <= 0) {
                     EventsManager::startEvent($event);
                 }
             }
