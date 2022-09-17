@@ -118,6 +118,11 @@ commands:
     aliases: []
     permission: core.commands.duel
     usage: /duel
+  event:
+    description: Créer un évènement ?
+    aliases: []
+    permission: core.commands.event
+    usage: /event
 
 
 actions:

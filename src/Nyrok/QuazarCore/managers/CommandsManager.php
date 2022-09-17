@@ -3,6 +3,7 @@ namespace Nyrok\QuazarCore\managers;
 
 use Nyrok\QuazarCore\commands\DiscordCommand;
 use Nyrok\QuazarCore\commands\DuelCommand;
+use Nyrok\QuazarCore\commands\EventCommand;
 use Nyrok\QuazarCore\commands\MuteCommand;
 use Nyrok\QuazarCore\commands\PingCommand;
 use Nyrok\QuazarCore\commands\QuazarCommands;
@@ -48,7 +49,8 @@ abstract class CommandsManager
             new UnBanCommand('unban'),
             new PingCommand('ping'),
             new TPSCommand('tps'),
-            new DuelCommand('duel')
+            new DuelCommand('duel'),
+            new EventCommand('event'),
         ];
     }
 
