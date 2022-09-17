@@ -9,6 +9,7 @@ use AndreasHGK\EasyKits\Kit;
 use AndreasHGK\EasyKits\manager\KitManager;
 use Nyrok\QuazarCore\objects\Event;
 use pocketmine\level\Position;
+use pocketmine\Player;
 use pocketmine\Server;
 
 abstract class EventsManager
@@ -157,5 +158,12 @@ abstract class EventsManager
         
         $kit->claimFor($fighter1);
         $kit->claimFor($fighter2);
+    }
+
+    public static function removePlayer(Player $player): void
+    {
+        foreach (self::getEvents() as $event){
+            $event->removePlayer($player);
+        }
     }
 }

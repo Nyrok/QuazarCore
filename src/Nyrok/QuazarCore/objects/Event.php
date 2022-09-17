@@ -157,6 +157,9 @@ final class Event
     {
         unset($this->players[array_search($player->getName(), $this->players)]);
         LobbyManager::load($player);
+        if(empty($this->players)){
+            $this->cancel();
+        }
     }
     
     public function cancel(): void
