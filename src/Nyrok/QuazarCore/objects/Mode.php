@@ -3,12 +3,13 @@
 namespace Nyrok\QuazarCore\objects;
 
 use AndreasHGK\EasyKits\Kit;
+use pocketmine\network\mcpe\protocol\types\GameMode;
 
 final class Mode
 {
     private array $arenas = [];
 
-    public function __construct(private string $name, private Kit $kit)
+    public function __construct(private string $name, private Kit $kit, private int $gameMode)
     {
     }
 
@@ -41,6 +42,14 @@ final class Mode
     public function getKit(): Kit
     {
         return $this->kit;
+    }
+
+    /**
+     * @return int
+     */
+    public function getGameMode(): int
+    {
+        return $this->gameMode;
     }
 
 }

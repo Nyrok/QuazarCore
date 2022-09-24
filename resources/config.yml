@@ -218,6 +218,7 @@ duels:
   §aNo Debuff:
     kit: duel-ndb
     arenas:
+      gamemode: 2
       ndb1:
         player1:
           x: 258
@@ -227,6 +228,9 @@ duels:
           x: 256
           y: 65
           z: 256
+        blocks:
+          - 1
+          - 2
       ndb2:
         player1:
           x: 258
@@ -236,9 +240,11 @@ duels:
           x: 256
           y: 65
           z: 256
+        blocks: []
   §cSoup:
     kit: duel-soup
     arenas:
+      gamemode: 2
       soup1:
         player1:
           x: 258
@@ -248,6 +254,7 @@ duels:
           x: 256
           y: 65
           z: 256
+        blocks: []
       soup2:
         player1:
           x: 258
@@ -257,6 +264,7 @@ duels:
           x: 256
           y: 65
           z: 256
+        blocks: []
 
 events:
   min-players: 6
@@ -314,3 +322,6 @@ events:
           x: 256
           y: 256
           z: 256
+
+cosmetics:
+  Ailes de Dragon: core.cosmetics.dragonwings

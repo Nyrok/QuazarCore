@@ -12,6 +12,7 @@ final class Duel
 {
     public bool $started = false;
     public bool $accepted = false;
+    public ?Arena $arena = null;
 
     public function __construct(private Player $host, private Player $opponent, private Mode $mode)
     {
@@ -33,6 +34,11 @@ final class Duel
     public function getMode(): Mode
     {
         return $this->mode;
+    }
+
+    public function getArena(): ?Arena
+    {
+        return $this->arena;
     }
 
     /**
@@ -76,6 +82,7 @@ final class Duel
 
     public function start(): void {
         $arena = $this->mode->getRandomArena();
+        $this->arena ??= $arena;
         if(!$this->host->isOnline() or !$this->opponent->isOnline()){
             $this->stop();
             return;
@@ -87,6 +94,7 @@ final class Duel
             $this->mode->getKit()->claimFor($this->host);
             $pos = $arena->getPlayer1();
             $pos->level = $level;
+            $this->host->setGamemode($this->mode->getGameMode());
             $this->host->teleport($pos);
 
             $this->opponent->removeAllEffects();
@@ -95,6 +103,7 @@ final class Duel
             $this->mode->getKit()->claimFor($this->opponent);
             $pos = $arena->getPlayer2();
             $pos->level = $level;
+            $this->opponent->setGamemode($this->mode->getGameMode());
             $this->opponent->teleport($pos);
             /*
             $i = 3;

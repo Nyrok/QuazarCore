@@ -9,6 +9,7 @@ use Nyrok\QuazarCore\objects\Mode;
 use pocketmine\level\Level;
 use pocketmine\nbt\BigEndianNBTStream;
 use pocketmine\nbt\tag\CompoundTag;
+use pocketmine\network\mcpe\protocol\types\GameMode;
 use pocketmine\Server;
 
 abstract class ArenasManager
@@ -23,13 +24,14 @@ abstract class ArenasManager
             }
         }
         foreach (Core::getInstance()->getConfig()->get('duels', []) as $name => $data) {
-            $mode = new Mode($name, KitManager::get($data['kit']) ?? array_values(KitManager::getAll())[0]);
+            $mode = new Mode($name, KitManager::get($data['kit']) ?? array_values(KitManager::getAll())[0], $data["gamemode"]);
             foreach ($data['arenas'] as $world => $arena) {
                 if (Server::getInstance()->loadLevel($world)) {
                     $mode->addArena(new Arena([
                         $arena['player1'], $arena['player2']
                     ],
-                        Server::getInstance()->getLevelByName($world)
+                        Server::getInstance()->getLevelByName($world),
+                        $arena['blocks'] ?? [],
                     ));
                 }
             }

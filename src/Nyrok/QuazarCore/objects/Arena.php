@@ -14,7 +14,7 @@ use pocketmine\Server;
 
 final class Arena
 {
-    public function __construct(private array $players, private Level $level)
+    public function __construct(private array $players, private Level $level, private array $blocks)
     {
     }
 
@@ -47,6 +47,14 @@ final class Arena
     {
         $pos = end($this->players);
         return new Position($pos["x"], $pos["y"], $pos["z"], $this->level);
+    }
+
+    /**
+     * @return array
+     */
+    public function getBlocks(): array
+    {
+        return $this->blocks;
     }
 
     public function generate(Player $player): ?Level
