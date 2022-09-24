@@ -42,7 +42,7 @@ messages:
     enderperle: "{cooldown} secondes"
 
   duels:
-    decount: "Le duel va commencer dans {count}"
+    countdown: "Le duel commence dans {countdown}"
 
   success:
     duel-request: "Vous avez reçu une demande de duel en {mode} de la part de {host}"

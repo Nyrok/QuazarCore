@@ -5,6 +5,7 @@ namespace Nyrok\QuazarCore\objects;
 use Nyrok\QuazarCore\managers\DuelsManager;
 use Nyrok\QuazarCore\providers\LanguageProvider;
 use Nyrok\QuazarCore\providers\PlayerProvider;
+use Nyrok\QuazarCore\tasks\DuelAcceptTask;
 use pocketmine\Player;
 
 final class Duel
@@ -80,8 +81,6 @@ final class Duel
             return;
         }
         if(($level = $arena->generate($this->host))){
-            $this->host->sendMessage("Map chargée");
-
             $this->host->removeAllEffects();
             $this->host->getInventory()->clearAll(true);
             $this->host->getArmorInventory()->clearAll(true);
@@ -97,6 +96,22 @@ final class Duel
             $pos = $arena->getPlayer2();
             $pos->level = $level;
             $this->opponent->teleport($pos);
+            /*
+            $i = 3;
+            $task = new ClosureTask(function (int $currentTick) use ($i): void {
+                $msg = LanguageProvider::getLanguageMessage("messages.success.duel-countdown", PlayerProvider::toQuazarPlayer($this->host), true);
+                $this->host->sendMessage(str_replace("{countdown}", $i, $msg));
+                $msg = LanguageProvider::getLanguageMessage("messages.success.duel-countdown", PlayerProvider::toQuazarPlayer($this->opponent), true);
+                $this->opponent->sendMessage(str_replace("{countdown}", $i, $msg));
+                $i--;
+                if($i === 0){
+
+                }
+                else {
+
+                }
+            }); */
+            Core::getInstance()->getScheduler()->scheduleRepeatingTask(new DuelAcceptTask($this->host, $this->opponent, $this), 20);
         }
         else {
             $this->host->sendMessage("Erreur lors du chargement de la map");
