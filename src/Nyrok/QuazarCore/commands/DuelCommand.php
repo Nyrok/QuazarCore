@@ -2,6 +2,7 @@
 
 namespace Nyrok\QuazarCore\commands;
 
+use Nyrok\QuazarCore\librairies\EasyUI\icon\ButtonIcon;
 use Nyrok\QuazarCore\managers\DuelsManager;
 use Nyrok\QuazarCore\objects\Duel;
 use pocketmine\Server;
@@ -59,7 +60,7 @@ final class DuelCommand extends QuazarCommands
     {
         $form = new SimpleForm("§m§a" . "Duels", "Affronter " . $target->getName() . " pour un duel ?");
         foreach (ArenasManager::getModes() as $mode) {
-            $form->addButton(new Button($mode->getName(), null, fn(Player $player) => DuelsManager::addDuel(new Duel($player, $target, $mode))));
+            $form->addButton(new Button($mode->getName(), new ButtonIcon("textures/ui/icon_recipe_equipment"), fn(Player $player) => DuelsManager::addDuel(new Duel($player, $target, $mode))));
         }
         $player->sendForm($form);
     }
