@@ -20,15 +20,21 @@ abstract class CosmeticsManager
     public static function initCosmetics(): void
     {
         Core::getInstance()->saveResource("steve.json", false);
+        Core::getInstance()->saveResource("cosmetics/Ailes d'Ange.json", false);
+        Core::getInstance()->saveResource("cosmetics/Ailes d'Ange.png", false);
         self::checkRequirement();
         self::checkCosmetique();
     }
 
     public static function formCosmetics(Player $player): void {
         $form = new SimpleForm("§m§a"."§fCosmetics");
-        $form->addButton(new Button("§lReset", new ButtonIcon("textures/ui/refresh", ButtonIcon::TYPE_PATH)));
-        foreach (self::$cosmeticsDetails as $folder => $cosmetic) {
-            $form->addButton(new Button("§l".ucfirst($cosmetic), new ButtonIcon("textures/ui/".strtolower($cosmetic), ButtonIcon::TYPE_PATH)));
+        $form->addButton(new Button("§lReset", new ButtonIcon("textures/ui/refresh", ButtonIcon::TYPE_PATH), function (Player $player) {
+            self::resetSkin($player);
+        }));
+        foreach (self::$cosmeticsDetails as $cosmetic) {
+            $form->addButton(new Button("§l".ucfirst(reset($cosmetic)), new ButtonIcon("textures/ui/mashup_hangar", ButtonIcon::TYPE_PATH), function (Player $player) use ($cosmetic){
+                self::setSkin($player, reset($cosmetic), "cosmetics");
+            }));
         }
         AntiSpamForm::sendForm($player, $form);
     }

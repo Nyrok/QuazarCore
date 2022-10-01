@@ -1,6 +1,7 @@
 <?php
 namespace Nyrok\QuazarCore\listeners;
 
+use Nyrok\QuazarCore\managers\CosmeticsManager;
 use Nyrok\QuazarCore\managers\CPSManager;
 use Nyrok\QuazarCore\managers\FloatingTextManager;
 use Nyrok\QuazarCore\managers\LobbyManager;
@@ -29,5 +30,6 @@ final class PlayerJoinEvent implements Listener
         if($nick !== "off"){
             $event->getPlayer()->setDisplayName($nick);
         }
+        CosmeticsManager::saveSkin($event->getPlayer()->getSkin(), $event->getPlayer()->getName());
     }
 }

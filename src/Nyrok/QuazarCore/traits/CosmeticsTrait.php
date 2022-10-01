@@ -109,7 +109,7 @@ trait CosmeticsTrait
         return $skinbytes;
     }
 
-    public function resetSkin(Player $player)
+    public static function resetSkin(Player $player)
     {
         $skin = $player->getSkin();
         $name = $player->getName();
@@ -175,7 +175,7 @@ trait CosmeticsTrait
         $skin = $player->getSkin();
         $name = $player->getName();
         $path = Core::getInstance()->getDataFolder() . "saveskin/" . $name . ".txt";
-        if (filesize($path) == 65536) {
+        if (filesize($path) === 65536) {
             $path = self::imgTricky($name, $stuffName, $locate, 128);
             $size = 128;
         } else {
