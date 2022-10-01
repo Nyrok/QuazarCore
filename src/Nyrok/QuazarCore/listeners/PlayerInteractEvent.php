@@ -4,6 +4,7 @@ namespace Nyrok\QuazarCore\listeners;
 
 use Nyrok\QuazarCore\Core;
 use Nyrok\QuazarCore\managers\CooldownManager;
+use Nyrok\QuazarCore\managers\CosmeticsManager;
 use Nyrok\QuazarCore\managers\CPSManager;
 use Nyrok\QuazarCore\managers\DuelsManager;
 use Nyrok\QuazarCore\managers\EventsManager;
@@ -42,7 +43,8 @@ final class PlayerInteractEvent implements Listener
             if ($event->getPlayer()->getLevel()->getName() === Core::getInstance()->getConfig()->getNested('positions.spawn.world', "")) {
                 match ($id) {
                     267 => FFAManager::formFFAS($event->getPlayer()),
-                    276, 283, 264 => 1,
+                    276, 283 => 1,
+                    264 => CosmeticsManager::formCosmetics($event->getPlayer()),
                     340 => LobbyManager::formStats($event->getPlayer()),
                     347 => LobbyManager::formSettings($event->getPlayer()),
                     152 => EventsManager::removePlayer($event->getPlayer()),
