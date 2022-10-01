@@ -217,8 +217,8 @@ anti-timer: 15
 duels:
   §aNo Debuff:
     kit: duel-ndb
+    gamemode: 2
     arenas:
-      gamemode: 2
       ndb1:
         player1:
           x: 258
@@ -243,8 +243,8 @@ duels:
         blocks: []
   §cSoup:
     kit: duel-soup
+    gamemode: 2
     arenas:
-      gamemode: 2
       soup1:
         player1:
           x: 258
