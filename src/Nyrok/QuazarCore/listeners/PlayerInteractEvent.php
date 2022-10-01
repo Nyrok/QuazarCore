@@ -83,8 +83,8 @@ final class PlayerInteractEvent implements Listener
                 }
             }
 
-            if (!$duel?->started) {
-                if (!in_array($event->getBlock()->getId(), $duel->getArena()?->getBlocks())) {
+            if (!is_null($duel?->started)) {
+                if (!in_array($event->getBlock()->getId(), $duel?->getArena()?->getBlocks() ?? [])) {
                     $event->setCancelled(true);
                 }
             }
