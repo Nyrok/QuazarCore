@@ -24,7 +24,7 @@ abstract class ArenasManager
             }
         }
         foreach (Core::getInstance()->getConfig()->get('duels', []) as $name => $data) {
-            $mode = new Mode($name, KitManager::get($data['kit']) ?? array_values(KitManager::getAll())[0], $data["gamemode"]);
+            $mode = new Mode($name, KitManager::get($data['kit']) ?? array_values(KitManager::getAll())[0], $data["gamemode"] ?? GameMode::ADVENTURE);
             foreach ($data['arenas'] as $world => $arena) {
                 if (Server::getInstance()->loadLevel($world)) {
                     $mode->addArena(new Arena([
