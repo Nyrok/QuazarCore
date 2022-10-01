@@ -5,6 +5,7 @@ namespace Nyrok\QuazarCore\managers;
 use JetBrains\PhpStorm\Pure;
 use Nyrok\QuazarCore\Core;
 use Nyrok\QuazarCore\librairies\EasyUI\element\Button;
+use Nyrok\QuazarCore\librairies\EasyUI\icon\ButtonIcon;
 use Nyrok\QuazarCore\librairies\EasyUI\variant\SimpleForm;
 use Nyrok\QuazarCore\objects\FFA;
 use Nyrok\QuazarCore\utils\AntiSpamForm;
@@ -66,7 +67,7 @@ abstract class FFAManager
     public static function formFFAS(Player $player): void {
         $form = new SimpleForm("§m§a"."§fFFA");
         foreach (self::getAllFFAS() as $ffa){
-            $form->addButton(new Button($ffa->getName(), null, function (Player $player) use ($ffa): void {
+            $form->addButton(new Button($ffa->getName(), new ButtonIcon("textures/ui/sword"), function (Player $player) use ($ffa): void {
                 $ffa?->start($player);
             }));
         }
