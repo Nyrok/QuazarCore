@@ -80,7 +80,7 @@ class Core extends PluginBase
         ArenasManager::initArenas();
         CosmeticsManager::initCosmetics();
 
-        $this->getLogger()->warning("By @Nyrok10 on Twitter.");
+        $this->getLogger()->warning("By @Nyrok10 on Twitter and RemBog.");
     }
 
     public function onDisable(): void
