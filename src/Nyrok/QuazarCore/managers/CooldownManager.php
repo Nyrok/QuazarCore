@@ -19,7 +19,7 @@ abstract class CooldownManager
             $levels = [];
             foreach($cooldown['cooldown'] as $worldName => $worldCooldown){
                 $level = Server::getInstance()->getLevelByName($worldName);
-                $levels[$level->getName()] = $worldCooldown;
+                $levels[$level->getFolderName()] = $worldCooldown;
             }
             $class = new Cooldown($cooldown['name'], (int)$id, $levels);
             self::$cooldowns[$id] = $class;
