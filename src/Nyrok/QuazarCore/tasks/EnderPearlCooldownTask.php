@@ -34,7 +34,7 @@ final class EnderPearlCooldownTask extends Task
                 $this->progress -= 0.1;
             }
         } else {
-            $this->player->setXpLevel(0);
+            $this->player->setXpAndProgress(0, 0.0);
             Core::getInstance()->getScheduler()->cancelTask($this->getTaskId());
         }
     }
