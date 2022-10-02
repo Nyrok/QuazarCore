@@ -26,7 +26,7 @@ final class EnderPearlCooldownTask extends Task
     public function onRun(int $currentTick)
     {
         if ($this->cooldown->has($this->player)) {
-            if($this->progress === 0.0) {
+            if($this->progress <= 0) {
                 $this->player->setXpLevel($this->cooldown->get($this->player) - time());
                 $this->progress = 1.0;
             }else{
@@ -35,7 +35,7 @@ final class EnderPearlCooldownTask extends Task
             }
         } else {
             $this->player->setXpLevel(0);
-                $this->player->setXpProgress(0.0);
+            $this->player->setXpProgress(0.0);
             Core::getInstance()->getScheduler()->cancelTask($this->getTaskId());
         }
     }
