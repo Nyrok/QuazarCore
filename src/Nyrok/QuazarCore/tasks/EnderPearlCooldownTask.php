@@ -30,7 +30,8 @@ final class EnderPearlCooldownTask extends Task
                 $this->player->setXpLevel($this->cooldown->get($this->player) - time());
                 $this->progress = 1.0;
             }else{
-                $this->player->setXpAndProgress($this->progress);
+                $this->player->setXpLevel(0);
+                $this->player->setXpProgress(0.0);
                 $this->progress -= 0.1;
             }
         } else {
