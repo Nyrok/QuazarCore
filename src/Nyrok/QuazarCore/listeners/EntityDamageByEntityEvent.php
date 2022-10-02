@@ -10,7 +10,9 @@ use Nyrok\QuazarCore\utils\AntiSwitch;
 use pocketmine\block\BlockIds;
 use pocketmine\event\Listener;
 use pocketmine\event\entity\EntityDamageByEntityEvent as ClassEvent;
+use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\item\ItemIds;
+use pocketmine\entity\projectile\FishingHook;
 use pocketmine\Player;
 
 final class EntityDamageByEntityEvent implements Listener
@@ -24,6 +26,13 @@ final class EntityDamageByEntityEvent implements Listener
      * @priority HIGHEST
      */
     public function onEvent(ClassEvent $event){
+        if($event->getEntity() instanceof Player and $event->getDamager() instanceof FishingHook){
+            $event->cancel();
+            $kb = Core::getInstance()->getConfig()['utils']['rod']['kb'];
+            $event->getEntity()->attack(new ClassEvent($event->getDamager(), $event->getEntity(), EntityDamageEvent::CAUSE_ENTITY_ATTACK, 0, [], $kb));
+            if(Core::getInstance()->getConfig()['utils']['rod']['dispawn']) $event->getDamager()->flagForDespawn();
+        }
+        
         if($event->getEntity() instanceof Player and $event->getDamager() instanceof Player){
             if($event->getCause() === $event::CAUSE_PROJECTILE) return;
             if(AntiSwitch::isBlacklist($event->getDamager())) $event->setCancelled(true);
