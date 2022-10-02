@@ -7,6 +7,7 @@ use Nyrok\QuazarCore\managers\LobbyManager;
 use Nyrok\QuazarCore\managers\OpponentManager;
 use Nyrok\QuazarCore\managers\StaffManager;
 use Nyrok\QuazarCore\utils\AntiSwitch;
+use Nyrok\QuazarCore\Core;
 use pocketmine\block\BlockIds;
 use pocketmine\event\Listener;
 use pocketmine\event\entity\EntityDamageByEntityEvent as ClassEvent;
