@@ -150,6 +150,9 @@ utils:
     id: 353
     meta: 0
     heal: 2
+  rod:
+    kb: 0.4
+    dispawn: true
 
 messages:
   # {player} - Nom du joueur
