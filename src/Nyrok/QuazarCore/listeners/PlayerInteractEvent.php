@@ -63,7 +63,7 @@ final class PlayerInteractEvent implements Listener
                             $event->setCancelled(true);
                         } else {
                             $cooldown->set($event->getPlayer());
-                            Core::getInstance()->getScheduler()->scheduleRepeatingTask(new EnderPearlCooldownTask($cooldown, $event->getPlayer()), 2);
+                            Core::getInstance()->getScheduler()->scheduleRepeatingTask(new EnderPearlCooldownTask($cooldown, $event->getPlayer()), 1);
                         }
                     }
                 }
