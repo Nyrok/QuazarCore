@@ -18,8 +18,8 @@ abstract class CooldownManager
         foreach (Core::getInstance()->getConfig()->getNested("cooldowns") as $id => $cooldown){
             $levels = [];
             foreach($cooldown['cooldown'] as $worldName => $worldCooldown){
-                $level = Server::getInstance()->getLevelByName($worldName);
-                $levels[$level->getFolderName()] = $worldCooldown;
+                //$level = Server::getInstance()->getLevelByName($worldName);
+                $levels[$worldName] = $worldCooldown;
             }
             $class = new Cooldown($cooldown['name'], (int)$id, $levels);
             self::$cooldowns[$id] = $class;
