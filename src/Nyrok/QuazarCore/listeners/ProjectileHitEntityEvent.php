@@ -15,7 +15,7 @@ final class ProjectileHitEntityEvent implements Listener
      * @param ClassEvent $event
      */
     public function onEvent(ClassEvent $event){
-        // if($event->getEntity()->getLevel()->getName() !== $event->getEntityHit()->getLevel()->getName()) $event->setCancelled(true);;
+        // if($event->getEntity()->getLevel()->getName() !== $event->getEntityHit()->getLevel()->getName()) $event->setCancelled(true);
         if($event->getEntity() instanceof EnderPearl){
             $motion = $event->getEntityHit()->getMotion();
             $motion->x += Core::getInstance()->getConfig()->getNested("utils.enderpearl.kb.x", 0);
