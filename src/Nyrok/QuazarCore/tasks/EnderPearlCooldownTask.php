@@ -10,7 +10,7 @@ use Nyrok\QuazarCore\objects\Cooldown;
 
 final class EnderPearlCooldownTask extends Task
 {
-    private float $progress = 1.0;
+    private float $progress = 0.0;
     
     /**
      * @param Cooldown $cooldown
@@ -26,16 +26,16 @@ final class EnderPearlCooldownTask extends Task
     public function onRun(int $currentTick)
     {
         if ($this->cooldown->has($this->player)) {
-            if($currentTick === 20) {
+            if($this->progress === 0.0) {
                 $this->player->setXpLevel($this->cooldown->get($this->player) - time());
                 $this->progress = 1.0;
             }else{
-                $this->player->setXpLevel(0);
-                $this->player->setXpProgress(0.0);
+                $this->player->setXpProgress($this->progress);
                 $this->progress -= 0.1;
             }
         } else {
-            $this->player->setXpAndProgress(0, 0.0);
+            $this->player->setXpLevel(0);
+                $this->player->setXpProgress(0.0);
             Core::getInstance()->getScheduler()->cancelTask($this->getTaskId());
         }
     }
