@@ -133,13 +133,20 @@ abstract class KitsManager
                     $item->getNamedTag()->getByte("reset", 0) !== 1 and
                     !in_array($slot, [47, 48, 50, 51]);
             }, ARRAY_FILTER_USE_BOTH));
-            $kits[$name]["armor"] = json_encode(array_values(
-                array_filter($inventory->getContents(), function ($item, $slot) {
+            $base_armor = [
+                47 => Item::get(0),
+                48 => Item::get(0),
+                50 => Item::get(0),
+                51 => Item::get(0),
+            ];
+            $current_armor = array_filter($inventory->getContents(), function ($item, $slot) {
                     return $item->getNamedTag()->getByte("immobile", 0) !== 1 and
                         $item->getNamedTag()->getByte("reset", 0) !== 1 and
                         in_array($slot, [47, 48, 50, 51]);
-                }, ARRAY_FILTER_USE_BOTH)
-            ));
+                }, ARRAY_FILTER_USE_BOTH);
+            $armor = $base_armor + $current_armor;
+            ksort($armor);
+            $kits[$name]["armor"] = json_encode(array_values($armor));
             PlayerProvider::toQuazarPlayer($player)->setData("kits", $kits, false, PlayerProvider::TYPE_ARRAY);
             LobbyManager::load($player);
         });
