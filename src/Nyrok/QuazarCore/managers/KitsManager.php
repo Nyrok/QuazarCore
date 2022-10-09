@@ -144,9 +144,10 @@ abstract class KitsManager
                         $item->getNamedTag()->getByte("reset", 0) !== 1 and
                         in_array($slot, [47, 48, 50, 51]);
                 }, ARRAY_FILTER_USE_BOTH);
-            $armor = $base_armor + $current_armor;
+            $armor = $current_armor + $base_armor;
             ksort($armor);
             $kits[$name]["armor"] = json_encode(array_values($armor));
+            var_dump(json_encode(array_values($armor)));
             PlayerProvider::toQuazarPlayer($player)->setData("kits", $kits, false, PlayerProvider::TYPE_ARRAY);
             LobbyManager::load($player);
         });
