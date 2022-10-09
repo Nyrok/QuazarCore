@@ -90,6 +90,7 @@ abstract class KitsManager
                 case 48:
                 case 50:
                 case 51:
+                case 53:
                     break;
                 default:
                     $item = ItemFactory::get(BlockIds::STAINED_GLASS_PANE, 15);
@@ -99,6 +100,7 @@ abstract class KitsManager
                     break;
             }
         }
+        $menu->getInventory()->setItem(53, ItemFactory::get(BlockIds::INVISIBLE_BEDROCK, 0)->setCustomName("§cRéinitialiser"));
         $menu->setListener(function (InvMenuTransaction $invMenuTransaction){
             if($invMenuTransaction->getItemClicked()->getNamedTag()->hasTag("immobile", ByteTag::class)){
                 return new InvMenuTransactionResult(true);

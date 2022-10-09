@@ -10,7 +10,7 @@ use Nyrok\QuazarCore\managers\OpponentManager;
 use Nyrok\QuazarCore\managers\CooldownManager;
 use Nyrok\QuazarCore\providers\LanguageProvider;
 use Nyrok\QuazarCore\providers\PlayerProvider;
-use Nyrok\QuazarCore\utils\AntiGlitchPerl;
+use Nyrok\QuazarCore\utils\AntiGlitchPearl;
 use Nyrok\QuazarCore\utils\PlayerUtils;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\event\Listener;
@@ -54,10 +54,10 @@ final class PlayerDeathEvent implements Listener
         $event->setDrops([]);
         $event->setDeathMessage("");
         FloatingTextManager::update();
-        AntiGlitchPerl::blacklist($player);
+        AntiGlitchPearl::blacklist($player);
         CooldownManager::resetPlayerCooldown($player);
         Core::getInstance()->getScheduler()->scheduleDelayedTask(new ClosureTask(function (int $currentTick) use ($event): void {
-            AntiGlitchPerl::unblacklist($event->getPlayer());
+            AntiGlitchPearl::unblacklist($event->getPlayer());
         }), 80);
     }
 
