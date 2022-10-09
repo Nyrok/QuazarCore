@@ -9,6 +9,7 @@ use Nyrok\QuazarCore\managers\CPSManager;
 use Nyrok\QuazarCore\managers\DuelsManager;
 use Nyrok\QuazarCore\managers\EventsManager;
 use Nyrok\QuazarCore\managers\FFAManager;
+use Nyrok\QuazarCore\managers\KitsManager;
 use Nyrok\QuazarCore\managers\LobbyManager;
 use Nyrok\QuazarCore\managers\SoupManager;
 use Nyrok\QuazarCore\managers\StaffManager;
@@ -44,7 +45,7 @@ final class PlayerInteractEvent implements Listener
                 match ($id) {
                     267 => FFAManager::formFFAS($event->getPlayer()),
                     276 => 1,
-                    54 => 1,
+                    54 => KitsManager::formKits($event->getPlayer()),
                     264 => CosmeticsManager::formCosmetics($event->getPlayer()),
                     340 => LobbyManager::formStats($event->getPlayer()),
                     347 => LobbyManager::formSettings($event->getPlayer()),
