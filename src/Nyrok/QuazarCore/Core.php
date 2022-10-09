@@ -5,6 +5,7 @@ use jacknoordhuis\combatlogger\CombatLogger;
 use Nyrok\QuazarCore\databases\MuteListDatabase;
 use Nyrok\QuazarCore\databases\SanctionsDatabase;
 use Nyrok\QuazarCore\databases\UserDatabase;
+use Nyrok\QuazarCore\librairies\muqsit\invmenu\InvMenuHandler;
 use Nyrok\QuazarCore\managers\ArenasManager;
 use Nyrok\QuazarCore\managers\CommandsManager;
 use Nyrok\QuazarCore\managers\CooldownManager;
@@ -79,6 +80,8 @@ class Core extends PluginBase
         TimeManager::initTime();
         ArenasManager::initArenas();
         CosmeticsManager::initCosmetics();
+
+        if(!InvMenuHandler::isRegistered()) InvMenuHandler::register($this);
 
         $this->getLogger()->warning("By @Nyrok10 on Twitter.");
     }
