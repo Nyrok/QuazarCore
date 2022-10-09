@@ -43,7 +43,8 @@ final class PlayerInteractEvent implements Listener
             if ($event->getPlayer()->getLevel()->getName() === Core::getInstance()->getConfig()->getNested('positions.spawn.world', "")) {
                 match ($id) {
                     267 => FFAManager::formFFAS($event->getPlayer()),
-                    276, 283 => 1,
+                    276 => 1,
+                    54 => 1,
                     264 => CosmeticsManager::formCosmetics($event->getPlayer()),
                     340 => LobbyManager::formStats($event->getPlayer()),
                     347 => LobbyManager::formSettings($event->getPlayer()),
