@@ -12,7 +12,8 @@ final class PlayerProvider
 {
     public const TYPE_INT = "int";
     public const TYPE_STRING = "string";
-    const TYPE_BOOL = "bool";
+    public const TYPE_BOOL = "bool";
+    public const TYPE_ARRAY = "array";
 
     /**
      * @param Player $player
@@ -26,7 +27,7 @@ final class PlayerProvider
     /**
      * @param Player $player
      */
-    public function __construct(private Player $player)
+    public function __construct(public Player $player)
     {
     }
 
@@ -73,6 +74,7 @@ final class PlayerProvider
             self::TYPE_INT => Core::getInstance()->getData()->setNested($this->player?->getUniqueId()?->toString().".$key", ($add ? ($this->getData()[$key] ?? 0) : 0) + $value),
             self::TYPE_STRING => Core::getInstance()->getData()->setNested($this->player?->getUniqueId()?->toString().".$key", ($add ? ($this->getData()[$key] ?? "") : "") . $value),
             self::TYPE_BOOL => Core::getInstance()->getData()->setNested($this->player?->getUniqueId()?->toString().".$key", $value),
+            self::TYPE_ARRAY => Core::getInstance()->getData()->setNested($this->player?->getUniqueId()?->toString().".$key", ($add ? ($this->getData()[$key] ?? []) : []) + $value),
         };
         Core::getInstance()->getData()->save();
         return $this;

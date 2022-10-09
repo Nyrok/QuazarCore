@@ -3,6 +3,7 @@ namespace Nyrok\QuazarCore\utils;
 
 use Nyrok\QuazarCore\Core;
 use Nyrok\QuazarCore\managers\FFAManager;
+use Nyrok\QuazarCore\managers\KitsManager;
 use Nyrok\QuazarCore\managers\LobbyManager;
 use Nyrok\QuazarCore\providers\LanguageProvider;
 use Nyrok\QuazarCore\providers\PlayerProvider;
@@ -59,7 +60,8 @@ abstract class PlayerUtils
     public static function rekit(Player $player): void {
         if(array_key_exists($player->getLevel()->getName(), Core::getInstance()->getConfig()->get('ffas'))){
             $ffa = FFAManager::worldToFFA($player->getLevel()->getName());
-            $ffa->getKit()->claimFor($player);
+            $kit = KitsManager::getKit($player, $ffa->getKit()->getName()) ?? $ffa->getKit();
+            $kit?->claimFor($player);
         }
     }
 

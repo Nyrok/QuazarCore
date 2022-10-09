@@ -3,6 +3,7 @@ namespace Nyrok\QuazarCore\objects;
 
 use AndreasHGK\EasyKits\Kit;
 use AndreasHGK\EasyKits\manager\KitManager;
+use Nyrok\QuazarCore\managers\KitsManager;
 use pocketmine\level\Level;
 use pocketmine\level\Position;
 use pocketmine\Player;
@@ -91,6 +92,7 @@ final class FFA
         $player->getArmorInventory()->clearAll();
         $player->teleport(new Position($this->getRandomX(), $this->getY(), $this->getRandomZ(), $this->getLevel()));
         $player->setGamemode(Player::ADVENTURE);
-        $this->getKit()?->claimFor($player);
+        $kit = KitsManager::getKit($player, $this->getKit()->getName()) ?? $this->getKit();
+        $kit?->claimFor($player);
     }
 }
