@@ -11,6 +11,9 @@ use Nyrok\QuazarCore\librairies\muqsit\invmenu\MenuIds;
 use Nyrok\QuazarCore\librairies\muqsit\invmenu\transaction\InvMenuTransaction;
 use Nyrok\QuazarCore\librairies\muqsit\invmenu\transaction\InvMenuTransactionResult;
 use Nyrok\QuazarCore\providers\PlayerProvider;
+use pocketmine\block\BlockIds;
+use pocketmine\item\ItemFactory;
+use pocketmine\nbt\tag\ByteTag;
 use pocketmine\Player;
 
 abstract class KitsManager
@@ -56,30 +59,30 @@ abstract class KitsManager
         for($i = 36; $i < 54; $i++) {
             switch($i) {
                 case 42:
-                    $item = ItemFactory::get(Item::STAINED_GLASS_PANE, 14);
+                    $item = ItemFactory::get(BlockIds::STAINED_GLASS_PANE, 14);
                     $item->setCustomName("Bloqué");
-                    $item->setNamedTagEntry(new ByteTag("immovable", 1));
+                    $item->setNamedTagEntry(new ByteTag("immobile", 1));
                     $item->setLore(["Casque"]);
                     $menu->getInventory()->setItem($i, $item);
                     break;
                 case 41:
-                    $item = ItemFactory::get(Item::STAINED_GLASS_PANE, 14);
+                    $item = ItemFactory::get(BlockIds::STAINED_GLASS_PANE, 14);
                     $item->setCustomName("Bloqué");
-                    $item->setNamedTagEntry(new ByteTag("immovable", 1));
+                    $item->setNamedTagEntry(new ByteTag("immobile", 1));
                     $item->setLore(["Plastron"]);
                     $menu->getInventory()->setItem($i, $item);
                     break;
                 case 39:
-                    $item = ItemFactory::get(Item::STAINED_GLASS_PANE, 14);
+                    $item = ItemFactory::get(BlockIds::STAINED_GLASS_PANE, 14);
                     $item->setCustomName("Bloqué");
-                    $item->setNamedTagEntry(new ByteTag("immovable", 1));
+                    $item->setNamedTagEntry(new ByteTag("immobile", 1));
                     $item->setLore(["Jambières"]);
                     $menu->getInventory()->setItem($i, $item);
                     break;
                 case 38:
-                    $item = ItemFactory::get(Item::STAINED_GLASS_PANE, 14);
+                    $item = ItemFactory::get(BlockIds::STAINED_GLASS_PANE, 14);
                     $item->setCustomName("Bloqué");
-                    $item->setNamedTagEntry(new ByteTag("immovable", 1));
+                    $item->setNamedTagEntry(new ByteTag("immobile", 1));
                     $item->setLore(["Bottes"]);
                     $menu->getInventory()->setItem($i, $item);
                     break;
@@ -89,15 +92,15 @@ abstract class KitsManager
                 case 51:
                     break;
                 default:
-                    $item = ItemFactory::get(Item::STAINED_GLASS_PANE, 15);
+                    $item = ItemFactory::get(BlockIds::STAINED_GLASS_PANE, 15);
                     $item->setCustomName("Bloqué");
-                    $item->setNamedTagEntry(new ByteTag("immovable", 1));
+                    $item->setNamedTagEntry(new ByteTag("immobile", 1));
                     $menu->getInventory()->setItem($i, $item);
                     break;
             }
         }
         $menu->setListener(function (InvMenuTransaction $invMenuTransaction){
-            if($invMenuTransaction->getItemClicked()->getNamedTag()->hasTag("immovable", ByteTag::class)){
+            if($invMenuTransaction->getItemClicked()->getNamedTag()->hasTag("immobile", ByteTag::class)){
                 return new InvMenuTransactionResult(true);
             }
             return new InvMenuTransactionResult(false);
