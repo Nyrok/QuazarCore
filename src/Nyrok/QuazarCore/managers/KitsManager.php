@@ -8,6 +8,8 @@ use Nyrok\QuazarCore\librairies\EasyUI\element\Button;
 use Nyrok\QuazarCore\librairies\EasyUI\variant\SimpleForm;
 use Nyrok\QuazarCore\librairies\muqsit\invmenu\InvMenu;
 use Nyrok\QuazarCore\librairies\muqsit\invmenu\MenuIds;
+use Nyrok\QuazarCore\librairies\muqsit\invmenu\transaction\InvMenuTransaction;
+use Nyrok\QuazarCore\librairies\muqsit\invmenu\transaction\InvMenuTransactionResult;
 use Nyrok\QuazarCore\providers\PlayerProvider;
 use pocketmine\Player;
 
@@ -30,7 +32,7 @@ abstract class KitsManager
                 "§cKit: ".$FFA->getName(),
                 null, // new ButtonIcon("", ButtonIcon::TYPE_PATH),
                 function (Player $player) use ($FFA) {
-                    $this->editKit($player, $FFA->getKit()->getName());
+                    self::editKit($player, $FFA->getKit()->getName());
                 }
             ));
         }
@@ -94,8 +96,11 @@ abstract class KitsManager
                     break;
             }
         }
-        $menu->setListener(function (){
-
+        $menu->setListener(function (InvMenuTransaction $invMenuTransaction){
+            if($invMenuTransaction->getItemClicked()->getNamedTag()->hasTag("immovable", ByteTag::class)){
+                return new InvMenuTransactionResult(true);
+            }
+            return new InvMenuTransactionResult(false);
         });
         $menu->send($player);
     }
