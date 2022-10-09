@@ -33,12 +33,12 @@ abstract class LobbyManager
         Core::getInstance()->getLogger()->notice("[LOBBY] Item: FFA Loaded");
         self::$items[1] = Item::get(276)->setCustomName("Duel Unranked");
         Core::getInstance()->getLogger()->notice("[LOBBY] Item: Duel Unranked Loaded");
-        self::$items[2] = Item::get(BlockIds::CHEST)->setCustomName("Kit Editor");
-        Core::getInstance()->getLogger()->notice("[LOBBY] Item: Kit Editor Loaded");
         self::$items[4] = Item::get(264)->setCustomName("Cosmetic");
         Core::getInstance()->getLogger()->notice("[LOBBY] Item: Cosmetic Loaded");
         self::$items[6] = Item::get(340)->setCustomName("Statistic");
         Core::getInstance()->getLogger()->notice("[LOBBY] Item: Statistic Loaded");
+        self::$items[7] = Item::get(54)->setCustomName("Kit Editor");
+        Core::getInstance()->getLogger()->notice("[LOBBY] Item: Kit Editor Loaded");
         self::$items[8] = Item::get(347)->setCustomName("Settings");
         Core::getInstance()->getLogger()->notice("[LOBBY] Item: Settings Loaded");
 
