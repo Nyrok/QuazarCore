@@ -23,8 +23,10 @@ abstract class ArenasManager
                 Core::getInstance()->getServer()->removeLevel($level);
             }
         }
+        Core::getInstance()->getLogger()->notice("[DUELS] Loading Modes and Arenas..");
         foreach (Core::getInstance()->getConfig()->get('duels', []) as $name => $data) {
             $mode = new Mode($name, KitManager::get($data['kit']) ?? array_values(KitManager::getAll())[0], $data["gamemode"] ?? GameMode::ADVENTURE);
+            Core::getInstance()->getLogger()->notice("[MODES] Loading Mode: $name");
             foreach ($data['arenas'] as $world => $arena) {
                 if (Server::getInstance()->loadLevel($world)) {
                     $mode->addArena(new Arena([
@@ -33,9 +35,14 @@ abstract class ArenasManager
                         Server::getInstance()->getLevelByName($world),
                         $arena['blocks'] ?? [],
                     ));
+                    Core::getInstance()->getLogger()->notice("[ARENAS] Arena $world added to mode: $name");
+                }
+                else {
+                    Core::getInstance()->getLogger()->warning("[ARENAS] Arena $world doesn't exist");
                 }
             }
             self::$modes[] = $mode;
+            Core::getInstance()->getLogger()->notice("[MODES] Mode $name Loaded.");
         }
     }
 

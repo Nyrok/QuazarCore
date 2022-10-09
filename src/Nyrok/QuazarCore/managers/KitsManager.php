@@ -147,7 +147,6 @@ abstract class KitsManager
             $armor = $current_armor + $base_armor;
             ksort($armor);
             $kits[$name]["armor"] = json_encode(array_values($armor));
-            var_dump(json_encode(array_values($armor)));
             PlayerProvider::toQuazarPlayer($player)->setData("kits", $kits, false, PlayerProvider::TYPE_ARRAY);
             LobbyManager::load($player);
         });
