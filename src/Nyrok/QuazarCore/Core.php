@@ -83,7 +83,7 @@ class Core extends PluginBase
 
         if(!InvMenuHandler::isRegistered()) InvMenuHandler::register($this);
 
-        $this->getLogger()->warning("By @Nyrok10 on Twitter.");
+        $this->getLogger()->warning("By @Nyrok10 on Twitter and RemBog.");
     }
 
     public function onDisable(): void
