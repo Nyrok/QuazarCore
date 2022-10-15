@@ -23,8 +23,9 @@ abstract class CooldownManager
             foreach(Server::getInstance()->getLevels() as $serverLevel) {
                 $levelName = $serverLevel->getName();
                 
-                if(!isset($cooldown['cooldown'][$levelName])) {
+                if(!array_key_exists($levelName, $cooldown['cooldown'])) {
                     $config->setNested("cooldowns.".$id.".cooldown.".$levelName, 0);
+                    $config->save();
                 }
                 
                 $levelCooldown = $config->getNested("cooldowns.".$id.".cooldown.".$levelName);
