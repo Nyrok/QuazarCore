@@ -15,12 +15,22 @@ abstract class CooldownManager
     public static array $cooldowns = [];
 
     public static function initCooldowns(): void {
-        foreach (Core::getInstance()->getConfig()->getNested("cooldowns") as $id => $cooldown){
+        $config = Core::getInstance()->getConfig();
+        
+        foreach ($config->getNested("cooldowns") as $id => $cooldown){
             $levels = [];
-            foreach($cooldown['cooldown'] as $worldName => $worldCooldown){
-                //$level = Server::getInstance()->getLevelByName($worldName);
-                $levels[$worldName] = $worldCooldown;
+            
+            foreach(Server::getInstance()->getLevels() as $serverLevel) {
+                $levelName = $serverLevel->getName();
+                
+                if(!isset($cooldown['cooldown'][$levelName])) {
+                    $config->setNested("cooldowns.".$id.".cooldown.".$levelName, 0);
+                }
+                
+                $levelCooldown = $config->getNested("cooldowns.".$id.".cooldown.".$levelName);
+                $levels[$levelName] = $levelCooldown;
             }
+            
             $class = new Cooldown($cooldown['name'], (int)$id, $levels);
             self::$cooldowns[$id] = $class;
             Core::getInstance()->getLogger()->notice("[COOLDOWNS] Cooldown: ({$class->getName()}) ".$class->getItem()->getVanillaName()." seconds Loaded");
