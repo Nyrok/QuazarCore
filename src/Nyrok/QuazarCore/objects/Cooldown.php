@@ -1,60 +1,102 @@
 <?php
 
-namespace Nyrok\QuazarCore\managers;
+namespace Nyrok\QuazarCore\objects;
 
-use Nyrok\QuazarCore\Core;
-use Nyrok\QuazarCore\objects\Cooldown;
+use JetBrains\PhpStorm\Pure;
+use pocketmine\item\Item;
+use pocketmine\item\ItemFactory;
 use pocketmine\Player;
-use pocketmine\Server;
+use pocketmine\level\Level;
 
-abstract class CooldownManager
+final class Cooldown
 {
     /**
-     * @var Cooldown[]
+     * @var array
      */
-    public static array $cooldowns = [];
+    public array $cooldowns = [];
 
-    public static function initCooldowns(): void {
-        $config = Core::getInstance()->getConfig();
-        
-        foreach ($config->getNested("cooldowns") as $id => $cooldown){
-            $levels = [];
-            
-            foreach(Server::getInstance()->getLevels() as $serverLevel) {
-                $levelName = $serverLevel->getName();
-                
-                if(!array_key_exists($levelName, $cooldown['cooldown'])) {
-                    $config->setNested("cooldowns.".$id.".cooldown.".$levelName, 0);
-                    $config->save();
-                }
-                
-                $levelCooldown = $config->getNested("cooldowns.".$id.".cooldown.".$levelName);
-                $levels[$levelName] = $levelCooldown;
-            }
-            
-            $class = new Cooldown($cooldown['name'], (int)$id, $levels);
-            self::$cooldowns[$id] = $class;
-            Core::getInstance()->getLogger()->notice("[COOLDOWNS] Cooldown: ({$class->getName()}) ".$class->getItem()->getVanillaName()." seconds Loaded");
-        }
+    /**
+     * @param string $name
+     * @param int $id
+     * @param array $levels
+     */
+    public function __construct(private string $name, private int $id, private array $levels)
+    {
+    }
+
+    /**
+     * @return string
+     */
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    /**
+     * @return int
+     */
+    public function getId(): int
+    {
+        return $this->id;
     }
 
     /**
      * @return array
      */
-    public static function getCooldowns(): array
+    public function getLevels(): array
     {
-        return self::$cooldowns;
+        return $this->levels;
     }
-    
+
+    /**
+     * @param Level $level
+     * @return int
+     */
+    #[Pure] public function getCooldown(Level $level): int
+    {
+        return $this->levels[$level->getName()];
+    }
+
+    /**
+     * @return Item|null
+     */
+    public function getItem(): ?Item
+    {
+        return new Item($this->getId(), 0, ItemFactory::get($this->getId())->getVanillaName()) ?? null;
+    }
+
     /**
      * @param Player $player
      * @return void
      */
-    public static function resetPlayerCooldown(Player $player): void
+    public function resetCooldown(Player $player): void
     {
-        foreach (self::getCooldowns() as $cooldown){
-            $cooldown->resetCooldown($player);
-        }
+        $this->cooldowns[$player->getName()] = 0;
     }
 
+    /**
+     * @param Player $player
+     * @return bool
+     */
+    public function has(Player $player): bool
+    {
+        return ($this->cooldowns[$player->getName()] ?? 0) > time();
+    }
+
+    /**
+     * @param Player $player
+     */
+    public function set(Player $player): void
+    {
+        $this->cooldowns[$player->getName()] = time() + $this->getCooldown($player->getLevel());
+    }
+
+    /**
+     * @param Player $player
+     * @return int
+     */
+    #[Pure] public function get(Player $player): int
+    {
+        return $this->cooldowns[$player->getName()] ?? 0;
+    }
 }
