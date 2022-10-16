@@ -13,10 +13,8 @@ use Nyrok\QuazarCore\providers\LanguageProvider;
 use Nyrok\QuazarCore\providers\PlayerProvider;
 use Nyrok\QuazarCore\utils\AntiSpamForm;
 use Nyrok\QuazarCore\utils\PlayerUtils;
-use pocketmine\block\BlockIds;
 use pocketmine\item\Durable;
 use pocketmine\item\Item;
-use pocketmine\item\ItemIds;
 use pocketmine\level\Position;
 use pocketmine\Player;
 use pocketmine\Server;
@@ -85,8 +83,14 @@ abstract class LobbyManager
      * @param Player $player
      */
     public static function formStats(Player $player): void {
-        $form = new SimpleForm("§m§c"."§fStats");
-        $form->setHeaderText(PlayerUtils::getStats(PlayerProvider::toQuazarPlayer($player), false));
+        $form = new SimpleForm("§m§b"."§fStats");
+        $stats = "";
+        $text = explode("\n", PlayerUtils::getStats(PlayerProvider::toQuazarPlayer($player), false));
+        unset($text[1]);
+        foreach ($text as $t) {
+            $stats .= "                             $t\n";
+        }
+        $form->setHeaderText($stats);
         AntiSpamForm::sendForm($player, $form);
     }
 
