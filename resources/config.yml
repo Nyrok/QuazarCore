@@ -1,6 +1,7 @@
 prefix: "§4[§cQuazar§4] "
 
 elo:
+  coefficient: 50
   default: 1000
 
 ffas:

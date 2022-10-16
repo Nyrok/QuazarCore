@@ -12,6 +12,7 @@ use Nyrok\QuazarCore\providers\LanguageProvider;
 use Nyrok\QuazarCore\providers\PlayerProvider;
 use Nyrok\QuazarCore\utils\AntiGlitchPearl;
 use Nyrok\QuazarCore\utils\PlayerUtils;
+use Nyrok\QuazarCore\managers\EloManager;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerDeathEvent as ClassEvent;
@@ -28,13 +29,18 @@ final class PlayerDeathEvent implements Listener
     public function onEvent(ClassEvent $event)
     {
         // KILL
+        $player = $event->getPlayer();
         if (($cause = $event->getPlayer()->getLastDamageCause()) instanceof EntityDamageByEntityEvent and ($killer = $cause->getDamager()) instanceof Player) {
-            $player = $event->getPlayer();
             if (str_starts_with($player->getLevel()->getName(), "duel.")) {
                 LobbyManager::load($killer);
                 PlayerUtils::teleportToSpawn($killer);
                 $player->getServer()->removeLevel($player->getLevel());
             }
+            $elo = EloManager::calculateElo(PlayerProvider::toQuazarPlayer($event->getPlayer())->getElo(), PlayerProvider::toQuazarPlayer($killer)->getElo());
+            PlayerProvider::toQuazarPlayer($event->getPlayer())->setData("elo", -$elo, true)->updateRank();
+            PlayerProvider::toQuazarPlayer($killer)->setData("elo", $elo, true)->updateRank();
+            $event->getPlayer()->sendMessage(str_replace("{elo}", $elo, LanguageProvider::getLanguageMessage("messages.elo.lost", PlayerProvider::toQuazarPlayer($event->getPlayer()), true)));
+            $killer->sendMessage(str_replace("{elo}", $elo, LanguageProvider::getLanguageMessage("messages.elo.gain", PlayerProvider::toQuazarPlayer($killer), true)));
             PlayerProvider::toQuazarPlayer($killer)->setData('kills', 1, true)->updateKDR();
             PlayerProvider::toQuazarPlayer($killer)->setData('killstreak', 1, true);
             OpponentManager::setOpponent($killer, null);

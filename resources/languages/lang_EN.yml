@@ -41,6 +41,14 @@ messages:
     kick: "You have been kicked for having a high CPS."
     broadcast: "{player} has been kicked for having a high CPS."
 
+  duels:
+    countdown: "Duel is starting in {countdown}"
+
+  elo:
+    # {elo} Elo
+    gain: "§b+{elo} Elo"
+    lost: "§9-{elo} Elo"
+
   success:
     sanctions-removed: "Sanction has been removed"
     mute: "You have muted {player} until {time} for {reason}" # {player}, {time}, {reason}

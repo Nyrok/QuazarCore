@@ -44,6 +44,11 @@ messages:
   duels:
     countdown: "Le duel commence dans {countdown}"
 
+  elo:
+    # {elo} Elo
+    gain: "§b+{elo} Elo"
+    lost: "§9-{elo} Elo"
+
   success:
     duel-request: "Vous avez reçu une demande de duel en {mode} de la part de {host}"
     duel-accepted-opponent: "Vous avez accepté la demande de duel de {host} !"
