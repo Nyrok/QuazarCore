@@ -9,11 +9,15 @@ use pocketmine\event\Listener;
 use pocketmine\event\server\DataPacketReceiveEvent as ClassEvent;
 use pocketmine\network\mcpe\protocol\LevelSoundEventPacket;
 use pocketmine\network\mcpe\protocol\LoginPacket;
+use pocketmine\network\mcpe\protocol\PlayerAuthInputPacket;
 use pocketmine\scheduler\ClosureTask;
 
 final class DataPacketReceiveEvent implements Listener
 {
     const NAME = "DataPacketReceiveEvent";
+
+    private array $lastTime = [];
+    private array $balance = [];
 
     /**
      * @param ClassEvent $event
@@ -49,6 +53,28 @@ final class DataPacketReceiveEvent implements Listener
                     }, false, PlayerProvider::TYPE_STRING);
                 }));
                 break;
+            case $pk instanceof PlayerAuthInputPacket:
+                if (!$event->getPlayer()->isAlive()) {
+                    $this->lastTime[$event->getPlayer()->getName()] = null;
+                    $this->balance[$event->getPlayer()->getName()] = 0;
+                    return;
+                }
+                $currentTime = microtime(true) * 1000;
+                if (isset($this->lastTime[$event->getPlayer()->getName()]) and $this->lastTime[$event->getPlayer()->getName()] !== null) {
+                    $this->lastTime[$event->getPlayer()->getName()] = $currentTime;
+                    return;
+                }
+                // convert the time difference into ticks (round this value to detect lower timer values).
+                $timeDiff = round(($currentTime - $this->lastTime[$event->getPlayer()->getName()]) / 50, 2);
+                // there should be a one tick difference between the two packets
+                $this->balance[$event->getPlayer()->getName()] -= 1;
+                // add the time difference between the two packet (this should be near one tick - which evens out the subtraction of one)
+                $this->balance[$event->getPlayer()->getName()] += $timeDiff;
+                // if the balance is too low (the time difference is usually less than one tick)
+                if ($this->balance[$event->getPlayer()->getName()] <= -5) {
+                    $this->balance[$event->getPlayer()->getName()] = 0;
+                }
+                $this->lastTime[$event->getPlayer()->getName()] = $currentTime;
         }
     }
 }
