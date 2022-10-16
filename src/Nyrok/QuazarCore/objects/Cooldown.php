@@ -54,7 +54,7 @@ final class Cooldown
      */
     #[Pure] public function getCooldown(Level $level): int
     {
-        return $this->levels[$level->getName()];
+        return $this->levels[$level->getName()] ?? 0;
     }
 
     /**

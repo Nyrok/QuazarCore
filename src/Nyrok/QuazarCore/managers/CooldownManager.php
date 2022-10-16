@@ -18,21 +18,7 @@ abstract class CooldownManager
         $config = Core::getInstance()->getConfig();
         
         foreach ($config->getNested("cooldowns") as $id => $cooldown){
-            $levels = [];
-            
-            foreach(Server::getInstance()->getLevels() as $serverLevel) {
-                $levelName = $serverLevel->getName();
-                
-                if(!array_key_exists($levelName, $cooldown['cooldown'])) {
-                    $config->setNested("cooldowns.".$id.".cooldown.".$levelName, 0);
-                    $config->save();
-                }
-                
-                $levelCooldown = $config->getNested("cooldowns.".$id.".cooldown.".$levelName);
-                $levels[$levelName] = $levelCooldown;
-            }
-            
-            $class = new Cooldown($cooldown['name'], (int)$id, $levels);
+            $class = new Cooldown($cooldown['name'], (int)$id, $cooldown["levels"]);
             self::$cooldowns[$id] = $class;
             Core::getInstance()->getLogger()->notice("[COOLDOWNS] Cooldown: ({$class->getName()}) ".$class->getItem()->getVanillaName()." seconds Loaded");
         }
