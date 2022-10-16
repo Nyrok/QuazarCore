@@ -72,6 +72,7 @@ final class DataPacketReceiveEvent implements Listener
                 $this->balance[$event->getPlayer()->getName()] += $timeDiff;
                 // if the balance is too low (the time difference is usually less than one tick)
                 if ($this->balance[$event->getPlayer()->getName()] <= -5) {
+                    
                     $this->balance[$event->getPlayer()->getName()] = 0;
                 }
                 $this->lastTime[$event->getPlayer()->getName()] = $currentTime;
