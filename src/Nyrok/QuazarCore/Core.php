@@ -17,6 +17,7 @@ use Nyrok\QuazarCore\managers\ListenersManager;
 use Nyrok\QuazarCore\managers\LanguageManager;
 use Nyrok\QuazarCore\databases\ConfigDatabase;
 use Nyrok\QuazarCore\managers\LobbyManager;
+use Nyrok\QuazarCore\managers\RanksManager;
 use Nyrok\QuazarCore\managers\ScoreBoardManager;
 use Nyrok\QuazarCore\managers\SoupManager;
 use Nyrok\QuazarCore\managers\StaffManager;
@@ -80,6 +81,7 @@ class Core extends PluginBase
         TimeManager::initTime();
         ArenasManager::initArenas();
         CosmeticsManager::initCosmetics();
+        RanksManager::initRanks();
 
         if(!InvMenuHandler::isRegistered()) InvMenuHandler::register($this);
 
@@ -127,5 +129,4 @@ class Core extends PluginBase
     {
         return $this->filePath;
     }
-
 }

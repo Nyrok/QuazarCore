@@ -329,3 +329,14 @@ events:
 
 cosmetics:
   Ailes de Dragon: core.cosmetics.dragonwings
+
+ranks:
+  0: "Merde"
+  700: "Bronze I"
+  800: "Bronze II"
+  900: "Bronze III"
+  1000: "Argent I"
+  1100: "Argent II"
+  1200: "Argent III"
+  1400: "Argent IV"
+  2000: "Argent V"

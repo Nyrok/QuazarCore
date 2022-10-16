@@ -12,6 +12,11 @@ final class PlayerChatEvent implements Listener
 {
     const NAME = "PlayerChatEvent";
 
+    /**
+     * @param ClassEvent $event
+     * @priority MONITOR
+     * @ignoreCancelled true
+     */
     public function onEvent(ClassEvent $event): void
     {
         $player = $event->getPlayer();
@@ -19,6 +24,7 @@ final class PlayerChatEvent implements Listener
             $event->setCancelled(true);
             $player->sendMessage(str_replace(["{player}", "{reason}", "{time}"], [$player->getName(), MuteManager::getMuteReason($player), date("d/m/Y H:i", MuteManager::getMuteDate($player))], LanguageProvider::getLanguageMessage("messages.errors.muted", PlayerProvider::toQuazarPlayer($player), true)));
         }
+        $event->setFormat(str_replace("{rank}", PlayerProvider::toQuazarPlayer($event->getPlayer())->getRank(), $event->getFormat()));
+        $event->setMessage(str_replace("{rank}", PlayerProvider::toQuazarPlayer($event->getPlayer())->getRank(), $event->getMessage()));
     }
-
 }

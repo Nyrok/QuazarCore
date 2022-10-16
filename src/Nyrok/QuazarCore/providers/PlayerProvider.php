@@ -7,6 +7,8 @@ use JetBrains\PhpStorm\Pure;
 use Nyrok\QuazarCore\Core;
 use Nyrok\QuazarCore\managers\EloManager;
 use pocketmine\Player;
+use Nyrok\QuazarCore\managers\RanksManager;
+use Nyrok\QuazarCore\objects\Rank;
 
 final class PlayerProvider
 {
@@ -135,6 +137,22 @@ final class PlayerProvider
      */
     public function getCombatTime(): int {
         return CombatLogger::getInstance()->getTagDuration($this->player) ?? 0;
+    }
+
+    public function updateRank(): self {
+        if($this->getRank() !== RanksManager::getRank($this->getData()['elo'])?->getName() ?? $this->getRank()){
+            $this->setData("rank", RanksManager::getRank($this->getData()['elo'])?->getName() ?? $this->getRank(), false, self::TYPE_STRING);
+            $this->onRankChange(RanksManager::getRank($this->getData()['elo']));
+        }
+        return $this;
+    }
+
+    public function getRank(): string {
+        return $this->getData()['rank'] ?? RanksManager::getDefaultRank()?->getName() ?? "*";
+    }
+
+    public function onRankChange(Rank $rank): void {
+        $this->player->sendMessage(str_replace(["{rank}", "{elo}"], [$rank->getName(), $rank->getElo()], LanguageProvider::getLanguageMessage("messages.rank-change", $this, true)));
     }
 
 }
