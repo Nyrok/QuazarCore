@@ -32,9 +32,11 @@ abstract class CosmeticsManager
             self::resetSkin($player);
         }));
         foreach (self::$cosmeticsDetails as $cosmetic) {
-            $form->addButton(new Button("§l".ucfirst(reset($cosmetic)), new ButtonIcon("textures/ui/mashup_hangar", ButtonIcon::TYPE_PATH), function (Player $player) use ($cosmetic){
-                self::setSkin($player, reset($cosmetic), "cosmetics");
-            }));
+            foreach ($cosmetic as $c){
+                $form->addButton(new Button("§l".ucfirst($c), new ButtonIcon("textures/ui/mashup_hangar", ButtonIcon::TYPE_PATH), function (Player $player) use ($c){
+                    self::setSkin($player, $c, "cosmetics");
+                }));
+            }
         }
         AntiSpamForm::sendForm($player, $form);
     }
