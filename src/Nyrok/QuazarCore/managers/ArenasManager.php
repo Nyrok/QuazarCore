@@ -25,7 +25,8 @@ abstract class ArenasManager
         }
         Core::getInstance()->getLogger()->notice("[DUELS] Loading Modes and Arenas..");
         foreach (Core::getInstance()->getConfig()->get('duels', []) as $name => $data) {
-            $mode = new Mode($name, KitManager::get($data['kit']) ?? array_values(KitManager::getAll())[0], $data["gamemode"] ?? GameMode::ADVENTURE);
+            return;
+            $mode = new Mode($name, KitManager::get($data['kit']) ?? array_values(KitManager::getAll())[0] ?? null, $data["gamemode"] ?? GameMode::ADVENTURE);
             Core::getInstance()->getLogger()->notice("[MODES] Loading Mode: $name");
             foreach ($data['arenas'] as $world => $arena) {
                 if (Server::getInstance()->isLevelGenerated($world)) {

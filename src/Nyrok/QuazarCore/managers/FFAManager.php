@@ -20,26 +20,30 @@ abstract class FFAManager
      */
     public static array $ffas = [];
 
-    public static function initFFAs(){
-            foreach (Core::getInstance()->getConfig()->get('ffas', []) as $world => $data){
-                $name = $data["name"];
-                $kit = $data["kit"];
-                $x = [$data["min-x"], $data["max-x"]];
-                $y = $data["y"];
-                $z = [$data["min-z"], $data["max-z"]];
-                Core::getInstance()->getScheduler()->scheduleTask(new ClosureTask(function (int $currentTick) use ($name, $world, $kit, $x, $y, $z): void {
-                    $world = Server::getInstance()->getLevelByName($world);
+    public static function initFFAs()
+    {
+        foreach (Core::getInstance()->getConfig()->get('ffas', []) as $world => $data) {
+            $name = $data["name"];
+            $kit = $data["kit"];
+            $x = [$data["min-x"], $data["max-x"]];
+            $y = $data["y"];
+            $z = [$data["min-z"], $data["max-z"]];
+            Core::getInstance()->getScheduler()->scheduleTask(new ClosureTask(function (int $currentTick) use ($name, $world, $kit, $x, $y, $z): void {
+                $world = Server::getInstance()->getLevelByName($world);
+                if ($world) {
                     self::$ffas[$name] = new FFA($name, $world, $kit, $x, $y, $z);
-                }));
-                Core::getInstance()->getLogger()->notice("[FFAS] FFA: $name Loaded");
-            }
+                }
+            }));
+            Core::getInstance()->getLogger()->notice("[FFAS] FFA: $name Loaded");
+        }
     }
 
     /**
      * @param int $data
      * @return FFA|null
      */
-    #[Pure] public static function dataToFFA(int $data): ?FFA {
+    #[Pure] public static function dataToFFA(int $data): ?FFA
+    {
         return array_values(self::getAllFFAS())[$data];
     }
 
@@ -47,9 +51,10 @@ abstract class FFAManager
      * @param string $world
      * @return FFA|null
      */
-    #[Pure] public static function worldToFFA(string $world): ?FFA {
-        foreach(self::getAllFFAS() as $ffa){
-            if($ffa->getLevel()?->getName() === $world) return $ffa;
+    #[Pure] public static function worldToFFA(string $world): ?FFA
+    {
+        foreach (self::getAllFFAS() as $ffa) {
+            if ($ffa->getLevel()?->getName() === $world) return $ffa;
         }
         return null;
     }
@@ -57,16 +62,18 @@ abstract class FFAManager
     /**
      * @return FFA[]
      */
-    public static function getAllFFAS(): array {
+    public static function getAllFFAS(): array
+    {
         return self::$ffas;
     }
 
     /**
      * @param Player $player
      */
-    public static function formFFAS(Player $player): void {
-        $form = new SimpleForm("§m§a"."§fFFA");
-        foreach (self::getAllFFAS() as $ffa){
+    public static function formFFAS(Player $player): void
+    {
+        $form = new SimpleForm("§m§a" . "§fFFA");
+        foreach (self::getAllFFAS() as $ffa) {
             $form->addButton(new Button($ffa->getName(), new ButtonIcon("textures/ui/sword"), function (Player $player) use ($ffa): void {
                 $ffa?->start($player);
             }));

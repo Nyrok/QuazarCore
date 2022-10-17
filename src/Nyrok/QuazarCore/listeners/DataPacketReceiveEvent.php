@@ -23,7 +23,6 @@ final class DataPacketReceiveEvent implements Listener
      * @param ClassEvent $event
      */
     public function onEvent(ClassEvent $event){
-        var_dump($event->getPacket()::class);
         switch ($pk = $event->getPacket()){
             case $pk instanceof LevelSoundEventPacket:
                 switch ($pk->sound){
@@ -72,8 +71,6 @@ final class DataPacketReceiveEvent implements Listener
                 // add the time difference between the two packet (this should be near one tick - which evens out the subtraction of one)
                 $this->balance[$event->getPlayer()->getName()] += $timeDiff;
                 // if the balance is too low (the time difference is usually less than one tick)
-                var_dump($this->balance);
-                var_dump($this->lastTime);
                 if ($this->balance[$event->getPlayer()->getName()] <= -5) {
                     $event->getPlayer()->kick("Anti Timer mother fucker", false);
                     $this->balance[$event->getPlayer()->getName()] = 0;
