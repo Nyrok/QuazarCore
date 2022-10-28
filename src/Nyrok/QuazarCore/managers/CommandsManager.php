@@ -5,6 +5,7 @@ use Nyrok\QuazarCore\commands\DiscordCommand;
 use Nyrok\QuazarCore\commands\DuelCommand;
 use Nyrok\QuazarCore\commands\EventCommand;
 use Nyrok\QuazarCore\commands\MuteCommand;
+use Nyrok\QuazarCore\commands\NickCommand;
 use Nyrok\QuazarCore\commands\PingCommand;
 use Nyrok\QuazarCore\commands\QuazarCommands;
 use Nyrok\QuazarCore\commands\RekitCommand;
@@ -51,6 +52,7 @@ abstract class CommandsManager
             new TPSCommand('tps'),
             new DuelCommand('duel'),
             new EventCommand('event'),
+            new NickCommand('nick')
         ];
     }
 
