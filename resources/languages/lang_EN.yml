@@ -118,23 +118,23 @@ forms:
         header: "Give us some details"
         default: ""
         place-holder: "Example: This Player Insulted me"
-    events:
+  events:
+    1:
+      title: "Events"
+      1: "Create"
+      2: "Join"
+    2:
+      title: "Create Event"
       1:
-        title: "Events"
-        1: "Create"
-        2: "Join"
-      2:
-        title: "Create Event"
-        1:
-          text: "Type"
-          types:
-            - Nodebuff
-            - Sumo
-            - Soup
-      3:
-        title: "Join Event"
-        
-        # {type} Type de l'évent
-        # {host} Hébergeur de l'évent
-        button-text: "{type} Évent - {host}"
-        button-return: "Return"
+        text: "Type"
+        types:
+          - Nodebuff
+          - Sumo
+          - Soup
+    3:
+      title: "Join Event"
+
+      # {type} Type de l'évent
+      # {host} Hébergeur de l'évent
+      button-text: "{type} Évent - {host}"
+      button-return: "Return"
