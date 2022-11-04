@@ -1,6 +1,7 @@
 <?php
 namespace Nyrok\QuazarCore\listeners;
 
+use Nyrok\QuazarCore\commands\NickCommand;
 use Nyrok\QuazarCore\managers\CosmeticsManager;
 use Nyrok\QuazarCore\managers\CPSManager;
 use Nyrok\QuazarCore\managers\FloatingTextManager;
@@ -26,10 +27,8 @@ final class PlayerJoinEvent implements Listener
         FloatingTextManager::update();
         CPSManager::load($event->getPlayer());
         AntiSwitch::unblacklist($event->getPlayer());
-        $nick = PlayerProvider::toQuazarPlayer($event->getPlayer())->getData()["nick"] ?? "off";
-        if($nick !== "off"){
-            $event->getPlayer()->setDisplayName($nick);
-        }
+        $nick = PlayerProvider::toQuazarPlayer($event->getPlayer())->getData()["nick"] ?? null;
+        NickCommand::setNick($event->getPlayer(), $nick !== "off" and !is_null($nick) ? $nick : null);
         CosmeticsManager::saveSkin($event->getPlayer()->getSkin(), $event->getPlayer()->getName());
     }
 }

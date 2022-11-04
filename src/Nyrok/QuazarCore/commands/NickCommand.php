@@ -23,22 +23,22 @@ final class NickCommand extends QuazarCommands
             $target = $sender->getServer()->getPlayer($args[0]);
             if ($target) {
                 if (isset($args[1])) {
-                    $this->setNick($target, $args[1] === "off" ? null : $args[1]);
+                    self::setNick($target, $args[1] === "off" ? null : $args[1]);
                 } else if ($sender instanceof Player) {
                     $form = new SimpleForm("§m§a" . "§fNick");
                     $form->addButton(new Button("Add", new ButtonIcon("textures/ui/color_plus", ButtonIcon::TYPE_PATH), function (Player $player) use ($target) {
                         $form = new CustomForm("Ajouter un Nick à " . $target->getName());
                         $form->setSubmitListener(function (Player $player, FormResponse $formResponse) use ($target) {
-                            $this->setNick($target, $formResponse->getInputSubmittedText('nick') ?: null);
+                            self::setNick($target, $formResponse->getInputSubmittedText('nick') ?: null);
                         });
                         $form->addElement("nick", new Input("Nick", "", $this->getRandomNick()));
                         $player->sendForm($form);
                     }));
                     $form->addButton(new Button("Random", new ButtonIcon("textures/ui/random_dice", ButtonIcon::TYPE_PATH), function (Player $player) use ($target) {
-                        $this->setNick($target, $this->getRandomNick());
+                        self::setNick($target, $this->getRandomNick());
                     }));
                     $form->addButton(new Button("Remove", new ButtonIcon("textures/ui/trash", ButtonIcon::TYPE_PATH), function (Player $player) use ($target) {
-                        $this->setNick($target, null);
+                        self::setNick($target, null);
                     }));
                     $sender->sendForm($form);
                 } else {
@@ -53,16 +53,16 @@ final class NickCommand extends QuazarCommands
                 $form->addButton(new Button("Add", new ButtonIcon("textures/ui/color_plus", ButtonIcon::TYPE_PATH), function (Player $player) {
                     $form = new CustomForm("Définir votre Nick");
                     $form->setSubmitListener(function (Player $player, FormResponse $formResponse) {
-                        $this->setNick($player, $formResponse->getInputSubmittedText('nick') ?: null);
+                        self::setNick($player, $formResponse->getInputSubmittedText('nick') ?: null);
                     });
                     $form->addElement("nick", new Input("Nick", "", $this->getRandomNick()));
                     $player->sendForm($form);
                 }));
                 $form->addButton(new Button("Random", new ButtonIcon("textures/ui/random_dice", ButtonIcon::TYPE_PATH), function (Player $player) {
-                    $this->setNick($player, $this->getRandomNick());
+                    self::setNick($player, $this->getRandomNick());
                 }));
                 $form->addButton(new Button("Remove", new ButtonIcon("textures/ui/trash", ButtonIcon::TYPE_PATH), function (Player $player) {
-                    $this->setNick($player, null);
+                    self::setNick($player, null);
                 }));
                 $sender->sendForm($form);
             }
@@ -70,7 +70,7 @@ final class NickCommand extends QuazarCommands
         // TODO: Stocker le nick dans une db
     }
 
-    public function setNick(Player $player, ?string $nick)
+    public static function setNick(Player $player, ?string $nick): void
     {
         $player->setDisplayName($nick ?? $player->getName());
         $player->setNameTag(str_replace($player->getName(), $nick ?? $player->getName(), $player->getNameTag()));
