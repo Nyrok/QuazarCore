@@ -11,6 +11,7 @@ use Nyrok\QuazarCore\managers\EventsManager;
 use Nyrok\QuazarCore\managers\FFAManager;
 use Nyrok\QuazarCore\managers\KitsManager;
 use Nyrok\QuazarCore\managers\LobbyManager;
+use Nyrok\QuazarCore\managers\MatchmakingManager;
 use Nyrok\QuazarCore\managers\SoupManager;
 use Nyrok\QuazarCore\managers\StaffManager;
 use Nyrok\QuazarCore\tasks\EnderPearlCooldownTask;
@@ -44,7 +45,7 @@ final class PlayerInteractEvent implements Listener
             if ($event->getPlayer()->getLevel()->getName() === Core::getInstance()->getConfig()->getNested('positions.spawn.world', "")) {
                 match ($id) {
                     267 => FFAManager::formFFAS($event->getPlayer()),
-                    276 => 1,
+                    276 => MatchmakingManager::formMatchmaking($event->getPlayer()),
                     54 => KitsManager::formKits($event->getPlayer()),
                     264 => CosmeticsManager::formCosmetics($event->getPlayer()),
                     340 => LobbyManager::formStats($event->getPlayer()),

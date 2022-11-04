@@ -17,6 +17,7 @@ use Nyrok\QuazarCore\managers\ListenersManager;
 use Nyrok\QuazarCore\managers\LanguageManager;
 use Nyrok\QuazarCore\databases\ConfigDatabase;
 use Nyrok\QuazarCore\managers\LobbyManager;
+use Nyrok\QuazarCore\managers\MatchmakingManager;
 use Nyrok\QuazarCore\managers\RanksManager;
 use Nyrok\QuazarCore\managers\ScoreBoardManager;
 use Nyrok\QuazarCore\managers\SoupManager;
@@ -82,6 +83,7 @@ class Core extends PluginBase
         ArenasManager::initArenas();
         CosmeticsManager::initCosmetics();
         RanksManager::initRanks();
+        MatchmakingManager::initMatchmaking();
 
         if(!InvMenuHandler::isRegistered()) InvMenuHandler::register($this);
 
