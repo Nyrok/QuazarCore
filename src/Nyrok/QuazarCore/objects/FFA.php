@@ -92,7 +92,7 @@ final class FFA
         $player->getArmorInventory()->clearAll();
         $player->teleport(new Position($this->getRandomX(), $this->getY(), $this->getRandomZ(), $this->getLevel()));
         $player->setGamemode(Player::ADVENTURE);
-        $kit = KitsManager::getKit($player, $this->getKit()->getName()) ?? $this->getKit();
+        $kit = KitsManager::getKit($player, $this->getKit()?->getName()) ?? $this->getKit();
         $kit?->claimFor($player);
     }
 }
