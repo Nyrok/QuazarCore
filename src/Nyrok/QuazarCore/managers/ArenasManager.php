@@ -31,6 +31,7 @@ abstract class ArenasManager
                 continue;
             }
             $mode = new Mode($name, KitManager::get($data['kit']) ?? null, $data["gamemode"] ?? GameMode::ADVENTURE);
+            $count = 0;
             foreach ($data['arenas'] as $world => $arena) {
                 if (Server::getInstance()->isLevelGenerated($world)) {
                     if(!Server::getInstance()->loadLevel($world)){
@@ -43,11 +44,16 @@ abstract class ArenasManager
                         $arena['blocks'] ?? [],
                     ));
                     Core::getInstance()->getLogger()->notice("[ARENAS] Arena $world added to mode: $name");
+                    $count++;
                 }
                 else {
                     error:
                     Core::getInstance()->getLogger()->warning("[ARENAS] Arena $world doesn't exist");
                 }
+            }
+            if(!$count){
+                Core::getInstance()->getLogger()->error("[MODES] Mode $name doesn't have any Arenas.");
+                return;
             }
             self::$modes[] = $mode;
             Core::getInstance()->getLogger()->notice("[MODES] Mode $name Loaded.");
