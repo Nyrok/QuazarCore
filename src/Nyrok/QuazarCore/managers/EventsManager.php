@@ -65,25 +65,11 @@ abstract class EventsManager
      */
     public static function startEvent(Event $event): void
     {
-        $configCache = Core::getInstance()->getConfig()->getAll();
-        
         if(count($event->getPlayers()) >= (int)$configCache["events"]["min-players"]) {
             $event->setStart();
             
-            $worldN = match($event->getType()) {
-                'nodebuff' => 'ndb-event',
-                'sumo' => 'sumo-event',
-                'soup' => 'soup-event',
-            };
-            
-            $posData = $configCache["events"][$worldN]["spectators"]["spawn"];
-            
-            $world = Server::getInstance()->getLevelByName($worldN);
-            $position = new Position($posData["x"], $posData["y"], $posData["z"], $world);
-            
             foreach($event->getPlayers() as $player)
             {
-                $player->teleport($position);
                 
                 $eventStartMsg = LanguageProvider::getLanguageMessage("messages.events.event-start", PlayerProvider::toQuazarPlayer($player), true);
                 $player->sendMessage($eventStartMsg);
@@ -165,5 +151,24 @@ abstract class EventsManager
         foreach (self::getEvents() as $event){
             $event->removePlayer($player);
         }
+        LobbyManager::load($player);
+    }
+    
+    public static function teleportPlayerToEvent(Player $player, Event $event): void
+    {
+        $configCache = Core::getInstance()->getConfig()->getAll();
+        
+        $worldN = match($event->getType()) {
+            'nodebuff' => 'ndb-event',
+            'sumo' => 'sumo-event',
+            'soup' => 'soup-event'
+        };
+            
+        $posData = $configCache["events"][$worldN]["spectators"]["spawn"];
+        
+        $world = Server::getInstance()->getLevelByName($worldN);
+        $position = new Position($posData["x"], $posData["y"], $posData["z"], $world);
+        
+        $player->teleport($position);
     }
 }
