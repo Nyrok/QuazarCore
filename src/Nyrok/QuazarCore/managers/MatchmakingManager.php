@@ -9,6 +9,7 @@ use Nyrok\QuazarCore\librairies\EasyUI\variant\SimpleForm;
 use Nyrok\QuazarCore\objects\Mode;
 use Nyrok\QuazarCore\providers\PlayerProvider;
 use Nyrok\QuazarCore\tasks\MatchmakingTask;
+use pocketmine\item\ItemFactory;
 use pocketmine\Player;
 
 abstract class MatchmakingManager
@@ -30,6 +31,8 @@ abstract class MatchmakingManager
             "elo" => PlayerProvider::toQuazarPlayer($player)->getElo(),
             "mode" => $mode
         ];
+        $player->getInventory()->setItem(0, ItemFactory::get(0));
+        $player->getInventory()->setItem(1, ItemFactory::get(-161)->setCustomName("§cQuitter le matchmaking"));
     }
 
     /**
@@ -38,6 +41,7 @@ abstract class MatchmakingManager
     public static function removePlayer(string $name): void
     {
         unset(self::$matchmaking[$name]);
+        if($player = Core::getInstance()->getServer()->getPlayer($name)) LobbyManager::load($player);
     }
 
     /**
@@ -100,10 +104,12 @@ abstract class MatchmakingManager
      */
     public static function formMatchmaking(Player $player): void
     {
-        $form = new SimpleForm("§m§a" . "Duels", "Choisir le Mode de Jeu");
-        foreach (ArenasManager::getModes() as $mode) {
-            $form->addButton(new Button($mode->getName(), new ButtonIcon("textures/ui/icon_recipe_equipment"), fn(Player $player) => self::addPlayer($player, $mode)));
+        if(!self::isPlayerInMatchmaking($player->getName())){
+            $form = new SimpleForm("§m§a" . "Duels", "Choisir le Mode de Jeu");
+            foreach (ArenasManager::getModes() as $mode) {
+                $form->addButton(new Button($mode->getName(), new ButtonIcon("textures/ui/icon_recipe_equipment"), fn(Player $player) => self::addPlayer($player, $mode)));
+            }
+            $player->sendForm($form);
         }
-        $player->sendForm($form);
     }
 }
