@@ -80,19 +80,20 @@ final class EventCommand extends QuazarCommands
 
         $form->setSubmitListener(function (Player $player, FormResponse $formResponse) use ($dropdown1, $dropdown2, $dropdown3): void {
             switch($formResponse->getDropdownSubmittedOptionId('type')) {
-                case $dropdown1:
+                case 0:
                     EventsManager::addEvent(new Event($player->getName(), "nodebuff", $player));
                     break;
                 
-                case $dropdown2:
+                case 1:
                     EventsManager::addEvent(new Event($player->getName(), "sumo", $player));
                     break;
                 
-                case $dropdown3:
+                case 2:
                     EventsManager::addEvent(new Event($player->getName(), "soup", $player));
                     break;
                 
                 default:
+                    return;
                     break;
             };
             $message = LanguageProvider::getLanguageMessage("messages.events.event-create", PlayerProvider::toQuazarPlayer($player), true);
