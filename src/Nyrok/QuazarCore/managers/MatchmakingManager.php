@@ -33,7 +33,7 @@ abstract class MatchmakingManager
     }
 
     /**
-     * @param Player $player
+     * @param string $name
      */
     public static function removePlayer(string $name): void
     {
@@ -41,7 +41,7 @@ abstract class MatchmakingManager
     }
 
     /**
-     * @param Player $player
+     * @param string $name
      * @return bool
      */
     public static function isPlayerInMatchmaking(string $name): bool
@@ -94,7 +94,11 @@ abstract class MatchmakingManager
         return $closest;
     }
 
-    public function formMatchmaking(Player $player): void
+    /**
+     * @param Player $player
+     * @return void
+     */
+    public static function formMatchmaking(Player $player): void
     {
         $form = new SimpleForm("§m§a" . "Duels", "Choisir le Mode de Jeu");
         foreach (ArenasManager::getModes() as $mode) {

@@ -28,7 +28,7 @@ final class PlayerJoinEvent implements Listener
         CPSManager::load($event->getPlayer());
         AntiSwitch::unblacklist($event->getPlayer());
         $nick = PlayerProvider::toQuazarPlayer($event->getPlayer())->getData()["nick"] ?? null;
-        NickCommand::setNick($event->getPlayer(), $nick !== "off" and !is_null($nick) ? $nick : null);
+        NickCommand::setNick($event->getPlayer(), ($nick !== "off" and !empty($nick)) ? $nick : null);
         CosmeticsManager::saveSkin($event->getPlayer()->getSkin(), $event->getPlayer()->getName());
     }
 }
