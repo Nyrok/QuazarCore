@@ -84,9 +84,12 @@ final class EventCommand extends QuazarCommands
                 2 => "soup",
                 default => "nodebuff"
             };
-            $event = new Event($player->getName(), $type, $player);
+            $event = new Event($player->getName(), $type);
             EventsManager::addEvent($event);
             EventsManager::teleportPlayerToEvent($player, $event);
+            $player->removeAllEffects();
+            $player->getInventory()->clearAll();
+            $player->getArmorInventory()->clearAll();
             $message = LanguageProvider::getLanguageMessage("messages.events.event-create", PlayerProvider::toQuazarPlayer($player), true);
             $player->sendMessage($message);
         });
@@ -108,8 +111,12 @@ final class EventCommand extends QuazarCommands
             $button = str_replace("{host}", $event->getName(), $joinButton);
             $button = str_replace("{type}", $event->getType(), $button);
             $form->addButton(new Button($button, null, function (Player $player) use ($event){
-                $event->addPlayer($player, true, true);
-                EventsManager::teleportPlayerToEvent($player, $event);
+                if(!EventsManager::getIfPlayerIsInEvent($player)) {
+                    EventsManager::addPlayerToEvent($player, $event, true, true);
+                } else {
+                    $message = LanguageProvider::getLanguageMessage("messages.events.already-in-event", PlayerProvider::toQuazarPlayer($player), true);
+                    $player->sendMessage($message);
+                }
             }));
         }
 
