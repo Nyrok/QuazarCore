@@ -118,13 +118,14 @@ final class Event
     }
 
     /**
-     * @param string $player
+     * @param Player $player
+     * @param bool $giveItem
      * @param bool $sendMsg
      * @return void
      */
-    public function addPlayer(string $player, bool $giveItem = false, bool $sendMsg = false): void
+    public function addPlayer(Player $player, bool $giveItem = false, bool $sendMsg = false): void
     {
-        array_push($this->players, $player);
+        array_push($this->players, $player->getName());
         
         $player->removeAllEffects();
         $player->getInventory()->clearAll();
