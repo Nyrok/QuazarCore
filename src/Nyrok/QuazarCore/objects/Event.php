@@ -35,9 +35,9 @@ final class Event
      * @param string $type
      * @param Player $host
      */
-    public function __construct(private string $name, private string $type, private Player $host)
+    public function __construct(private string $name, private string $type)
     {
-        self::addPlayer($host);
+        $this->addPlayer($name);
         $this->startIn = time() + 120;
     }
     
@@ -55,14 +55,6 @@ final class Event
     public function getType(): string
     {
         return $this->type;
-    }
-    
-    /**
-     * @return Player
-     */
-    public function getHost(): Player
-    {
-        return $this->host;
     }
     
     /**
@@ -126,11 +118,11 @@ final class Event
     }
 
     /**
-     * @param Player $player
+     * @param string $player
      * @param bool $sendMsg
      * @return void
      */
-    public function addPlayer(Player $player, bool $giveItem = false, bool $sendMsg = false): void
+    public function addPlayer(string $player, bool $giveItem = false, bool $sendMsg = false): void
     {
         array_push($this->players, $player);
         
@@ -150,12 +142,12 @@ final class Event
     }
     
     /**
-     * @param Player $player
+     * @param string $player
      * @return void
      */
-    public function removePlayer(Player $player): void
+    public function removePlayer(string $player): void
     {
-        unset($this->players[array_search($player->getName(), $this->players)]);
+        unset($this->players[array_search($player, $this->players)]);
         if(empty($this->players)){
             $this->cancel();
         }
