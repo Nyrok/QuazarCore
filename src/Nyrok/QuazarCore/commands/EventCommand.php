@@ -105,7 +105,7 @@ final class EventCommand extends QuazarCommands
         $joinButton = LanguageProvider::getLanguageMessage("forms.events.3.button-event", PlayerProvider::toQuazarPlayer($player), false);
 
         foreach (EventsManager::getEvents() as $event) {
-            $button = str_replace("{host}", $event->getHost(), $joinButton);
+            $button = str_replace("{host}", $event->getName(), $joinButton);
             $button = str_replace("{type}", $event->getType(), $button);
             $form->addButton(new Button($button, null, function (Player $player) use ($event){
                 $event->addPlayer($player, true, true);
