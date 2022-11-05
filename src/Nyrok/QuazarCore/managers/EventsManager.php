@@ -3,6 +3,7 @@
 namespace Nyrok\QuazarCore\managers;
 
 use Nyrok\QuazarCore\Core;
+use Nyrok\QuazarCore\utils\PlayerUtils;
 use Nyrok\QuazarCore\providers\LanguageProvider;
 use Nyrok\QuazarCore\providers\PlayerProvider;
 use AndreasHGK\EasyKits\Kit;
@@ -169,7 +170,7 @@ abstract class EventsManager
     public static function removePlayer(Player $player): void
     {
         self::getEventByPlayer($player)->removePlayer($player->getName());
-        LobbyManager::load($player);
+        if(PlayerUtils::teleportToSpawn($player)) LobbyManager::load($player);
     }
     
     public static function getEventByPlayer(Player $player): ?Event
