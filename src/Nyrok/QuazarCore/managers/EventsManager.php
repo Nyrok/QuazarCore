@@ -11,6 +11,7 @@ use Nyrok\QuazarCore\objects\Event;
 use pocketmine\level\Position;
 use pocketmine\Player;
 use pocketmine\Server;
+use pocketmine\item\Item;
 
 abstract class EventsManager
 {
@@ -59,6 +60,22 @@ abstract class EventsManager
     public static function removeEvent(Event $event): void
     {
         unset(self::$events[$event->getName()]);
+    }
+    
+    public static function addPlayerToEvent(Player $player, Event $event): void
+    {
+        $event->addPlayer($player->getName());
+        self::teleportPlayerToEvent($player, $event);
+        
+        $player->removeAllEffects();
+        $player->getInventory()->clearAll();
+        $player->getArmorInventory()->clearAll();
+        
+        $item = [4 => Item::get(152)->setCustomName("§4Leave")];
+        $player->getInventory()->setContents($item);
+        
+        $message = LanguageProvider::getLanguageMessage("messages.events.event-join", PlayerProvider::toQuazarPlayer($player), true);
+        $player->sendMessage($message);
     }
     
     /**
@@ -161,7 +178,7 @@ abstract class EventsManager
         {
             foreach($event->getPlayers() as $key => $p)
             {
-                if($p->getName() == $player->getName()) return $event;
+                if($p == $player->getName()) return $event;
             }
         }
     }
@@ -172,7 +189,7 @@ abstract class EventsManager
         {
             foreach($event->getPlayers() as $key => $p)
             {
-                if($p->getName() == $player->getName()) return true;
+                if($p == $player->getName()) return true;
             }
         }
         return false;
