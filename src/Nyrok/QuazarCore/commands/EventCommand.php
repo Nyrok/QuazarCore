@@ -108,7 +108,7 @@ final class EventCommand extends QuazarCommands
             $button = str_replace("{host}", $event->getHost(), $joinButton);
             $button = str_replace("{type}", $event->getType(), $button);
             $form->addButton(new Button($button, null, function (Player $player) use ($event){
-                $event->addPlayer($player, true);
+                $event->addPlayer($player, true, true);
                 EventsManager::teleportPlayerToEvent($player, $event);
             }));
         }
