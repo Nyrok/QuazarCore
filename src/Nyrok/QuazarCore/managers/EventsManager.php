@@ -159,7 +159,10 @@ abstract class EventsManager
     {
         foreach(self::getEvents() as $host => $event)
         {
-            if(isset($event->getPlayers()[$player->getName()])) return true;
+            foreach($event->getPlayers() as $key => $p)
+            {
+                if($p->getName() == $player->getName()) return true;
+            }
         }
         return false;
     }
