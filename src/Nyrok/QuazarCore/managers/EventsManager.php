@@ -121,9 +121,10 @@ abstract class EventsManager
         $event->setFought($fighter2->getName());
         
         $worldN = match($event->getType()) {
-            'nodebuff', default => 'ndb-event',
+            'nodebuff' =>'ndb-event',
             'sumo' => 'sumo-event',
-            'soup' => 'soup-event'
+            'soup' => 'soup-event',
+            default => 'ndb-event'
         };
         
         $configCache = Core::getInstance()->getConfig()->getAll();
@@ -168,9 +169,10 @@ abstract class EventsManager
         $configCache = Core::getInstance()->getConfig()->getAll();
         
         $worldN = match($event->getType()) {
-            'nodebuff', default => 'ndb-event',
+            'nodebuff' => 'ndb-event',
             'sumo' => 'sumo-event',
-            'soup' => 'soup-event'
+            'soup' => 'soup-event',
+            default => 'ndb-event'
         };
             
         $posData = $configCache["events"][$worldN]["spectators"]["spawn"];
