@@ -121,9 +121,9 @@ abstract class EventsManager
         $event->setFought($fighter2->getName());
         
         $worldN = match($event->getType()) {
-            'nodebuff' => 'ndb-event',
+            'nodebuff', default => 'ndb-event',
             'sumo' => 'sumo-event',
-            'soup' => 'soup-event',
+            'soup' => 'soup-event'
         };
         
         $configCache = Core::getInstance()->getConfig()->getAll();
@@ -154,12 +154,21 @@ abstract class EventsManager
         LobbyManager::load($player);
     }
     
+    public static function getIfPlayerIsInEvent(Player $player): bool
+    {
+        foreach(self::getEvents() as $host => $event)
+        {
+            if(isset($event->getPlayers()[$player->getName()])) return true;
+        }
+        return false;
+    }
+    
     public static function teleportPlayerToEvent(Player $player, Event $event): void
     {
         $configCache = Core::getInstance()->getConfig()->getAll();
         
         $worldN = match($event->getType()) {
-            'nodebuff' => 'ndb-event',
+            'nodebuff', default => 'ndb-event',
             'sumo' => 'sumo-event',
             'soup' => 'soup-event'
         };
