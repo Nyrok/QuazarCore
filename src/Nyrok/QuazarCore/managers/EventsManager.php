@@ -42,11 +42,13 @@ abstract class EventsManager
      */
     public static function addEvent(Event $event): void
     {
-        self::$events[$event->getHost()->getName()] = $event;
+        self::$events[$event->getName()] = $event;
+        
+        $type = str_replace("nodebuff", "ndb", $event->getType());
         
         foreach(Server::getInstance()->getOnlinePlayers() as $p)
         {
-            $p->sendMessage(LanguageProvider::getLanguageMessage("messages.events.event-ndb-created", PlayerProvider::toQuazarPlayer($p), true));
+            $p->sendMessage(LanguageProvider::getLanguageMessage("messages.events.event-" . $type . "-created", PlayerProvider::toQuazarPlayer($p), true));
         }
     }
     
@@ -56,7 +58,7 @@ abstract class EventsManager
      */
     public static function removeEvent(Event $event): void
     {
-        unset(self::$events[$event->getHost()->getName()]);
+        unset(self::$events[$event->getName()]);
     }
     
     /**
@@ -68,7 +70,7 @@ abstract class EventsManager
         if(count($event->getPlayers()) >= (int)$configCache["events"]["min-players"]) {
             $event->setStart();
             
-            foreach($event->getPlayers() as $player)
+            foreach($event->getPlayers() as $key => $player)
             {
                 
                 $eventStartMsg = LanguageProvider::getLanguageMessage("messages.events.event-start", PlayerProvider::toQuazarPlayer($player), true);
@@ -79,7 +81,7 @@ abstract class EventsManager
         }else{
             unset(self::$events[$event->getName()]);
             
-            foreach($event->getPlayers() as $player)
+            foreach($event->getPlayers() as $key => $player)
             {
                 $player->sendMessage(LanguageProvider::getLanguageMessage("messages.events.event-not-enough-player", PlayerProvider::toQuazarPlayer($player), true));
             }
@@ -149,15 +151,24 @@ abstract class EventsManager
 
     public static function removePlayer(Player $player): void
     {
-        foreach (self::getEvents() as $event){
-            $event->removePlayer($player);
-        }
+        self::getEventByPlayer($player)->removePlayer($player->getName());
         LobbyManager::load($player);
+    }
+    
+    public static function getEventByPlayer(Player $player): ?Event
+    {
+        foreach(self::getEvents() as $name => $event)
+        {
+            foreach($event->getPlayers() as $key => $p)
+            {
+                if($p->getName() == $player->getName()) return $event;
+            }
+        }
     }
     
     public static function getIfPlayerIsInEvent(Player $player): bool
     {
-        foreach(self::getEvents() as $host => $event)
+        foreach(self::getEvents() as $name => $event)
         {
             foreach($event->getPlayers() as $key => $p)
             {
