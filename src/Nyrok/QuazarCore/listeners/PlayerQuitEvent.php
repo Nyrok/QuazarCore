@@ -6,6 +6,7 @@ use Nyrok\QuazarCore\managers\CPSManager;
 use Nyrok\QuazarCore\managers\DuelsManager;
 use Nyrok\QuazarCore\managers\LogsManager;
 use Nyrok\QuazarCore\managers\StaffManager;
+use Nyrok\QuazarCore\managers\EventsManager;
 use Nyrok\QuazarCore\utils\AntiSwitch;
 use pocketmine\event\player\PlayerQuitEvent as ClassEvent;
 use pocketmine\event\Listener;
