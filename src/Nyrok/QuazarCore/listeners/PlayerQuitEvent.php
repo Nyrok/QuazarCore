@@ -32,5 +32,9 @@ final class PlayerQuitEvent implements Listener
                 $duel->stop();
             }
         }
+        
+        if(EventsManager::getIfPlayerIsInEvent($event->getPlayer())) {
+            EventsManager::removePlayer($event->getPlayer());
+        }
     }
 }
