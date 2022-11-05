@@ -118,28 +118,12 @@ final class Event
     }
 
     /**
-     * @param Player $player
-     * @param bool $giveItem
-     * @param bool $sendMsg
+     * @param string $player
      * @return void
      */
-    public function addPlayer(Player $player, bool $giveItem = false, bool $sendMsg = false): void
+    public function addPlayer(string $player): void
     {
-        array_push($this->players, $player->getName());
-        
-        $player->removeAllEffects();
-        $player->getInventory()->clearAll();
-        $player->getArmorInventory()->clearAll();
-        
-        if($giveItem) {
-            $item = [4 => Item::get(152)->setCustomName("§4Leave")];
-            $player->getInventory()->setContents($item);
-        }
-        
-        if($sendMsg) {
-            $message = LanguageProvider::getLanguageMessage("messages.events.event-join", PlayerProvider::toQuazarPlayer($player), true);
-            $player->sendMessage($message);
-        }
+        array_push($this->players, $player);
     }
     
     /**
