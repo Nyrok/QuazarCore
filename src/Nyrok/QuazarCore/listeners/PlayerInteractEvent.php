@@ -2,6 +2,7 @@
 
 namespace Nyrok\QuazarCore\listeners;
 
+use Couchbase\MatchAllSearchQuery;
 use Nyrok\QuazarCore\Core;
 use Nyrok\QuazarCore\managers\CooldownManager;
 use Nyrok\QuazarCore\managers\CosmeticsManager;
@@ -33,12 +34,16 @@ final class PlayerInteractEvent implements Listener
      */
     public function onEvent(ClassEvent $event)
     {
-        if ($event->getAction() === $event::LEFT_CLICK_AIR or $event->getAction() === $event::LEFT_CLICK_BLOCK) CPSManager::addClick($event->getPlayer());
         $id = $event->getItem()?->getId() ?? 0;
         if (StaffManager::isStaff($event->getPlayer()) and $event->getItem()->getNamedTagEntry("staff")) {
             match ($id) {
                 ItemIds::COMPASS => StaffManager::randomTP($event->getPlayer()),
                 BlockIds::REDSTONE_BLOCK => StaffManager::turnOff($event->getPlayer()),
+                default => null
+            };
+        } else if (EventsManager::getIfPlayerIsInEvent($event->getPlayer())) {
+            match($id) {
+                152 => EventsManager::removePlayer($event->getPlayer()),
                 default => null
             };
         } else {
@@ -50,9 +55,10 @@ final class PlayerInteractEvent implements Listener
                     264 => CosmeticsManager::formCosmetics($event->getPlayer()),
                     340 => LobbyManager::formStats($event->getPlayer()),
                     347 => LobbyManager::formSettings($event->getPlayer()),
-                    152 => EventsManager::removePlayer($event->getPlayer()),
+                    -161 => MatchmakingManager::removePlayer($event->getPlayer()->getName()),
                     default => null
                 };
+                
             } else if ($id === SoupManager::getSoupId() and $event->getPlayer()->getHealth() != $event->getPlayer()->getMaxHealth()) {
                 $event->getPlayer()->heal(new EntityRegainHealthEvent($event->getPlayer(), SoupManager::getSoupHeal(), EntityRegainHealthEvent::CAUSE_CUSTOM));
                 $event->getPlayer()->getInventory()->setItemInHand($event->getItem()->setCount($event->getItem()->getCount() - 1));
