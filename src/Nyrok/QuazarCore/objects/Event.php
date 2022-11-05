@@ -130,18 +130,18 @@ final class Event
      * @param bool $sendMsg
      * @return void
      */
-    public function addPlayer(Player $player, bool $sendMsg = false): void
+    public function addPlayer(Player $player, bool $giveItem = false, bool $sendMsg = false): void
     {
         array_push($this->players, $player);
-        
-        
-        $item = [4 => Item::get(152)->setCustomName("§4Leave")];
         
         $player->removeAllEffects();
         $player->getInventory()->clearAll();
         $player->getArmorInventory()->clearAll();
-        $player->getInventory()->setContents($item);
         
+        if($giveItem) {
+            $item = [4 => Item::get(152)->setCustomName("§4Leave")];
+            $player->getInventory()->setContents($item);
+        }
         
         if($sendMsg) {
             $message = LanguageProvider::getLanguageMessage("messages.events.event-join", PlayerProvider::toQuazarPlayer($player), true);
@@ -156,7 +156,6 @@ final class Event
     public function removePlayer(Player $player): void
     {
         unset($this->players[array_search($player->getName(), $this->players)]);
-        LobbyManager::load($player);
         if(empty($this->players)){
             $this->cancel();
         }
