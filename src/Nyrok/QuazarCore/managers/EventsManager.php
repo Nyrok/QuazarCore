@@ -196,6 +196,16 @@ abstract class EventsManager
         return false;
     }
     
+    public static function getIfEventTypeUsed(string $type): bool
+    {
+        var_dump($type);
+        foreach(self::getEvents() as $name => $event)
+        {
+            if($event->getType() == $type) return true;
+        }
+        return false;
+    }
+    
     public static function teleportPlayerToEvent(Player $player, Event $event): void
     {
         $configCache = Core::getInstance()->getConfig()->getAll();
