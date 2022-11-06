@@ -78,20 +78,33 @@ final class EventCommand extends QuazarCommands
         $form->addElement("type", $dropdown);
 
         $form->setSubmitListener(function (Player $player, FormResponse $formResponse) use ($dropdown1, $dropdown2, $dropdown3): void {
-            $type = match($formResponse->getDropdownSubmittedOptionId('type')) {
-                0 => "nodebuff",
-                1 => "sumo",
-                2 => "soup",
-                default => "nodebuff"
-            };
-            $event = new Event($player->getName(), $type);
-            EventsManager::addEvent($event);
-            EventsManager::teleportPlayerToEvent($player, $event);
-            $player->removeAllEffects();
-            $player->getInventory()->clearAll();
-            $player->getArmorInventory()->clearAll();
-            $message = LanguageProvider::getLanguageMessage("messages.events.event-create", PlayerProvider::toQuazarPlayer($player), true);
-            $player->sendMessage($message);
+            if(EventsManager::getIfPlayerIsInEvent($player)) {
+                $message = LanguageProvider::getLanguageMessage("messages.events.already-in-event", PlayerProvider::toQuazarPlayer($player), true);
+                $player->sendMessage($message);
+                return;
+            }
+            
+            $typeFR = $formResponse->getDropdownSubmittedOptionId('type');
+            $type = "";
+            
+            if($typeFR == 0) $type = "nodebuff";
+            if($typeFR == 1) $type = "soup";
+            if($typeFR == 2) $type = "sumo";
+            
+            if(!EventsManager::getIfEventTypeUsed($type))
+            {
+                $event = new Event($player->getName(), $type);
+                EventsManager::addEvent($event);
+                EventsManager::teleportPlayerToEvent($player, $event);
+                $player->removeAllEffects();
+                $player->getInventory()->clearAll();
+                $player->getArmorInventory()->clearAll();
+                $message = LanguageProvider::getLanguageMessage("messages.events.event-create", PlayerProvider::toQuazarPlayer($player), true);
+                $player->sendMessage($message);
+            } else {
+                $message = LanguageProvider::getLanguageMessage("messages.events.type-already-used", PlayerProvider::toQuazarPlayer($player), true);
+                $player->sendMessage($message);
+            }
         });
         $player->sendForm($form);
     }
