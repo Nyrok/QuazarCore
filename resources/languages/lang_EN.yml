@@ -93,6 +93,7 @@ messages:
     event-quit: "You have left the event" 
     event-start: "The event begins"
     already-in-event: "You are already in event"
+    type-already-used: "A event of this type is already in progress"
 
 forms:
   top:
