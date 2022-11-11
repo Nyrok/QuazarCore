@@ -6,6 +6,7 @@ use Nyrok\QuazarCore\Core;
 use Nyrok\QuazarCore\utils\PlayerUtils;
 use Nyrok\QuazarCore\providers\LanguageProvider;
 use Nyrok\QuazarCore\providers\PlayerProvider;
+use Nyrok\QuazarCore\tasks\EventsTask;
 use AndreasHGK\EasyKits\Kit;
 use AndreasHGK\EasyKits\manager\KitManager;
 use Nyrok\QuazarCore\objects\Event;
@@ -52,6 +53,8 @@ abstract class EventsManager
         {
             $p->sendMessage(LanguageProvider::getLanguageMessage("messages.events.event-" . $type . "-created", PlayerProvider::toQuazarPlayer($p), true));
         }
+        
+        Core::getInstance()->getScheduler()->scheduleRepeatingTask(new EventsTask($event), 20);
     }
     
     /**
@@ -85,23 +88,30 @@ abstract class EventsManager
      */
     public static function startEvent(Event $event): void
     {
+        $configCache = Core::getInstance()->getConfig()->getAll();
+        
+        $event->setStart();
+        
         if(count($event->getPlayers()) >= (int)$configCache["events"]["min-players"]) {
-            $event->setStart();
-            
-            foreach($event->getPlayers() as $key => $player)
+            foreach($event->getPlayers() as $key => $p)
             {
+                $player = Server::getInstance()->getPlayerExact($p);
                 
                 $eventStartMsg = LanguageProvider::getLanguageMessage("messages.events.event-start", PlayerProvider::toQuazarPlayer($player), true);
                 $player->sendMessage($eventStartMsg);
-                
-                self::startFights($event);
             }
-        }else{
-            unset(self::$events[$event->getName()]);
             
-            foreach($event->getPlayers() as $key => $player)
+            self::startFights($event);
+        }else{
+            self::removeEvent($event);
+            
+            foreach($event->getPlayers() as $key => $p)
             {
+                $player = Server::getInstance()->getPlayerExact($p);
+                
                 $player->sendMessage(LanguageProvider::getLanguageMessage("messages.events.event-not-enough-player", PlayerProvider::toQuazarPlayer($player), true));
+                
+                if(PlayerUtils::teleportToSpawn($player)) LobbyManager::load($player);
             }
             
             $event->cancel();
