@@ -5,7 +5,6 @@ namespace Nyrok\QuazarCore\traits;
 use GdImage;
 use Nyrok\QuazarCore\Core;
 use Nyrok\QuazarCore\librairies\EasyUI\EasyUI;
-use Nyrok\QuazarCore\librairies\EasyUI\variant\SimpleForm;
 use Nyrok\QuazarCore\managers\CosmeticsManager;
 use pocketmine\entity\Skin;
 use pocketmine\Player;
@@ -19,11 +18,11 @@ trait CosmeticsTrait
         $allDirs = scandir($path);
         foreach ($allDirs as $foldersName) {
             if (is_dir($path . $foldersName) and $foldersName === "cosmetics") {
-                array_push(CosmeticsManager::$cosmeticsTypes, $foldersName);
+                CosmeticsManager::$cosmeticsTypes[] = $foldersName;
                 $allFiles = scandir($path . $foldersName);
                 foreach ($allFiles as $allFilesName) {
                     if (strpos($allFilesName, ".json")) {
-                        array_push($checkFileAvailable, str_replace('.json', '', $allFilesName));
+                        $checkFileAvailable[] = str_replace('.json', '', $allFilesName);
                     }
                 }
                 foreach ($checkFileAvailable as $value) {
@@ -45,7 +44,7 @@ trait CosmeticsTrait
         sort(CosmeticsManager::$cosmeticsTypes);
     }
 
-    private static function checkRequirement()
+    private static function checkRequirement(): void
     {
         $main = Core::getInstance();
         if (!extension_loaded("gd")) {
@@ -68,7 +67,7 @@ trait CosmeticsTrait
         }
     }
 
-    private static function recurse_copy($src, $dst)
+    private static function recurse_copy($src, $dst): void
     {
         $dir = opendir($src);
         @mkdir($dst);
@@ -109,7 +108,7 @@ trait CosmeticsTrait
         return $skinbytes;
     }
 
-    public static function resetSkin(Player $player)
+    public static function resetSkin(Player $player): void
     {
         $skin = $player->getSkin();
         $name = $player->getName();
@@ -125,7 +124,7 @@ trait CosmeticsTrait
         $player->sendSkin();
     }
 
-    public static function saveSkin(Skin $skin, $name)
+    public static function saveSkin(Skin $skin, $name): void
     {
         $path = Core::getInstance()->getDataFolder();
 
@@ -137,12 +136,12 @@ trait CosmeticsTrait
             unlink($path . "saveskin/" . $name . ".txt");
         }
 
-        file_put_contents($path . "saveskin/" . $name . ".txt", $skin->getSkinImage()->getData());
+        file_put_contents($path . "saveskin/" . $name . ".txt", $skin->getSkinData());
 
         if (filesize($path . "saveskin/" . $name . ".txt") == 65536) {
-            $img = self::toImage($skin->getSkinImage()->getData(), 128, 128);
+            $img = self::toImage($skin->getSkinData(), 128, 128);
         } else {
-            $img = self::toImage($skin->getSkinImage()->getData(), 64, 64);
+            $img = self::toImage($skin->getSkinData(), 64, 64);
         }
         imagepng($img, $path . "saveskin/" . $name . ".png");
     }
@@ -163,14 +162,14 @@ trait CosmeticsTrait
             }, $walkable);
             $alpha = array_pop($color);
             $alpha = ((~((int)$alpha)) & 0xff) >> 1;
-            array_push($color, $alpha);
+            $color[] = $alpha;
             imagesetpixel($image, $x, $y, imagecolorallocatealpha($image, ...$color));
             $position--;
         }
         return $image;
     }
 
-    public static function setSkin(Player $player, string $stuffName, string $locate)
+    public static function setSkin(Player $player, string $stuffName, string $locate): void
     {
         $skin = $player->getSkin();
         $name = $player->getName();

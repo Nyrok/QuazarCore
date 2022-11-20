@@ -28,7 +28,7 @@ final class EntityDamageByEntityEvent implements Listener
      */
     public function onEvent(ClassEvent $event){
         if($event->getEntity() instanceof Player and $event->getDamager() instanceof FishingHook){
-            $event->cancel();
+            $event->setCancelled(true);
             $kb = Core::getInstance()->getConfig()['utils']['rod']['kb'];
             $event->getEntity()->attack(new ClassEvent($event->getDamager(), $event->getEntity(), EntityDamageEvent::CAUSE_ENTITY_ATTACK, 0, [], $kb));
             if(Core::getInstance()->getConfig()['utils']['rod']['dispawn']) $event->getDamager()->flagForDespawn();
