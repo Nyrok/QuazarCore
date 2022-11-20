@@ -2,11 +2,9 @@
 
 namespace Nyrok\QuazarCore\listeners;
 
-use Couchbase\MatchAllSearchQuery;
 use Nyrok\QuazarCore\Core;
 use Nyrok\QuazarCore\managers\CooldownManager;
 use Nyrok\QuazarCore\managers\CosmeticsManager;
-use Nyrok\QuazarCore\managers\CPSManager;
 use Nyrok\QuazarCore\managers\DuelsManager;
 use Nyrok\QuazarCore\managers\EventsManager;
 use Nyrok\QuazarCore\managers\FFAManager;
@@ -41,6 +39,11 @@ final class PlayerInteractEvent implements Listener
                 BlockIds::REDSTONE_BLOCK => StaffManager::turnOff($event->getPlayer()),
                 default => null
             };
+        } else if (EventsManager::getIfPlayerIsInEvent($event->getPlayer())) {
+            match($id) {
+                152 => EventsManager::removePlayer($event->getPlayer()),
+                default => null
+            };
         } else {
             if ($event->getPlayer()->getLevel()->getName() === Core::getInstance()->getConfig()->getNested('positions.spawn.world', "")) {
                 match ($id) {
@@ -50,10 +53,10 @@ final class PlayerInteractEvent implements Listener
                     264 => CosmeticsManager::formCosmetics($event->getPlayer()),
                     340 => LobbyManager::formStats($event->getPlayer()),
                     347 => LobbyManager::formSettings($event->getPlayer()),
-                    152 => EventsManager::removePlayer($event->getPlayer()),
                     -161 => MatchmakingManager::removePlayer($event->getPlayer()->getName()),
                     default => null
                 };
+                
             } else if ($id === SoupManager::getSoupId() and $event->getPlayer()->getHealth() != $event->getPlayer()->getMaxHealth()) {
                 $event->getPlayer()->heal(new EntityRegainHealthEvent($event->getPlayer(), SoupManager::getSoupHeal(), EntityRegainHealthEvent::CAUSE_CUSTOM));
                 $event->getPlayer()->getInventory()->setItemInHand($event->getItem()->setCount($event->getItem()->getCount() - 1));

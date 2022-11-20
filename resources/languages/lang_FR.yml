@@ -95,6 +95,7 @@ messages:
     event-join: "Vous avez rejoint l'évent"
     event-quit: "Vous avez quitté l'évent"
     event-start: "L'évent commence"
+    type-already-used: "Un évent de ce type est déjà en cours"
 
 forms:
   top:

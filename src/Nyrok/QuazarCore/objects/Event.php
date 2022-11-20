@@ -35,9 +35,9 @@ final class Event
      * @param string $type
      * @param Player $host
      */
-    public function __construct(private string $name, private string $type, private Player $host)
+    public function __construct(private string $name, private string $type)
     {
-        self::addPlayer($host);
+        $this->addPlayer($name);
         $this->startIn = time() + 120;
     }
     
@@ -55,14 +55,6 @@ final class Event
     public function getType(): string
     {
         return $this->type;
-    }
-    
-    /**
-     * @return Player
-     */
-    public function getHost(): Player
-    {
-        return $this->host;
     }
     
     /**
@@ -126,37 +118,21 @@ final class Event
     }
 
     /**
-     * @param Player $player
-     * @param bool $sendMsg
+     * @param string $player
      * @return void
      */
-    public function addPlayer(Player $player, bool $sendMsg = false): void
+    public function addPlayer(string $player): void
     {
         array_push($this->players, $player);
-        
-        
-        $item = [4 => Item::get(152)->setCustomName("§4Leave")];
-        
-        $player->removeAllEffects();
-        $player->getInventory()->clearAll();
-        $player->getArmorInventory()->clearAll();
-        $player->getInventory()->setContents($item);
-        
-        
-        if($sendMsg) {
-            $message = LanguageProvider::getLanguageMessage("messages.events.event-join", PlayerProvider::toQuazarPlayer($player), true);
-            $player->sendMessage($message);
-        }
     }
     
     /**
-     * @param Player $player
+     * @param string $player
      * @return void
      */
-    public function removePlayer(Player $player): void
+    public function removePlayer(string $player): void
     {
-        unset($this->players[array_search($player->getName(), $this->players)]);
-        LobbyManager::load($player);
+        unset($this->players[array_search($player, $this->players)]);
         if(empty($this->players)){
             $this->cancel();
         }

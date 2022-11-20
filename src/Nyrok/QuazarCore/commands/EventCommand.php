@@ -77,26 +77,34 @@ final class EventCommand extends QuazarCommands
 
         $form->addElement("type", $dropdown);
 
-
         $form->setSubmitListener(function (Player $player, FormResponse $formResponse) use ($dropdown1, $dropdown2, $dropdown3): void {
-            switch($formResponse->getDropdownSubmittedOptionId('type')) {
-                case $dropdown1:
-                    EventsManager::addEvent(new Event($player->getName(), "nodebuff", $player));
-                    break;
-                
-                case $dropdown2:
-                    EventsManager::addEvent(new Event($player->getName(), "sumo", $player));
-                    break;
-                
-                case $dropdown3:
-                    EventsManager::addEvent(new Event($player->getName(), "soup", $player));
-                    break;
-                
-                default:
-                    break;
-            };
-            $message = LanguageProvider::getLanguageMessage("messages.events.event-create", PlayerProvider::toQuazarPlayer($player), true);
-            $player->sendMessage($message);
+            if(EventsManager::getIfPlayerIsInEvent($player)) {
+                $message = LanguageProvider::getLanguageMessage("messages.events.already-in-event", PlayerProvider::toQuazarPlayer($player), true);
+                $player->sendMessage($message);
+                return;
+            }
+            
+            $typeFR = $formResponse->getDropdownSubmittedOptionId('type');
+            $type = "";
+            
+            if($typeFR == 0) $type = "nodebuff";
+            if($typeFR == 1) $type = "soup";
+            if($typeFR == 2) $type = "sumo";
+            
+            if(!EventsManager::getIfEventTypeUsed($type))
+            {
+                $event = new Event($player->getName(), $type);
+                EventsManager::addEvent($event);
+                EventsManager::teleportPlayerToEvent($player, $event);
+                $player->removeAllEffects();
+                $player->getInventory()->clearAll();
+                $player->getArmorInventory()->clearAll();
+                $message = LanguageProvider::getLanguageMessage("messages.events.event-create", PlayerProvider::toQuazarPlayer($player), true);
+                $player->sendMessage($message);
+            } else {
+                $message = LanguageProvider::getLanguageMessage("messages.events.type-already-used", PlayerProvider::toQuazarPlayer($player), true);
+                $player->sendMessage($message);
+            }
         });
         $player->sendForm($form);
     }
@@ -113,10 +121,15 @@ final class EventCommand extends QuazarCommands
         $joinButton = LanguageProvider::getLanguageMessage("forms.events.3.button-event", PlayerProvider::toQuazarPlayer($player), false);
 
         foreach (EventsManager::getEvents() as $event) {
-            $button = str_replace("{host}", $event->getHost(), $joinButton);
+            $button = str_replace("{host}", $event->getName(), $joinButton);
             $button = str_replace("{type}", $event->getType(), $button);
             $form->addButton(new Button($button, null, function (Player $player) use ($event){
-                $event->addPlayer($player, true);
+                if(!EventsManager::getIfPlayerIsInEvent($player)) {
+                    EventsManager::addPlayerToEvent($player, $event, true, true);
+                } else {
+                    $message = LanguageProvider::getLanguageMessage("messages.events.already-in-event", PlayerProvider::toQuazarPlayer($player), true);
+                    $player->sendMessage($message);
+                }
             }));
         }
 

@@ -3,14 +3,17 @@
 namespace Nyrok\QuazarCore\managers;
 
 use Nyrok\QuazarCore\Core;
+use Nyrok\QuazarCore\utils\PlayerUtils;
 use Nyrok\QuazarCore\providers\LanguageProvider;
 use Nyrok\QuazarCore\providers\PlayerProvider;
+use Nyrok\QuazarCore\tasks\EventsTask;
 use AndreasHGK\EasyKits\Kit;
 use AndreasHGK\EasyKits\manager\KitManager;
 use Nyrok\QuazarCore\objects\Event;
 use pocketmine\level\Position;
 use pocketmine\Player;
 use pocketmine\Server;
+use pocketmine\item\Item;
 
 abstract class EventsManager
 {
@@ -42,12 +45,16 @@ abstract class EventsManager
      */
     public static function addEvent(Event $event): void
     {
-        self::$events[$event->getHost()->getName()] = $event;
+        self::$events[$event->getName()] = $event;
+        
+        $type = str_replace("nodebuff", "ndb", $event->getType());
         
         foreach(Server::getInstance()->getOnlinePlayers() as $p)
         {
-            $p->sendMessage(LanguageProvider::getLanguageMessage("messages.events.event-ndb-created", PlayerProvider::toQuazarPlayer($p), true));
+            $p->sendMessage(LanguageProvider::getLanguageMessage("messages.events.event-" . $type . "-created", PlayerProvider::toQuazarPlayer($p), true));
         }
+        
+        Core::getInstance()->getScheduler()->scheduleRepeatingTask(new EventsTask($event), 20);
     }
     
     /**
@@ -56,7 +63,23 @@ abstract class EventsManager
      */
     public static function removeEvent(Event $event): void
     {
-        unset(self::$events[$event->getHost()->getName()]);
+        unset(self::$events[$event->getName()]);
+    }
+    
+    public static function addPlayerToEvent(Player $player, Event $event): void
+    {
+        $event->addPlayer($player->getName());
+        self::teleportPlayerToEvent($player, $event);
+        
+        $player->removeAllEffects();
+        $player->getInventory()->clearAll();
+        $player->getArmorInventory()->clearAll();
+        
+        $item = [4 => Item::get(152)->setCustomName("§4Leave")];
+        $player->getInventory()->setContents($item);
+        
+        $message = LanguageProvider::getLanguageMessage("messages.events.event-join", PlayerProvider::toQuazarPlayer($player), true);
+        $player->sendMessage($message);
     }
     
     /**
@@ -67,35 +90,28 @@ abstract class EventsManager
     {
         $configCache = Core::getInstance()->getConfig()->getAll();
         
+        $event->setStart();
+        
         if(count($event->getPlayers()) >= (int)$configCache["events"]["min-players"]) {
-            $event->setStart();
-            
-            $worldN = match($event->getType()) {
-                'nodebuff' => 'ndb-event',
-                'sumo' => 'sumo-event',
-                'soup' => 'soup-event',
-            };
-            
-            $posData = $configCache["events"][$worldN]["spectators"]["spawn"];
-            
-            $world = Server::getInstance()->getLevelByName($worldN);
-            $position = new Position($posData["x"], $posData["y"], $posData["z"], $world);
-            
-            foreach($event->getPlayers() as $player)
+            foreach($event->getPlayers() as $key => $p)
             {
-                $player->teleport($position);
+                $player = Server::getInstance()->getPlayerExact($p);
                 
                 $eventStartMsg = LanguageProvider::getLanguageMessage("messages.events.event-start", PlayerProvider::toQuazarPlayer($player), true);
                 $player->sendMessage($eventStartMsg);
-                
-                self::startFights($event);
             }
-        }else{
-            unset(self::$events[$event->getName()]);
             
-            foreach($event->getPlayers() as $player)
+            self::startFights($event);
+        }else{
+            self::removeEvent($event);
+            
+            foreach($event->getPlayers() as $key => $p)
             {
+                $player = Server::getInstance()->getPlayerExact($p);
+                
                 $player->sendMessage(LanguageProvider::getLanguageMessage("messages.events.event-not-enough-player", PlayerProvider::toQuazarPlayer($player), true));
+                
+                if(PlayerUtils::teleportToSpawn($player)) LobbyManager::load($player);
             }
             
             $event->cancel();
@@ -135,9 +151,10 @@ abstract class EventsManager
         $event->setFought($fighter2->getName());
         
         $worldN = match($event->getType()) {
-            'nodebuff' => 'ndb-event',
+            'nodebuff' =>'ndb-event',
             'sumo' => 'sumo-event',
             'soup' => 'soup-event',
+            default => 'ndb-event'
         };
         
         $configCache = Core::getInstance()->getConfig()->getAll();
@@ -162,8 +179,59 @@ abstract class EventsManager
 
     public static function removePlayer(Player $player): void
     {
-        foreach (self::getEvents() as $event){
-            $event->removePlayer($player);
+        self::getEventByPlayer($player)->removePlayer($player->getName());
+        if(PlayerUtils::teleportToSpawn($player)) LobbyManager::load($player);
+    }
+    
+    public static function getEventByPlayer(Player $player): ?Event
+    {
+        foreach(self::getEvents() as $name => $event)
+        {
+            foreach($event->getPlayers() as $key => $p)
+            {
+                if($p == $player->getName()) return $event;
+            }
         }
+    }
+    
+    public static function getIfPlayerIsInEvent(Player $player): bool
+    {
+        foreach(self::getEvents() as $name => $event)
+        {
+            foreach($event->getPlayers() as $key => $p)
+            {
+                if($p == $player->getName()) return true;
+            }
+        }
+        return false;
+    }
+    
+    public static function getIfEventTypeUsed(string $type): bool
+    {
+        var_dump($type);
+        foreach(self::getEvents() as $name => $event)
+        {
+            if($event->getType() == $type) return true;
+        }
+        return false;
+    }
+    
+    public static function teleportPlayerToEvent(Player $player, Event $event): void
+    {
+        $configCache = Core::getInstance()->getConfig()->getAll();
+        
+        $worldN = match($event->getType()) {
+            'nodebuff' => 'ndb-event',
+            'sumo' => 'sumo-event',
+            'soup' => 'soup-event',
+            default => 'ndb-event'
+        };
+            
+        $posData = $configCache["events"][$worldN]["spectators"]["spawn"];
+        
+        $world = Server::getInstance()->getLevelByName($worldN);
+        $position = new Position($posData["x"], $posData["y"], $posData["z"], $world);
+        
+        $player->teleport($position);
     }
 }
