@@ -60,7 +60,7 @@ class Core extends PluginBase
     public function onEnable(): void
     {
         $this::setInstance($this);
-        $this->saveResource("config.yml", true);
+        $this->saveResource("config.yml", false);
 
         $this->filePath = $this->getFile();
         $this->config = new ConfigDatabase($this->getDataFolder().'config.yml', Config::YAML);
