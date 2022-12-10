@@ -50,6 +50,10 @@ messages:
     lost: "§9-{elo} Elo"
 
   success:
+    duel-created: "You requested {opponent} in duel {mode}"
+    duel-request: "You received a duel request in {mode} from {host}"
+    duel-accepted-opponent: "You have accepted {host}'s duel request!"
+    duel-accepted-host: "{opponent} has accepted your duel request!"
     sanctions-removed: "Sanction has been removed"
     mute: "You have muted {player} until {time} for {reason}" # {player}, {time}, {reason}
     muted: "You have been muted by {staff} until {time} for {reason}" # {staff}, {time}, {reason}
@@ -82,6 +86,8 @@ messages:
     spawn-not-found: "Spawn has not been found"
     not-a-player: "You must be a player"
     invalid-argument: "This value is invalid"
+    duel-dont-exists: "This duel does not exist"
+    duel-not-opponent: "No opponent found"
     
   events:
     event-ndb-created: "A nodebuff event has been launched"
