@@ -16,8 +16,10 @@ final class Duel
 
     public function __construct(private Player $host, private Player $opponent, private Mode $mode)
     {
-        $this->host->sendMessage(LanguageProvider::getLanguageMessage("messages.success.duel-created", PlayerProvider::toQuazarPlayer($this->host), true));
-        $this->opponent->sendMessage(LanguageProvider::getLanguageMessage("messages.success.duel-request", PlayerProvider::toQuazarPlayer($this->opponent), true));
+        $message = LanguageProvider::getLanguageMessage("messages.success.duel-created", PlayerProvider::toQuazarPlayer($this->host), true);
+        $this->host->sendMessage(str_replace(["{opponent}", "{mode}"], [$this->opponent->getName(), $this->mode->getName()], $message));
+        $message = LanguageProvider::getLanguageMessage("messages.success.duel-request", PlayerProvider::toQuazarPlayer($this->opponent), true);
+        $this->opponent->sendMessage(str_replace(["{host}", "{mode}"], [$this->host->getName(), $this->mode->getName()], $message));
     }
 
     /**

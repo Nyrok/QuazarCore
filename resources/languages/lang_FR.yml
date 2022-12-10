@@ -50,6 +50,7 @@ messages:
     lost: "§9-{elo} Elo"
 
   success:
+    duel-created: "Vous avez demandé {opponent} en duel {mode}"
     duel-request: "Vous avez reçu une demande de duel en {mode} de la part de {host}"
     duel-accepted-opponent: "Vous avez accepté la demande de duel de {host} !"
     duel-accepted-host: "{opponent} a accepté votre demande de duel !"
@@ -85,6 +86,9 @@ messages:
     spawn-not-found: "Le spawn n'a pas été trouvé"
     not-a-player: "Vous devez être un joueur"
     invalid-argument: "Cette valeur n'est pas valide"
+    duel-dont-exists: "Ce duel n'existe pas"
+    duel-not-opponent: "Aucun adversaire trouvé"
+
   events:
     duel-not-opponent: "Vous n'êtes pas l'adversaire de {host}"
     event-ndb-created: "Un event de nodebuff a été lancé"
