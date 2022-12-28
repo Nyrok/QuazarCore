@@ -7,9 +7,14 @@ use Nyrok\QuazarCore\managers\CPSManager;
 use Nyrok\QuazarCore\providers\PlayerProvider;
 use pocketmine\event\Listener;
 use pocketmine\event\server\DataPacketReceiveEvent as ClassEvent;
+use pocketmine\network\mcpe\protocol\InventoryTransactionPacket;
 use pocketmine\network\mcpe\protocol\LevelSoundEventPacket;
 use pocketmine\network\mcpe\protocol\LoginPacket;
+use pocketmine\network\mcpe\protocol\PlayerActionPacket;
 use pocketmine\network\mcpe\protocol\PlayerAuthInputPacket;
+use pocketmine\network\mcpe\protocol\types\inventory\UseItemOnEntityTransactionData;
+use pocketmine\network\mcpe\protocol\types\LevelSoundEvent;
+use pocketmine\network\mcpe\protocol\types\PlayerAction;
 use pocketmine\scheduler\ClosureTask;
 
 final class DataPacketReceiveEvent implements Listener
@@ -24,15 +29,10 @@ final class DataPacketReceiveEvent implements Listener
      */
     public function onEvent(ClassEvent $event){
         switch ($pk = $event->getPacket()){
-            case $pk instanceof LevelSoundEventPacket:
-                switch ($pk->sound){
-                    case $pk::SOUND_ATTACK:
-                    case $pk::SOUND_ATTACK_STRONG:
-                    case $pk::SOUND_ATTACK_NODAMAGE:
-                        CPSManager::addClick($event->getPlayer());
-                        $event->setCancelled();
-                        break;
-                }
+            case $pk instanceof InventoryTransactionPacket && $pk->trData instanceof UseItemOnEntityTransactionData:
+            case $pk instanceof LevelSoundEventPacket && $pk->sound === LevelSoundEventPacket::SOUND_ATTACK_NODAMAGE:
+            case $pk instanceof PlayerActionPacket && $pk->action === PlayerActionPacket::ACTION_START_BREAK:
+                CPSManager::addClick($event->getPlayer());
                 break;
             case $pk instanceof LoginPacket:
                 Core::getInstance()->getScheduler()->scheduleTask(new ClosureTask(function (int $currentTick) use ($event, $pk): void {

@@ -6,8 +6,15 @@ use Nyrok\QuazarCore\Core;
 use Nyrok\QuazarCore\librairies\CortexPE\DiscordWebhookAPI\Embed;
 use Nyrok\QuazarCore\librairies\CortexPE\DiscordWebhookAPI\Message;
 use Nyrok\QuazarCore\librairies\CortexPE\DiscordWebhookAPI\Webhook;
+use Nyrok\QuazarCore\listeners\DataPacketReceiveEvent;
 use Nyrok\QuazarCore\providers\PlayerProvider;
 use Nyrok\QuazarCore\tasks\CPSTask;
+use pocketmine\network\mcpe\protocol\InventoryTransactionPacket;
+use pocketmine\network\mcpe\protocol\LevelSoundEventPacket;
+use pocketmine\network\mcpe\protocol\PlayerActionPacket;
+use pocketmine\network\mcpe\protocol\types\inventory\UseItemOnEntityTransactionData;
+use pocketmine\network\mcpe\protocol\types\LevelSoundEvent;
+use pocketmine\network\mcpe\protocol\types\PlayerAction;
 use pocketmine\Player;
 
 abstract class CPSManager
@@ -28,7 +35,7 @@ abstract class CPSManager
      */
     public static function initPlayerClickData(Player $player): void
     {
-        self::$clicksData[$player->getName()] = [];
+        self::$clicksData[mb_strtolower($player->getName())] = [];
     }
 
     /**
@@ -36,9 +43,9 @@ abstract class CPSManager
      */
     public static function addClick(Player $player): void
     {
-        array_unshift(self::$clicksData[$player->getName()], microtime(true));
-        if (count(self::$clicksData[$player->getName()]) >= self::ARRAY_MAX_SIZE) {
-            array_pop(self::$clicksData[$player->getName()]);
+        array_unshift(self::$clicksData[mb_strtolower($player->getName())], microtime(true));
+        if(count(self::$clicksData[mb_strtolower($player->getName())]) >= self::ARRAY_MAX_SIZE){
+            array_pop(self::$clicksData[mb_strtolower($player->getName())]);
         }
     }
 
@@ -64,7 +71,7 @@ abstract class CPSManager
      */
     public static function removePlayerClickData(Player $player): void
     {
-        unset(self::$clicksData[$player->getName()]);
+        unset(self::$clicksData[mb_strtolower($player->getName())]);
     }
 
     /**
