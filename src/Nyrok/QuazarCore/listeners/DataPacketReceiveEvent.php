@@ -31,7 +31,6 @@ final class DataPacketReceiveEvent implements Listener
         switch ($pk = $event->getPacket()){
             case $pk instanceof InventoryTransactionPacket && $pk->trData instanceof UseItemOnEntityTransactionData:
             case $pk instanceof LevelSoundEventPacket && $pk->sound === LevelSoundEventPacket::SOUND_ATTACK_NODAMAGE:
-            case $pk instanceof PlayerActionPacket && $pk->action === PlayerActionPacket::ACTION_START_BREAK:
                 CPSManager::addClick($event->getPlayer());
                 break;
             case $pk instanceof LoginPacket:
