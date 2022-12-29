@@ -4,6 +4,7 @@ namespace Nyrok\QuazarCore\commands;
 
 use Nyrok\QuazarCore\librairies\EasyUI\icon\ButtonIcon;
 use Nyrok\QuazarCore\managers\DuelsManager;
+use Nyrok\QuazarCore\managers\EventsManager;
 use Nyrok\QuazarCore\objects\Duel;
 use pocketmine\Server;
 use Nyrok\QuazarCore\librairies\EasyUI\element\Button;
@@ -21,6 +22,10 @@ final class DuelCommand extends QuazarCommands
         if (!$this->testPermissionSilent($sender)) return;
         if (!$sender instanceof Player) {
             $sender->sendMessage(LanguageProvider::getLanguageMessage("messages.errors.not-a-player", null, true));
+            return;
+        }
+        if(EventsManager::getIfPlayerIsInEvent($sender)) {
+            $sender->sendMessage(LanguageProvider::getLanguageMessage("messages.events.unauthorized-command", PlayerProvider::toQuazarPlayer($sender), true));
             return;
         }
         if (isset($args[0], $args[1])) {

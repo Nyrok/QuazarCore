@@ -41,10 +41,15 @@ final class PlayerInteractEvent implements Listener
             };
         } else if (EventsManager::getIfPlayerIsInEvent($event->getPlayer())) {
             match($id) {
-                152 => EventsManager::removePlayer($event->getPlayer()),
+                152 => EventsManager::removePlayer($event->getPlayer(), true),
                 default => null
             };
-        } else {
+        } else if (EventsManager::getIfPlayerIsSpectatorEvent($event->getPlayer())) {
+            match ($id) {
+                152 => EventsManager::removeSpectator($event->getPlayer()),
+                default => null
+            };
+        }else {
             if ($event->getPlayer()->getLevel()->getName() === Core::getInstance()->getConfig()->getNested('positions.spawn.world', "")) {
                 match ($id) {
                     267 => FFAManager::formFFAS($event->getPlayer()),

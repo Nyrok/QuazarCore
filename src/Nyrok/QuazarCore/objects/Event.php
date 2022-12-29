@@ -3,15 +3,11 @@
 namespace Nyrok\QuazarCore\objects;
 
 use pocketmine\Player;
-use pocketmine\item\Item;
-use Nyrok\QuazarCore\providers\LanguageProvider;
-use Nyrok\QuazarCore\providers\PlayerProvider;
-use Nyrok\QuazarCore\managers\LobbyManager;
 
 final class Event
 {
     /**
-     * @var Player[]
+     * @var string[]
      */
     private array $players = [];
 
@@ -29,11 +25,15 @@ final class Event
      * @var array
      */
     private array $fought = [];
-    
+
+    /**
+     * @var array
+     */
+    private array $spectators = [];
+
     /**
      * @param string $name
      * @param string $type
-     * @param Player $host
      */
     public function __construct(private string $name, private string $type)
     {
@@ -101,9 +101,9 @@ final class Event
      * @param string $pName
      * @return void
      */
-    public function setFought(string $pName): void
+    public function addFought(string $pName): void
     {
-        array_push($this->fought, $pName);
+        $this->fought[] = $pName;
     }
     
     /**
@@ -111,10 +111,7 @@ final class Event
      */
     public function resetFought(): void
     {
-        foreach($this->fought as $pName)
-        {
-            unset($pName);
-        }
+        $this->fought = [];
     }
 
     /**
@@ -123,7 +120,7 @@ final class Event
      */
     public function addPlayer(string $player): void
     {
-        array_push($this->players, $player);
+        $this->players[] = $player;
     }
     
     /**
@@ -133,13 +130,31 @@ final class Event
     public function removePlayer(string $player): void
     {
         unset($this->players[array_search($player, $this->players)]);
-        if(empty($this->players)){
-            $this->cancel();
-        }
     }
-    
-    public function cancel(): void
+
+    /**
+     * @return array
+     */
+    public function getSpectators(): array
     {
-        $this->players = [];
+        return $this->spectators;
+    }
+
+    /**
+     * @param string $player
+     * @return void
+     */
+    public function addSpectator(string $player): void
+    {
+        $this->spectators[] = $player;
+    }
+
+    /**
+     * @param string $player
+     * @return void
+     */
+    public function removeSpectator(string $player): void
+    {
+        unset($this->spectators[array_search($player, $this->spectators)]);
     }
 }

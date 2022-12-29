@@ -7,13 +7,13 @@ use Nyrok\QuazarCore\utils\PlayerUtils;
 use Nyrok\QuazarCore\providers\LanguageProvider;
 use Nyrok\QuazarCore\providers\PlayerProvider;
 use Nyrok\QuazarCore\tasks\EventsTask;
-use AndreasHGK\EasyKits\Kit;
 use AndreasHGK\EasyKits\manager\KitManager;
 use Nyrok\QuazarCore\objects\Event;
 use pocketmine\level\Position;
 use pocketmine\Player;
 use pocketmine\Server;
 use pocketmine\item\Item;
+use pocketmine\utils\Utils;
 
 abstract class EventsManager
 {
@@ -93,7 +93,8 @@ abstract class EventsManager
         $event->setStart();
         
         if(count($event->getPlayers()) >= (int)$configCache["events"]["min-players"]) {
-            foreach($event->getPlayers() as $key => $p)
+
+            foreach($event->getPlayers() as $p)
             {
                 $player = Server::getInstance()->getPlayerExact($p);
                 
@@ -103,9 +104,10 @@ abstract class EventsManager
             
             self::startFights($event);
         }else{
+
             self::removeEvent($event);
             
-            foreach($event->getPlayers() as $key => $p)
+            foreach($event->getPlayers() as $p)
             {
                 $player = Server::getInstance()->getPlayerExact($p);
                 
@@ -113,8 +115,6 @@ abstract class EventsManager
                 
                 if(PlayerUtils::teleportToSpawn($player)) LobbyManager::load($player);
             }
-            
-            $event->cancel();
         }
     }
     
@@ -124,7 +124,19 @@ abstract class EventsManager
      */
     public static function endEvent(Event $event): void
     {
-        
+        $players = $event->getPlayers();
+
+        foreach ($players as $player)
+        {
+            $p = Server::getInstance()->getPlayerExact($player);
+            $message = LanguageProvider::getLanguageMessage("messages.events.winner", PlayerProvider::toQuazarPlayer($p), true);
+            $message = str_replace("{winner}", $event->getPlayers()[0], $message);
+            $p->sendMessage($message);
+
+            PlayerUtils::teleportToSpawn($p);
+        }
+
+        self::removeEvent($event);
     }
     
     /**
@@ -134,28 +146,37 @@ abstract class EventsManager
     public static function startFights(Event $event): void
     {
         $players = count($event->getPlayers());
-        $fighters = $event->getPlayers();
-        
-        foreach($event->getPlayers() as $player)
-        {
-            if(isset($event->getFought()[$player->getName()])) {
-                unset($fighters[$player->getName()]);
-            }
+
+        if($players === 1) {
+
+            self::endEvent($event);
+            return;
         }
-        
-        $fighter1 = $fighters[mt_rand(0, count($fighters) - 1)];
-        $event->setFought($fighter1->getName());
-        unset($fighters[array_search($fighter1, $fighters)]);
-        
-        $fighter2 = $fighters[mt_rand(0, count($fighters) - 1)];
-        $event->setFought($fighter2->getName());
+
+        $fighters = self::getFighters($event);
+
+        if(count($fighters) < 2) {
+
+            $event->resetFought();
+            $fighters = self::getFighters($event);
+        }
+
+        $fightersRand = array_rand($fighters, 2);
+
+        $fighter1Name = $fightersRand[0];
+        $event->addFought($fighter1Name);
+
+        $fighter2Name = $fightersRand[1];
+        $event->addFought($fighter2Name);
         
         $worldN = match($event->getType()) {
-            'nodebuff' =>'ndb-event',
             'sumo' => 'sumo-event',
             'soup' => 'soup-event',
             default => 'ndb-event'
         };
+
+        $fighter1 = Server::getInstance()->getPlayerExact($fighter1Name);
+        $fighter2 = Server::getInstance()->getPlayerExact($fighter2Name);
         
         $configCache = Core::getInstance()->getConfig()->getAll();
         
@@ -177,30 +198,76 @@ abstract class EventsManager
         $kit->claimFor($fighter2);
     }
 
-    public static function removePlayer(Player $player): void
+    public static function getFighters(Event $event): array
+    {
+        $fighters = $event->getPlayers();
+
+        foreach($fighters as $player)
+        {
+            if(isset($event->getFought()[$player])) {
+
+                unset($fighters[$player]);
+            }
+        }
+
+        return $fighters;
+    }
+
+    public static function removePlayer(Player $player, bool $teleport = false): void
     {
         self::getEventByPlayer($player)->removePlayer($player->getName());
+        if($teleport) if(PlayerUtils::teleportToSpawn($player)) LobbyManager::load($player);
+    }
+
+    public static function removeSpectator(Player $player): void
+    {
+        self::getEventBySpectator($player)->removePlayer($player->getName());
         if(PlayerUtils::teleportToSpawn($player)) LobbyManager::load($player);
     }
     
     public static function getEventByPlayer(Player $player): ?Event
     {
-        foreach(self::getEvents() as $name => $event)
+        foreach(self::getEvents() as $event)
         {
-            foreach($event->getPlayers() as $key => $p)
-            {
-                if($p == $player->getName()) return $event;
+            if (in_array($player->getName(), $event->getPlayers())) {
+
+                return $event;
             }
         }
+        return null;
+    }
+
+    public static function getEventBySpectator(Player $player): ?Event
+    {
+        foreach(self::getEvents() as $event)
+        {
+            if (in_array($player->getName(), $event->getSpectators())) {
+
+                return $event;
+            }
+        }
+        return null;
+    }
+
+    public static function getEventByType(string $type): ?Event
+    {
+        foreach(self::getEvents() as $event)
+        {
+            if ($event->getType() === $type) {
+
+                return $event;
+            }
+        }
+        return null;
     }
     
     public static function getIfPlayerIsInEvent(Player $player): bool
     {
-        foreach(self::getEvents() as $name => $event)
+        foreach(self::getEvents() as $event)
         {
-            foreach($event->getPlayers() as $key => $p)
-            {
-                if($p == $player->getName()) return true;
+            if (in_array($player->getName(), $event->getPlayers())) {
+
+                return true;
             }
         }
         return false;
@@ -208,10 +275,21 @@ abstract class EventsManager
     
     public static function getIfEventTypeUsed(string $type): bool
     {
-        var_dump($type);
-        foreach(self::getEvents() as $name => $event)
+        foreach(self::getEvents() as $event)
         {
             if($event->getType() == $type) return true;
+        }
+        return false;
+    }
+
+    public static function getIfPlayerIsSpectatorEvent(Player $player): bool
+    {
+        foreach(self::getEvents() as $event)
+        {
+            if (in_array($player->getName(), $event->getSpectators())) {
+
+                return true;
+            }
         }
         return false;
     }
@@ -221,7 +299,6 @@ abstract class EventsManager
         $configCache = Core::getInstance()->getConfig()->getAll();
         
         $worldN = match($event->getType()) {
-            'nodebuff' => 'ndb-event',
             'sumo' => 'sumo-event',
             'soup' => 'soup-event',
             default => 'ndb-event'

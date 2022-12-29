@@ -2,21 +2,18 @@
 
 namespace Nyrok\QuazarCore\tasks;
 
+use Nyrok\QuazarCore\providers\LanguageProvider;
+use Nyrok\QuazarCore\providers\PlayerProvider;
 use pocketmine\scheduler\Task;
 use pocketmine\Server;
 use pocketmine\math\Vector3;
 use pocketmine\network\mcpe\protocol\LevelSoundEventPacket;
-use Nyrok\QuazarCore\librairies\Voltage\Api\module\ScoreBoard;
-use Nyrok\QuazarCore\librairies\Voltage\Api\module\types\ScoreBoardLine;
 use Nyrok\QuazarCore\objects\Event;
 use Nyrok\QuazarCore\managers\EventsManager;
-use Nyrok\QuazarCore\managers\ScoreBoardManager;
 use Nyrok\QuazarCore\Core;
 
 final class EventsTask extends Task
 {
-    private float $progress = 0.0;
-    
     /**
      * @param Event $event
      */
@@ -28,53 +25,53 @@ final class EventsTask extends Task
     {
         $event = $this->event;
         if($event->getStart()) {
-            
+
+            Core::getInstance()->getScheduler()->cancelTask($this->getTaskId());
         } else {
+
             $startIn = $event->getStartIn() - time();
-            
+
+            // START EVENT
             if($startIn <= 0) {
                 EventsManager::startEvent($event);
                 return;
             }
-            
-            switch($startIn)
-            {
-                case $startIn === 60:
-                    $this->broadcastEventMessage($event, "L'évent commence dans une minute");
-                    break;
-                
-                case $startIn >= 1 && $startIn <= 3:
-                    $this->broadcastEventSoud($event, LevelSoundEventPacket::SOUND_LEVELUP);
-                    break;
+
+            if(
+                $startIn === 60 ||
+                $startIn === 30 ||
+                $startIn === 15 ||
+                ($startIn <= 5)
+            ) {
+
+                $this->broadcastEventMessage($event);
+
             }
-            
-            $worldN = match($event->getType()) {
-                'nodebuff' =>'ndb-event',
-                'sumo' => 'sumo-event',
-                'soup' => 'soup-event',
-                default => 'ndb-event'
-            };
-            $scoreboard = ScoreBoardManager::getScoreboards()[$worldN]['scoreboard'];
-            $scoreboard->setLineToAll(new ScoreBoardLine(3, "Start : $startIn"));
-            ScoreBoardManager::updateScoreboard($scoreboard, Server::getInstance()->getLevelByName($worldN));
+
+            if($startIn >= 1 && $startIn <= 3) {
+
+                $this->broadcastEventSound($event);
+            }
         }
     }
     
-    private function broadcastEventMessage(Event $event, string $message): void
+    private function broadcastEventMessage(Event $event): void
     {
-        foreach($event->getPlayers() as $key => $p)
+        foreach($event->getPlayers() as $p)
         {
             $player = Server::getInstance()->getPlayerExact($p);
+            $message = LanguageProvider::getLanguageMessage("messages.events.event-starts-in", PlayerProvider::toQuazarPlayer($player), true);
+            $message = str_replace(["{time}"], [$event->getStartIn() - time()], $message);
             $player->sendMessage($message);
         }
     }
     
-    private function broadcastEventSoud(Event $event, int $sound): void
+    private function broadcastEventSound(Event $event): void
     {
-        foreach($event->getPlayers() as $key => $p)
+        foreach($event->getPlayers() as $p)
         {
             $player = Server::getInstance()->getPlayerExact($p);
-            $player->getLevel()->broadcastLevelSoundEvent(new Vector3($player->x, $player->y, $player->z), $sound);
+            $player->getLevel()->broadcastLevelSoundEvent(new Vector3($player->x, $player->y, $player->z), LevelSoundEventPacket::SOUND_LEVELUP);
         }
     }
 }

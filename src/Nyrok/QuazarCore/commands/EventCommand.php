@@ -27,6 +27,10 @@ final class EventCommand extends QuazarCommands
             $sender->sendMessage(LanguageProvider::getLanguageMessage("messages.errors.not-a-player", null, true));
             return;
         }
+        if(EventsManager::getIfPlayerIsInEvent($sender)) {
+            $sender->sendMessage(LanguageProvider::getLanguageMessage("messages.events.unauthorized-command", PlayerProvider::toQuazarPlayer($sender), true));
+            return;
+        }
         $this->eventsForm($sender);
     }
 

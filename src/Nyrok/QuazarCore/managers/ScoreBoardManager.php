@@ -57,6 +57,22 @@ abstract class ScoreBoardManager
     }
 
     public static function getLines(Level $level): array {
+        if(strpos($level->getName(), "-event")) {
+
+            $type = str_replace(["-event", "ndb"], ["", "nodebuff"], $level->getName());
+            if(EventsManager::getIfEventTypeUsed($type)) {
+
+                $event = EventsManager::getEventByType($type);
+                if($event->getStart()) {
+
+                    return Core::getInstance()->getConfig()->getNested("scoreboards.{$level->getName()}.started.lines", []);
+                }else{
+
+                    return Core::getInstance()->getConfig()->getNested("scoreboards.{$level->getName()}.not-started.lines", []);
+                }
+            }else return [];
+        }
+
         return Core::getInstance()->getConfig()->getNested("scoreboards.{$level->getName()}.lines", []);
     }
 
@@ -76,9 +92,9 @@ abstract class ScoreBoardManager
         foreach (array_slice(self::getLines($level), 0, 15) as $i => $line){
             $opponent = $player ? OpponentManager::getOpponent($player) : null;
             $line = str_replace([
-                "{ping}", "{opponentPing}", "{playerName}", "{opponentName}", "{world}", "{deaths}", "{kills}", "{killstreak}", "{kdr}", "{playersOnline}", "{maxPlayersOnline}", "{ip}", "{port}", "{combatTime}", "{elo}"
+                "{ping}", "{opponentPing}", "{playerName}", "{opponentName}", "{world}", "{deaths}", "{kills}", "{killstreak}", "{kdr}", "{playersOnline}", "{maxPlayersOnline}", "{ip}", "{port}", "{combatTime}", "{elo}", "{time}"
             ], [
-                $player?->getPing() ?? 0, ($opponent?->getPing()) ?? 0, $player?->getName(), $opponent?->getName() ?? "Personne", $player?->getLevel()->getName() ?? "Inconnu", $player ? PlayerProvider::toQuazarPlayer($player)->getDeaths() : 0, $player ? PlayerProvider::toQuazarPlayer($player)->getKills() : 0, $player ? PlayerProvider::toQuazarPlayer($player)->getKillStreak() : 0, $player ? PlayerProvider::toQuazarPlayer($player)->getKDR() : 0, count(Server::getInstance()->getOnlinePlayers()), Server::getInstance()->getMaxPlayers(), Server::getInstance()->getIp(), Server::getInstance()->getPort(), $player ? PlayerProvider::toQuazarPlayer($player)->getCombatTime() : 0, $player ? PlayerProvider::toQuazarPlayer($player)->getElo() : EloManager::getDefaultElo()
+                $player?->getPing() ?? 0, ($opponent?->getPing()) ?? 0, $player?->getName(), $opponent?->getName() ?? "Personne", $player?->getLevel()->getName() ?? "Inconnu", $player ? PlayerProvider::toQuazarPlayer($player)->getDeaths() : 0, $player ? PlayerProvider::toQuazarPlayer($player)->getKills() : 0, $player ? PlayerProvider::toQuazarPlayer($player)->getKillStreak() : 0, $player ? PlayerProvider::toQuazarPlayer($player)->getKDR() : 0, count(Server::getInstance()->getOnlinePlayers()), Server::getInstance()->getMaxPlayers(), Server::getInstance()->getIp(), Server::getInstance()->getPort(), $player ? PlayerProvider::toQuazarPlayer($player)->getCombatTime() : 0, $player ? PlayerProvider::toQuazarPlayer($player)->getElo() : EloManager::getDefaultElo(), $player ? (EventsManager::getIfPlayerIsInEvent($player) ? EventsManager::getEventByPlayer($player)->getStartIn() - time() : 0) : 0
             ], $line);
             $scoreboard->setLineToAll(new ScoreBoardLine($i + 1, $line));
         }

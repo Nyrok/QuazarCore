@@ -37,6 +37,30 @@ scoreboards:
       - " §4Adversaire: §c{opponentName}   "
       - " §4Ping Adversaire: §c{opponentPing}   "
       - " §4Temps de combat: §c{combatTime}   "
+  ndb-event:
+    title: "Nodebuff Event"
+    not-started:
+      lines:
+        - " §cCommence dans §4{time}   "
+    started:
+      lines:
+        - " Pas dev"
+    soup-event:
+      title: "Soup Event"
+      not-started:
+        lines:
+          - " §cCommence dans §4{time}   "
+      started:
+        lines:
+          - " Pas dev"
+    sumo-event:
+      title: "Sumo Event"
+      not-started:
+        lines:
+          - " §cCommence dans §4{time}   "
+      started:
+        lines:
+          - " Pas dev"
 
 report:
   message: Il y a un nouveau report @everyone !

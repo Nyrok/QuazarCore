@@ -90,16 +90,20 @@ messages:
     duel-not-opponent: "Aucun adversaire trouvé"
 
   events:
-    duel-not-opponent: "Vous n'êtes pas l'adversaire de {host}"
     event-ndb-created: "Un event de nodebuff a été lancé"
     event-sumo-created: "Un event de sumo a été lancé"
     event-soup-created: "Un event de soupe a été lancé"
     event-not-enough-player: "Pas assez de joueurs pour que l'évent commence"
-    event-create: "You have created an event"
+    event-create: "Vous avez créé un évent"
     event-join: "Vous avez rejoint l'évent"
     event-quit: "Vous avez quitté l'évent"
     event-start: "L'évent commence"
+    event-kill: "{killer} a vaincu {death}"
+    winner: "L'évent est terminé et le gagnant est {winner}"
+    already-in-event: "Vous êtes déjà dans un event"
     type-already-used: "Un évent de ce type est déjà en cours"
+    event-starts-in: "L'évent commence dans {time} secondes"
+    unauthorized-command: "Vous ne pouvez pas éxécuter cette commande dans un event"
 
 forms:
   top:
