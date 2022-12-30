@@ -96,6 +96,7 @@ messages:
     event-not-enough-player: "Not enough players for the event to start"
     event-create: "You have created an event"
     event-player-join: "{player} has joined the event"
+    event-player-quit: "{player} has left the event"
     event-join: "You have joined the event"
     event-quit: "You have left the event" 
     event-start: "The event begins"

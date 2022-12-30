@@ -14,7 +14,6 @@ use pocketmine\level\Position;
 use pocketmine\Player;
 use pocketmine\scheduler\ClosureTask;
 use pocketmine\Server;
-use pocketmine\item\Item;
 
 abstract class EventsManager
 {
@@ -293,29 +292,21 @@ abstract class EventsManager
     {
         $event = self::getEventByPlayer($player);
 
-        if($kill) {
+        if(self::getIfPlayerIsInEvent($player)) {
 
-            if(in_array($player->getName(), $event->getFighters())) {
+            $event->removePlayer($player->getName());
 
-                $player->kill();
+            $message = LanguageProvider::getLanguageMessage("messages.events.event-quit", PlayerProvider::toQuazarPlayer($player), true);
+            $player->sendMessage($message);
 
-                $players = $event->getPlayers();
-                $fighters = $event->getFighters();
-                unset($fighters[$player->getName()]);
-                $fighters = array_values($fighters);
-                $killer = $fighters[0];
-
-                foreach ($players as $pName)
-                {
-                    $p = Server::getInstance()->getPlayerExact($pName);
-                    $message = LanguageProvider::getLanguageMessage("messages.events.event-kill", PlayerProvider::toQuazarPlayer($p), true);
-                    $message = str_replace(["{killer}", "{death}"], [$killer, $player->getName()], $message);
-                    $p->sendMessage($message);
-                }
+            foreach ($event->getPlayers() as $pName)
+            {
+                $p = Server::getInstance()->getPlayerExact($pName);
+                $message = LanguageProvider::getLanguageMessage("messages.events.event-player-quit", PlayerProvider::toQuazarPlayer($p), true);
+                $message = str_replace("{player}", $player->getName(),$message);
+                $p->sendMessage($message);
             }
         }
-
-        if(self::getIfPlayerIsInEvent($player)) $event->removePlayer($player->getName());
 
         if($teleport) if(PlayerUtils::teleportToSpawn($player)) LobbyManager::load($player);
     }

@@ -7,9 +7,12 @@ use Nyrok\QuazarCore\managers\DuelsManager;
 use Nyrok\QuazarCore\managers\LogsManager;
 use Nyrok\QuazarCore\managers\StaffManager;
 use Nyrok\QuazarCore\managers\EventsManager;
+use Nyrok\QuazarCore\providers\LanguageProvider;
+use Nyrok\QuazarCore\providers\PlayerProvider;
 use Nyrok\QuazarCore\utils\AntiSwitch;
 use pocketmine\event\player\PlayerQuitEvent as ClassEvent;
 use pocketmine\event\Listener;
+use pocketmine\Server;
 
 final class PlayerQuitEvent implements Listener
 {
@@ -35,7 +38,28 @@ final class PlayerQuitEvent implements Listener
         }
         
         if(EventsManager::getIfPlayerIsInEvent($event->getPlayer())) {
-            EventsManager::removePlayer($event->getPlayer(), false, true);
+
+
+            $tournament = EventsManager::getEventByPlayer($event->getPlayer());
+
+            EventsManager::removePlayer($event->getPlayer());
+
+            if(in_array($event->getPlayer()->getName(), $tournament->getFighters())) {
+
+                $players = $tournament->getPlayers();
+                $fighters = $tournament->getFighters();
+                unset($fighters[array_search($event->getPlayer()->getName(), $fighters)]);
+                $fighters = array_values($fighters);
+                $killer = $fighters[0];
+
+                foreach ($players as $pName)
+                {
+                    $p = Server::getInstance()->getPlayerExact($pName);
+                    $message = LanguageProvider::getLanguageMessage("messages.events.event-kill", PlayerProvider::toQuazarPlayer($p), true);
+                    $message = str_replace(["{killer}", "{death}"], [$killer, $event->getPlayer()->getName()], $message);
+                    $p->sendMessage($message);
+                }
+            }
         }
 
         if(EventsManager::getIfPlayerIsSpectatorEvent($event->getPlayer())) {
