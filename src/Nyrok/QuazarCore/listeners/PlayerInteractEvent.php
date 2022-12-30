@@ -49,7 +49,7 @@ final class PlayerInteractEvent implements Listener
                 -161 => EventsManager::removeSpectator($event->getPlayer()),
                 default => null
             };
-        }else {
+        } else {
             if ($event->getPlayer()->getLevel()->getName() === Core::getInstance()->getConfig()->getNested('positions.spawn.world', "")) {
                 match ($id) {
                     267 => FFAManager::formFFAS($event->getPlayer()),

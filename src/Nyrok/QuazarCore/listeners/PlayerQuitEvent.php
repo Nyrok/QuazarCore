@@ -35,7 +35,11 @@ final class PlayerQuitEvent implements Listener
         }
         
         if(EventsManager::getIfPlayerIsInEvent($event->getPlayer())) {
-            EventsManager::removePlayer($event->getPlayer());
+            EventsManager::removePlayer($event->getPlayer(), false, true);
+        }
+
+        if(EventsManager::getIfPlayerIsSpectatorEvent($event->getPlayer())) {
+            EventsManager::removeSpectator($event->getPlayer());
         }
     }
 }

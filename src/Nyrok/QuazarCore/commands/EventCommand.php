@@ -127,10 +127,18 @@ final class EventCommand extends QuazarCommands
         foreach (EventsManager::getEvents() as $event) {
             $button = str_replace("{host}", $event->getName(), $joinButton);
             $button = str_replace("{type}", $event->getType(), $button);
-            $form->addButton(new Button($button, null, function (Player $player) use ($event){
+            $form->addButton(new Button($button, null, function (Player $player) use ($event) {
                 if(!EventsManager::getIfPlayerIsInEvent($player)) {
-                    EventsManager::addPlayerToEvent($player, $event, true, true);
-                } else {
+                    if(!$event->getStart()) {
+
+                        EventsManager::addPlayerToEvent($player, $event);
+                    }else {
+
+                        $message = LanguageProvider::getLanguageMessage("messages.events.join-event-started", PlayerProvider::toQuazarPlayer($player), true);
+                        $player->sendMessage($message);
+                    }
+                }else {
+
                     $message = LanguageProvider::getLanguageMessage("messages.events.already-in-event", PlayerProvider::toQuazarPlayer($player), true);
                     $player->sendMessage($message);
                 }

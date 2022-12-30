@@ -42,25 +42,37 @@ scoreboards:
     not-started:
       lines:
         - " §cCommence dans §4{time}   "
+        - " §cJoueurs : §4{players}   "
     started:
       lines:
-        - " Pas dev"
+        - " §c{fighter1}   "
+        - " §4VS"
+        - " §c{fighter2}   "
+        - " §cJoueurs : §4{players}"
     soup-event:
       title: "Soup Event"
       not-started:
         lines:
           - " §cCommence dans §4{time}   "
+          - " Joueurs : {players}   "
       started:
         lines:
-          - " Pas dev"
+          - " §c{fighter1}   "
+          - " §4VS"
+          - " §c{fighter2}   "
+          - " §cJoueurs : §4{players}"
     sumo-event:
       title: "Sumo Event"
       not-started:
         lines:
           - " §cCommence dans §4{time}   "
+          - " Joueurs : {players}   "
       started:
         lines:
-          - " Pas dev"
+          - " §c{fighter1}   "
+          - " §4VS"
+          - " §c{fighter2}   "
+          - " §cJoueurs : §4{players}"
 
 report:
   message: Il y a un nouveau report @everyone !

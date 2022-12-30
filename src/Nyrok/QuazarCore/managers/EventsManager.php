@@ -280,28 +280,12 @@ abstract class EventsManager
         return $fighters;
     }
 
-    public static function removePlayer(Player $player, bool $teleport = false): void
+    public static function removePlayer(Player $player, bool $teleport = false, bool $kill = false): void
     {
         $event = self::getEventByPlayer($player);
         $event->removePlayer($player->getName());
 
-        if(isset($event->getFighters()[$player->getName()])) {
-
-            $players = $event->getPlayers();
-            foreach ($players as $pName)
-            {
-                $fighters = $event->getFighters();
-                unset($fighters[$player->getName()]);
-                $fighters = array_values($fighters);
-                $killer = $fighters[0];
-                $p = Server::getInstance()->getPlayerExact($pName);
-                $message = LanguageProvider::getLanguageMessage("messages.events.event-kill", PlayerProvider::toQuazarPlayer($p), true);
-                $message = str_replace(["{killer}", "{death}"], [$killer, $player->getName()], $message);
-                $p->sendMessage($message);
-            }
-
-            self::startFights($event);
-        }
+        if($kill) if(isset($event->getFighters()[$player->getName()])) $player->kill();
 
         if($teleport) if(PlayerUtils::teleportToSpawn($player)) LobbyManager::load($player);
     }
