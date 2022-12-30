@@ -4,6 +4,7 @@ namespace Nyrok\QuazarCore\managers;
 
 use JetBrains\PhpStorm\Pure;
 use Nyrok\QuazarCore\Core;
+use Nyrok\QuazarCore\listeners\CraftItemEvent;
 use Nyrok\QuazarCore\listeners\DataPacketReceiveEvent;
 use Nyrok\QuazarCore\listeners\EntityArmorChangeEvent;
 use Nyrok\QuazarCore\listeners\EntityDamageByEntityEvent;
@@ -63,7 +64,8 @@ abstract class ListenersManager
             new PlayerChatEvent(),
             new LevelLoadEvent(),
             new ProjectileHitBlockEvent(),
-            new EntityTeleportEvent()
+            new EntityTeleportEvent(),
+            new CraftItemEvent()
         ];
     }
 

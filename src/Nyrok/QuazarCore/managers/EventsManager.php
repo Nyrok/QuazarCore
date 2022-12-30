@@ -9,11 +9,12 @@ use Nyrok\QuazarCore\providers\PlayerProvider;
 use Nyrok\QuazarCore\tasks\EventsTask;
 use AndreasHGK\EasyKits\manager\KitManager;
 use Nyrok\QuazarCore\objects\Event;
+use pocketmine\item\ItemFactory;
 use pocketmine\level\Position;
 use pocketmine\Player;
+use pocketmine\scheduler\ClosureTask;
 use pocketmine\Server;
 use pocketmine\item\Item;
-use pocketmine\utils\Utils;
 
 abstract class EventsManager
 {
@@ -21,6 +22,16 @@ abstract class EventsManager
      * @var Event[]
      */
     public static array $events = [];
+
+    /**
+     * @var array
+     */
+    private static array $task = [];
+
+    /**
+     * @var int[]
+     */
+    private static array $countdown = [];
     
     /**
      * @return array
@@ -75,7 +86,7 @@ abstract class EventsManager
         $player->getInventory()->clearAll();
         $player->getArmorInventory()->clearAll();
         
-        $item = [4 => Item::get(152)->setCustomName("§4Leave")];
+        $item = [4 => ItemFactory::get(-161)->setCustomName("§4Leave")];
         $player->getInventory()->setContents($item);
         
         $message = LanguageProvider::getLanguageMessage("messages.events.event-join", PlayerProvider::toQuazarPlayer($player), true);
@@ -100,10 +111,14 @@ abstract class EventsManager
                 
                 $eventStartMsg = LanguageProvider::getLanguageMessage("messages.events.event-start", PlayerProvider::toQuazarPlayer($player), true);
                 $player->sendMessage($eventStartMsg);
+
+                $player->removeAllEffects();
+                $player->getInventory()->clearAll();
+                $player->getArmorInventory()->clearAll();
             }
             
             self::startFights($event);
-        }else{
+        }else {
 
             self::removeEvent($event);
             
@@ -125,15 +140,16 @@ abstract class EventsManager
     public static function endEvent(Event $event): void
     {
         $players = $event->getPlayers();
+        $players = array_values($players);
 
         foreach ($players as $player)
         {
             $p = Server::getInstance()->getPlayerExact($player);
             $message = LanguageProvider::getLanguageMessage("messages.events.winner", PlayerProvider::toQuazarPlayer($p), true);
-            $message = str_replace("{winner}", $event->getPlayers()[0], $message);
+            $message = str_replace("{winner}", $players[0], $message);
             $p->sendMessage($message);
 
-            PlayerUtils::teleportToSpawn($p);
+            if(PlayerUtils::teleportToSpawn($p)) LobbyManager::load($p);
         }
 
         self::removeEvent($event);
@@ -145,62 +161,113 @@ abstract class EventsManager
      */
     public static function startFights(Event $event): void
     {
-        $players = count($event->getPlayers());
+        Core::getInstance()->getScheduler()->scheduleDelayedTask(new ClosureTask(function (int $currentTick) use ($event): void {
 
-        if($players === 1) {
+            $playersCount = count($event->getPlayers());
 
-            self::endEvent($event);
-            return;
-        }
+            if ($playersCount === 1) {
 
-        $fighters = self::getFighters($event);
+                self::endEvent($event);
+                return;
+            }
 
-        if(count($fighters) < 2) {
-
-            $event->resetFought();
             $fighters = self::getFighters($event);
-        }
 
-        $fightersRand = array_rand($fighters, 2);
+            if (count($fighters) < 2) {
 
-        $fighter1Name = $fightersRand[0];
-        $event->addFought($fighter1Name);
+                $event->resetFought();
+                $fighters = self::getFighters($event);
+            }
 
-        $fighter2Name = $fightersRand[1];
-        $event->addFought($fighter2Name);
-        
-        $worldN = match($event->getType()) {
-            'sumo' => 'sumo-event',
-            'soup' => 'soup-event',
-            default => 'ndb-event'
-        };
+            $fightersRand = array_rand($fighters, 2);
 
-        $fighter1 = Server::getInstance()->getPlayerExact($fighter1Name);
-        $fighter2 = Server::getInstance()->getPlayerExact($fighter2Name);
-        
-        $configCache = Core::getInstance()->getConfig()->getAll();
-        
-        $posData = $configCache["events"][$worldN]["duel"]["spawn"];
-        $world = Server::getInstance()->getLevelByName($worldN);
-        
-        $posDataF1 = $posData["player1"];
-        $position1 = new Position($posDataF1["x"], $posDataF1["y"], $posDataF1["z"], $world);
-        
-        $posDataF2 = $posData["player2"];
-        $position2 = new Position($posDataF2["x"], $posDataF2["y"], $posDataF2["z"], $world);
-        
-        $fighter1->teleport($position1);
-        $fighter2->teleport($position2);
-        
-        $kit = KitManager::get($configCache["events"][$worldN]["duel"]["kit"]);
-        
-        $kit->claimFor($fighter1);
-        $kit->claimFor($fighter2);
+            $fighter1Name = $fighters[$fightersRand[0]];
+            $event->addFought($fighter1Name);
+
+            $fighter2Name = $fighters[$fightersRand[1]];
+            $event->addFought($fighter2Name);
+
+            foreach ($event->getPlayers() as $player)
+            {
+                $p = Server::getInstance()->getPlayerExact($player);
+                $message = LanguageProvider::getLanguageMessage("messages.events.new-fight", PlayerProvider::toQuazarPlayer($p), true);
+                $message = str_replace(["{fighter1}", "{fighter2}"], [$fighter1Name, $fighter2Name], $message);
+                $p->sendMessage($message);
+            }
+
+            $worldN = match($event->getType()) {
+                'sumo' => 'sumo-event',
+                'soup' => 'soup-event',
+                default => 'ndb-event'
+            };
+
+            $configCache = Core::getInstance()->getConfig()->getAll();
+
+            $posData = $configCache["events"][$worldN]["duel"]["spawn"];
+            $world = Server::getInstance()->getLevelByName($worldN);
+
+            $posDataF1 = $posData["player1"];
+            $position1 = new Position($posDataF1["x"], $posDataF1["y"], $posDataF1["z"], $world);
+
+            $posDataF2 = $posData["player2"];
+            $position2 = new Position($posDataF2["x"], $posDataF2["y"], $posDataF2["z"], $world);
+
+            $fighter1 = Server::getInstance()->getPlayerExact($fighter1Name);
+            $fighter2 = Server::getInstance()->getPlayerExact($fighter2Name);
+
+            $fighter1->teleport($position1);
+            $fighter2->teleport($position2);
+
+            $kit = KitManager::get($configCache["events"][$worldN]["duel"]["kit"]);
+
+            $kit->claimFor($fighter1);
+            $kit->claimFor($fighter2);
+
+            $fighter1->setImmobile();
+            $fighter2->setImmobile();
+
+            Core::getInstance()->getScheduler()->scheduleDelayedTask(new ClosureTask(function (int $currentTick) use ($fighter1, $fighter2, $event): void {
+
+                self::$countdown[$event->getName()] = 3;
+                self::$task[$event->getName()] = Core::getInstance()->getScheduler()->scheduleRepeatingTask(new ClosureTask(function (int $currentTick) use ($fighter1, $fighter2, $event): void {
+
+                    foreach ([$fighter1, $fighter2] as $fighter) {
+                        switch (self::$countdown[$event->getName()]) {
+                            case 3:
+                                $fighter->sendTitle("§43");
+                                break;
+
+                            case 2:
+                                $fighter->sendTitle("§e2");
+                                break;
+
+                            case 1:
+                                $fighter->sendTitle("§21");
+                                break;
+
+                            default:
+                                $fighter->sendTitle("§a§lGO");
+                                $fighter->setImmobile(false);
+                        }
+                    }
+
+                    if(self::$countdown[$event->getName()] <= 0) {
+
+                        $event->setFighters([$fighter1->getName(), $fighter2->getName()]);
+                        self::$task[$event->getName()]->cancel();
+                        return;
+                    }
+
+                    self::$countdown[$event->getName()]--;
+                }), 20);
+            }), 20);
+        }), 40);
     }
 
     public static function getFighters(Event $event): array
     {
         $fighters = $event->getPlayers();
+        $fighters = array_values($fighters);
 
         foreach($fighters as $player)
         {
@@ -215,13 +282,33 @@ abstract class EventsManager
 
     public static function removePlayer(Player $player, bool $teleport = false): void
     {
-        self::getEventByPlayer($player)->removePlayer($player->getName());
+        $event = self::getEventByPlayer($player);
+        $event->removePlayer($player->getName());
+
+        if(isset($event->getFighters()[$player->getName()])) {
+
+            $players = $event->getPlayers();
+            foreach ($players as $pName)
+            {
+                $fighters = $event->getFighters();
+                unset($fighters[$player->getName()]);
+                $fighters = array_values($fighters);
+                $killer = $fighters[0];
+                $p = Server::getInstance()->getPlayerExact($pName);
+                $message = LanguageProvider::getLanguageMessage("messages.events.event-kill", PlayerProvider::toQuazarPlayer($p), true);
+                $message = str_replace(["{killer}", "{death}"], [$killer, $player->getName()], $message);
+                $p->sendMessage($message);
+            }
+
+            self::startFights($event);
+        }
+
         if($teleport) if(PlayerUtils::teleportToSpawn($player)) LobbyManager::load($player);
     }
 
     public static function removeSpectator(Player $player): void
     {
-        self::getEventBySpectator($player)->removePlayer($player->getName());
+        self::getEventBySpectator($player)->removeSpectator($player->getName());
         if(PlayerUtils::teleportToSpawn($player)) LobbyManager::load($player);
     }
     

@@ -22,14 +22,19 @@ final class Event
     private bool $start = false;
 
     /**
-     * @var array
+     * @var string[]
      */
     private array $fought = [];
 
     /**
-     * @var array
+     * @var string[]
      */
     private array $spectators = [];
+
+    /**
+     * @var string[]
+     */
+    private array $fighters = [];
 
     /**
      * @param string $name
@@ -156,5 +161,22 @@ final class Event
     public function removeSpectator(string $player): void
     {
         unset($this->spectators[array_search($player, $this->spectators)]);
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getFighters(): array
+    {
+        return $this->fighters;
+    }
+
+    /**
+     * @param string[] $fighters
+     * @return void
+     */
+    public function setFighters(array $fighters): void
+    {
+        $this->fighters = $fighters;
     }
 }

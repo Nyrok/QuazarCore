@@ -41,12 +41,12 @@ final class PlayerInteractEvent implements Listener
             };
         } else if (EventsManager::getIfPlayerIsInEvent($event->getPlayer())) {
             match($id) {
-                152 => EventsManager::removePlayer($event->getPlayer(), true),
+                -161 => EventsManager::removePlayer($event->getPlayer(), true),
                 default => null
             };
         } else if (EventsManager::getIfPlayerIsSpectatorEvent($event->getPlayer())) {
             match ($id) {
-                152 => EventsManager::removeSpectator($event->getPlayer()),
+                -161 => EventsManager::removeSpectator($event->getPlayer()),
                 default => null
             };
         }else {

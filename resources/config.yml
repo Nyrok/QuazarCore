@@ -305,7 +305,7 @@ events:
         y: 256
         z: 256
     duel:
-      kit: ndb
+      kit: duel-ndb
       spawn:
         player1:
           x: 256
@@ -323,7 +323,7 @@ events:
         y: 255
         z: 256
     duel:
-      kit: Soupe
+      kit: duel-soup
       spawn:
         player1:
           x: 256
@@ -341,7 +341,7 @@ events:
         y: 255
         z: 256
     duel:
-      kit: sumo
+      kit: duel-sumo
       spawn:
         player1:
           x: 256

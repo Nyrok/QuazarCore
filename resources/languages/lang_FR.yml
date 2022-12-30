@@ -99,11 +99,13 @@ messages:
     event-quit: "Vous avez quitté l'évent"
     event-start: "L'évent commence"
     event-kill: "{killer} a vaincu {death}"
+    new-fight: "{fighter1} vs {fighter2}"
     winner: "L'évent est terminé et le gagnant est {winner}"
     already-in-event: "Vous êtes déjà dans un event"
     type-already-used: "Un évent de ce type est déjà en cours"
     event-starts-in: "L'évent commence dans {time} secondes"
     unauthorized-command: "Vous ne pouvez pas éxécuter cette commande dans un event"
+    join-event-started: "Cet event a déjà commencé"
 
 forms:
   top:

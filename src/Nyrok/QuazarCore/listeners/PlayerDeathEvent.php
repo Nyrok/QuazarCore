@@ -50,7 +50,6 @@ final class PlayerDeathEvent implements Listener
                     $message = str_replace(["{killer}", "{death}"], [$killer->getName(), $player->getName()], $message);
                     $p->sendMessage($message);
                 }
-                EventsManager::startFights($tournament);
             }else {
 
                 $elo = EloManager::calculateElo(PlayerProvider::toQuazarPlayer($event->getPlayer())->getElo(), PlayerProvider::toQuazarPlayer($killer)->getElo());
@@ -75,16 +74,9 @@ final class PlayerDeathEvent implements Listener
         if(EventsManager::getIfPlayerIsInEvent($player)) {
 
             $tournament = EventsManager::getEventByPlayer($player);
-            $tournament?->removePlayer($player->getName());
-            $tournament?->addSpectator($player->getName());
-            $event->setCancelled();
-            $player->setHealth(20);
-            EventsManager::teleportPlayerToEvent($player, $tournament);
-            $player->removeAllEffects();
-            $player->getInventory()->clearAll();
-            $player->getArmorInventory()->clearAll();
-            $item = [4 => Item::get(152)->setCustomName("§4Leave")];
-            $player->getInventory()->setContents($item);
+            EventsManager::removePlayer($player);
+            $tournament->addSpectator($player->getName());
+            EventsManager::startFights($tournament);
         }else {
 
             PlayerProvider::toQuazarPlayer($player)->setData('deaths', 1, true)->updateKDR();
