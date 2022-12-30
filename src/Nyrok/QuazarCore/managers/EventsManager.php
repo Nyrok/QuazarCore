@@ -314,7 +314,8 @@ abstract class EventsManager
                 }
             }
         }
-        if (!$kill) $event->removePlayer($player->getName());
+
+        if(self::getIfPlayerIsInEvent($player)) $event->removePlayer($player->getName());
 
         if($teleport) if(PlayerUtils::teleportToSpawn($player)) LobbyManager::load($player);
     }

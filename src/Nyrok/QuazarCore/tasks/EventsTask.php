@@ -40,13 +40,16 @@ final class EventsTask extends Task
 
             $configCache = Core::getInstance()->getConfig()->getAll();
 
-            if(is_int($startIn / (int)$configCache["events"]["alert-time"])) {
+            if(is_int($startIn / (int)$configCache["events"]["alert-time"]) && $startIn !== 120) {
 
                 foreach (Server::getInstance()->getOnlinePlayers() as $player)
                 {
-                    $message = LanguageProvider::getLanguageMessage("messages.events.event-kill", PlayerProvider::toQuazarPlayer($player), true);
-                    $message = str_replace("{type}", $event->getType(), $message);
-                    $player->sendMessage($message);
+                    if(!EventsManager::getIfPlayerIsInEvent($player)) {
+
+                        $message = LanguageProvider::getLanguageMessage("messages.events.alert", PlayerProvider::toQuazarPlayer($player), true);
+                        $message = str_replace("{type}", $event->getType(), $message);
+                        $player->sendMessage($message);
+                    }
                 }
             }
 
@@ -54,7 +57,7 @@ final class EventsTask extends Task
                 $startIn === 60 ||
                 $startIn === 30 ||
                 $startIn === 15 ||
-                ($startIn <= 5)
+                $startIn <= 5
             ) {
 
                 $this->broadcastEventMessage($event);
