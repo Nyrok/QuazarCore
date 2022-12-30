@@ -95,6 +95,7 @@ messages:
     event-soup-created: "A soup event has been launched"
     event-not-enough-player: "Not enough players for the event to start"
     event-create: "You have created an event"
+    event-player-join: "{player} has joined the event"
     event-join: "You have joined the event"
     event-quit: "You have left the event" 
     event-start: "The event begins"
@@ -106,6 +107,7 @@ messages:
     event-starts-in: "The event starts in {time} seconds"
     unauthorized-command: "You cannot execute this command in an event"
     join-event-started: "This event has already started"
+    alert: "An event {type} will start soon"
 
 forms:
   top:

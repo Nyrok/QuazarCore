@@ -111,8 +111,8 @@ abstract class ScoreBoardManager
                 $player ? PlayerProvider::toQuazarPlayer($player)->getElo() : EloManager::getDefaultElo(),
                 $player ? (EventsManager::getIfPlayerIsInEvent($player) ? EventsManager::getEventByPlayer($player)->getStartIn() - time() : 0) : 0,
                 $player ? (EventsManager::getIfPlayerIsInEvent($player) ? count(EventsManager::getEventByPlayer($player)->getPlayers()) : 0) : 0,
-                $player ? (EventsManager::getIfPlayerIsInEvent($player) ? EventsManager::getEventByPlayer($player)->getFighters()[0] : "Personne") : "Personne",
-                $player ? (EventsManager::getIfPlayerIsInEvent($player) ? EventsManager::getEventByPlayer($player)->getFighters()[1] : "Personne") : "Personne"
+                $player ? (EventsManager::getIfPlayerIsInEvent($player) ? (!empty(EventsManager::getEventByPlayer($player)->getFighters()) ? (EventsManager::getEventByPlayer($player)->getFighters()[0]) : "Personne") : "Personne") : "Personne",
+                $player ? (EventsManager::getIfPlayerIsInEvent($player) ? (!empty(EventsManager::getEventByPlayer($player)->getFighters()) ? (EventsManager::getEventByPlayer($player)->getFighters()[1]) : "Personne") : "Personne") : "Personne",
             ], $line);
             $scoreboard->setLineToAll(new ScoreBoardLine($i + 1, $line));
         }

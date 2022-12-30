@@ -79,6 +79,14 @@ abstract class EventsManager
     
     public static function addPlayerToEvent(Player $player, Event $event): void
     {
+        foreach($event->getPlayers() as $pName)
+        {
+            $p = Server::getInstance()->getPlayerExact($pName);
+            $message = LanguageProvider::getLanguageMessage("messages.events.event-player-join", PlayerProvider::toQuazarPlayer($player), true);
+            $message = str_replace("{player}", $player->getName(), $message);
+            $p->sendMessage($message);
+        }
+
         $event->addPlayer($player->getName());
         self::teleportPlayerToEvent($player, $event);
         
@@ -115,6 +123,7 @@ abstract class EventsManager
                 $player->removeAllEffects();
                 $player->getInventory()->clearAll();
                 $player->getArmorInventory()->clearAll();
+                $player->setHealth(20);
             }
             
             self::startFights($event);
@@ -283,9 +292,29 @@ abstract class EventsManager
     public static function removePlayer(Player $player, bool $teleport = false, bool $kill = false): void
     {
         $event = self::getEventByPlayer($player);
-        $event->removePlayer($player->getName());
 
-        if($kill) if(isset($event->getFighters()[$player->getName()])) $player->kill();
+        if($kill) {
+
+            if(in_array($player->getName(), $event->getFighters())) {
+
+                $player->kill();
+
+                $players = $event->getPlayers();
+                $fighters = $event->getFighters();
+                unset($fighters[$player->getName()]);
+                $fighters = array_values($fighters);
+                $killer = $fighters[0];
+
+                foreach ($players as $pName)
+                {
+                    $p = Server::getInstance()->getPlayerExact($pName);
+                    $message = LanguageProvider::getLanguageMessage("messages.events.event-kill", PlayerProvider::toQuazarPlayer($p), true);
+                    $message = str_replace(["{killer}", "{death}"], [$killer, $player->getName()], $message);
+                    $p->sendMessage($message);
+                }
+            }
+        }
+        if (!$kill) $event->removePlayer($player->getName());
 
         if($teleport) if(PlayerUtils::teleportToSpawn($player)) LobbyManager::load($player);
     }

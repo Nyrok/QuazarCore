@@ -33,8 +33,21 @@ final class EventsTask extends Task
 
             // START EVENT
             if($startIn <= 0) {
+
                 EventsManager::startEvent($event);
                 return;
+            }
+
+            $configCache = Core::getInstance()->getConfig()->getAll();
+
+            if(is_int($startIn / (int)$configCache["events"]["alert-time"])) {
+
+                foreach (Server::getInstance()->getOnlinePlayers() as $player)
+                {
+                    $message = LanguageProvider::getLanguageMessage("messages.events.event-kill", PlayerProvider::toQuazarPlayer($player), true);
+                    $message = str_replace("{type}", $event->getType(), $message);
+                    $player->sendMessage($message);
+                }
             }
 
             if(

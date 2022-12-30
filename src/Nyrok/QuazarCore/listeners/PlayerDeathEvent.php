@@ -50,6 +50,11 @@ final class PlayerDeathEvent implements Listener
                     $message = str_replace(["{killer}", "{death}"], [$killer->getName(), $player->getName()], $message);
                     $p->sendMessage($message);
                 }
+                EventsManager::teleportPlayerToEvent($killer, $tournament);
+                $killer->removeAllEffects();
+                $killer->getInventory()->clearAll();
+                $killer->getArmorInventory()->clearAll();
+                $killer->setHealth(20);
             }else {
 
                 $elo = EloManager::calculateElo(PlayerProvider::toQuazarPlayer($event->getPlayer())->getElo(), PlayerProvider::toQuazarPlayer($killer)->getElo());

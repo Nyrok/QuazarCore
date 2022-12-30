@@ -309,6 +309,9 @@ duels:
 
 events:
   min-players: 6
+
+  #In seconds
+  alert-time: 20
   
   ndb-event:
     spectators:

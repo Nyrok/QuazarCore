@@ -35,7 +35,7 @@ abstract class DuelsManager
                 $duel = self::$duels[$duel->getHost()->getName()];
                 if(!$duel->getOpponent()){
                     if ($player = Server::getInstance()->getPlayerExact($duel->getHost()->getName())){
-                        $player->sendMessage("messages.duels.request-timeout"); // À faire
+                        $player->sendMessage("messages.duels.request-timeout");
                     }
                     self::removeDuel($duel);
                 }
