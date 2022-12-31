@@ -81,6 +81,7 @@ final class PlayerDeathEvent implements Listener
             $tournament = EventsManager::getEventByPlayer($player);
             EventsManager::removePlayer($player);
             $tournament->addSpectator($player->getName());
+            $tournament->setFightStart(false);
             EventsManager::startFights($tournament);
         }else {
 

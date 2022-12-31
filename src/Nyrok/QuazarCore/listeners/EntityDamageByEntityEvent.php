@@ -50,7 +50,7 @@ final class EntityDamageByEntityEvent implements Listener
 
                 $tournament = EventsManager::getEventByPlayer($event->getEntity());
 
-                if (!(in_array($event->getEntity()->getName(), $tournament->getFighters()) && in_array($event->getDamager()->getName(), $tournament->getFighters()))) {
+                if (!(in_array($event->getEntity()->getName(), $tournament->getFighters()) && in_array($event->getDamager()->getName(), $tournament->getFighters()) && $tournament->getFightStart())) {
                     $event->setCancelled();
                 }
             }

@@ -234,6 +234,9 @@ abstract class EventsManager
             $fighter1->setImmobile();
             $fighter2->setImmobile();
 
+
+            $event->setFighters([$fighter1->getName(), $fighter2->getName()]);
+
             Core::getInstance()->getScheduler()->scheduleDelayedTask(new ClosureTask(function (int $currentTick) use ($fighter1, $fighter2, $event): void {
 
                 self::$countdown[$event->getName()] = 3;
@@ -261,7 +264,7 @@ abstract class EventsManager
 
                     if(self::$countdown[$event->getName()] <= 0) {
 
-                        $event->setFighters([$fighter1->getName(), $fighter2->getName()]);
+                        $event->setFightStart(true);
                         self::$task[$event->getName()]->cancel();
                         return;
                     }
@@ -288,7 +291,7 @@ abstract class EventsManager
         return $fighters;
     }
 
-    public static function removePlayer(Player $player, bool $teleport = false, bool $kill = false): void
+    public static function removePlayer(Player $player, bool $teleport = false): void
     {
         $event = self::getEventByPlayer($player);
 

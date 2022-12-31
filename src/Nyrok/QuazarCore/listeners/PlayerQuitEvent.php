@@ -39,7 +39,6 @@ final class PlayerQuitEvent implements Listener
         
         if(EventsManager::getIfPlayerIsInEvent($event->getPlayer())) {
 
-
             $tournament = EventsManager::getEventByPlayer($event->getPlayer());
 
             EventsManager::removePlayer($event->getPlayer());
@@ -50,15 +49,21 @@ final class PlayerQuitEvent implements Listener
                 $fighters = $tournament->getFighters();
                 unset($fighters[array_search($event->getPlayer()->getName(), $fighters)]);
                 $fighters = array_values($fighters);
-                $killer = $fighters[0];
+                $killer = Server::getInstance()->getPlayerExact($fighters[0]);
 
                 foreach ($players as $pName)
                 {
                     $p = Server::getInstance()->getPlayerExact($pName);
                     $message = LanguageProvider::getLanguageMessage("messages.events.event-kill", PlayerProvider::toQuazarPlayer($p), true);
-                    $message = str_replace(["{killer}", "{death}"], [$killer, $event->getPlayer()->getName()], $message);
+                    $message = str_replace(["{killer}", "{death}"], [$killer->getName(), $event->getPlayer()->getName()], $message);
                     $p->sendMessage($message);
                 }
+
+                EventsManager::teleportPlayerToEvent($killer, $tournament);
+                $killer->removeAllEffects();
+                $killer->getInventory()->clearAll();
+                $killer->getArmorInventory()->clearAll();
+                $killer->setHealth(20);
             }
         }
 

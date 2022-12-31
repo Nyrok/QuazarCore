@@ -37,6 +37,11 @@ final class Event
     private array $fighters = [];
 
     /**
+     * @var bool
+     */
+    private bool $fightStart = false;
+
+    /**
      * @param string $name
      * @param string $type
      */
@@ -178,5 +183,22 @@ final class Event
     public function setFighters(array $fighters): void
     {
         $this->fighters = $fighters;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getFightStart(): bool
+    {
+        return $this->fightStart;
+    }
+
+    /**
+     * @param bool $eventStart
+     * @return void
+     */
+    public function setFightStart(bool $eventStart): void
+    {
+        $this->fightStart = $eventStart;
     }
 }
