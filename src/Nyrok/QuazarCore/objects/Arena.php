@@ -60,7 +60,7 @@ final class Arena
     public function generate(Player $player): ?Level
     {
         $level = ArenasManager::copyWorld($this->level, "duel.".$this->getName()."-".$player->getName());
-        Server::getInstance()->loadLevel($level);
+        if(!Server::getInstance()->loadLevel($level)) return null;
         if(($world = PvPCore::getWorldHandler()->getWorld($this->getName())) instanceof PvPCWorld){
             $kb = clone $world->getKnockback();
             $new = PvPCore::getWorldHandler()->getWorld($this->getName());
