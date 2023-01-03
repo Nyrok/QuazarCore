@@ -26,7 +26,7 @@ final class MatchmakingTask extends Task
                 $player->sendMessage("§aVous avez été match avec " . $found["name"]); // À faire
                 MatchmakingManager::removePlayer($found["name"]);
                 MatchmakingManager::removePlayer($name);
-                DuelsManager::addDuel(new Duel($player, $opponent, $data["mode"]));
+                (new Duel($player, $opponent, $data["mode"]))->start();
             } else {
                 $player->sendActionBarMessage("§cMatchmaking en cours pour le mode: " . $data["mode"]->getName()); // À faire
             }
