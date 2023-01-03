@@ -75,7 +75,7 @@ abstract class FFAManager
     {
         $form = new SimpleForm("§m§a" . "§fFFA");
         foreach (self::getAllFFAS() as $ffa) {
-            $form->addButton(new Button($ffa->getName(), new ButtonIcon($ffa->getTexture()), function (Player $player) use ($ffa): void {
+            $form->addButton(new Button($ffa->getName(), new ButtonIcon($ffa->getTexture(), ButtonIcon::TYPE_PATH), function (Player $player) use ($ffa): void {
                 $ffa->start($player);
             }));
         }

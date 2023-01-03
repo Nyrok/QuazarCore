@@ -65,7 +65,7 @@ final class DuelCommand extends QuazarCommands
     {
         $form = new SimpleForm("§m§a" . "Duels", "Affronter " . $target->getName() . " pour un duel ?");
         foreach (ArenasManager::getModes() as $mode) {
-            $form->addButton(new Button($mode->getName(), new ButtonIcon("textures/ui/icon_recipe_equipment"), fn(Player $player) => DuelsManager::addDuel(new Duel($player, $target, $mode))));
+            $form->addButton(new Button($mode->getName(), new ButtonIcon("textures/ui/icon_recipe_equipment", ButtonIcon::TYPE_PATH), fn(Player $player) => DuelsManager::addDuel(new Duel($player, $target, $mode))));
         }
         $player->sendForm($form);
     }
