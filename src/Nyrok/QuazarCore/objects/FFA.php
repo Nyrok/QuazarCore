@@ -18,7 +18,7 @@ final class FFA
      * @param int $y
      * @param array $z
      */
-    public function __construct(private string $name, private Level $level, private string $kit, private array $x, private int $y, private array $z)
+    public function __construct(private string $name, private Level $level, private string $kit, private string $texture, private array $x, private int $y, private array $z)
     {
     }
 
@@ -44,6 +44,14 @@ final class FFA
     public function getKit(): ?Kit
     {
         return KitManager::get($this->kit);
+    }
+
+    /**
+     * @return string
+     */
+    public function getTexture(): string
+    {
+        return $this->texture;
     }
 
     /**
