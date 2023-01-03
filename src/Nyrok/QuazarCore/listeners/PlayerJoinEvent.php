@@ -2,12 +2,14 @@
 namespace Nyrok\QuazarCore\listeners;
 
 use Nyrok\QuazarCore\commands\NickCommand;
+use Nyrok\QuazarCore\Core;
 use Nyrok\QuazarCore\managers\CosmeticsManager;
 use Nyrok\QuazarCore\managers\CPSManager;
 use Nyrok\QuazarCore\managers\FloatingTextManager;
 use Nyrok\QuazarCore\managers\LobbyManager;
 use Nyrok\QuazarCore\managers\LogsManager;
 use Nyrok\QuazarCore\providers\PlayerProvider;
+use Nyrok\QuazarCore\tasks\DeadZoneTask;
 use Nyrok\QuazarCore\utils\AntiSwitch;
 use Nyrok\QuazarCore\utils\PlayerUtils;
 use pocketmine\event\Listener;
@@ -30,5 +32,6 @@ final class PlayerJoinEvent implements Listener
         $nick = PlayerProvider::toQuazarPlayer($event->getPlayer())->getData()["nick"] ?? null;
         NickCommand::setNick($event->getPlayer(), ($nick !== "off" and !empty($nick)) ? $nick : null);
         CosmeticsManager::saveSkin($event->getPlayer()->getSkin(), $event->getPlayer()->getName());
+        Core::getInstance()->getScheduler()->scheduleTask(new DeadZoneTask($event->getPlayer()->getName()));
     }
 }

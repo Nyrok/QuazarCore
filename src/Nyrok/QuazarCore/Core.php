@@ -11,6 +11,7 @@ use Nyrok\QuazarCore\managers\CommandsManager;
 use Nyrok\QuazarCore\managers\CooldownManager;
 use Nyrok\QuazarCore\managers\CosmeticsManager;
 use Nyrok\QuazarCore\managers\CPSManager;
+use Nyrok\QuazarCore\managers\DeadZoneManager;
 use Nyrok\QuazarCore\managers\FFAManager;
 use Nyrok\QuazarCore\managers\FloatingTextManager;
 use Nyrok\QuazarCore\managers\ListenersManager;
@@ -84,6 +85,7 @@ class Core extends PluginBase
         CosmeticsManager::initCosmetics();
         RanksManager::initRanks();
         MatchmakingManager::initMatchmaking();
+        DeadZoneManager::initDeadZone();
 
         if(!InvMenuHandler::isRegistered()) InvMenuHandler::register($this);
 
