@@ -58,9 +58,9 @@ abstract class PlayerUtils
      * @param Player $player
      */
     public static function rekit(Player $player): void {
-        if(array_key_exists($player->getLevel()->getName(), Core::getInstance()->getConfig()->get('ffas'))){
-            $ffa = FFAManager::worldToFFA($player->getLevel()->getName());
-            $kit = KitsManager::getKit($player, $ffa->getKit()->getName()) ?? $ffa->getKit();
+        if(array_key_exists($player->getLevel()?->getName(), Core::getInstance()->getConfig()->get('ffas'))){
+            $ffa = FFAManager::worldToFFA($player->getLevel()?->getName());
+            $kit = KitsManager::getKit($player, $ffa?->getKit()?->getName()) ?? $ffa->getKit();
             $kit?->claimFor($player);
         }
     }

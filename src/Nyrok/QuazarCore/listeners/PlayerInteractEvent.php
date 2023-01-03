@@ -41,7 +41,7 @@ final class PlayerInteractEvent implements Listener
             };
         } else if (EventsManager::getIfPlayerIsInEvent($event->getPlayer())) {
             match($id) {
-                -161 => EventsManager::removePlayer($event->getPlayer(), true),
+                -161 => EventsManager::removePlayer($event->getPlayer(), true, true),
                 default => null
             };
         } else if (EventsManager::getIfPlayerIsSpectatorEvent($event->getPlayer())) {
@@ -63,8 +63,12 @@ final class PlayerInteractEvent implements Listener
                 };
                 
             } else if ($id === SoupManager::getSoupId() and $event->getPlayer()->getHealth() != $event->getPlayer()->getMaxHealth()) {
-                $event->getPlayer()->heal(new EntityRegainHealthEvent($event->getPlayer(), SoupManager::getSoupHeal(), EntityRegainHealthEvent::CAUSE_CUSTOM));
-                $event->getPlayer()->getInventory()->setItemInHand($event->getItem()->setCount($event->getItem()->getCount() - 1));
+
+                for($h = $event->getPlayer()->getHealth(); $h < $event->getPlayer()->getMaxHealth(); $h += SoupManager::getSoupHeal())
+                {
+                    $event->getPlayer()->heal(new EntityRegainHealthEvent($event->getPlayer(), SoupManager::getSoupHeal(), EntityRegainHealthEvent::CAUSE_CUSTOM));
+                    $event->getPlayer()->getInventory()->setItemInHand($event->getItem()->setCount($event->getItem()->getCount() - 1));
+                }
             }
 
             if ($event->getAction() === $event::RIGHT_CLICK_AIR) {
@@ -72,7 +76,7 @@ final class PlayerInteractEvent implements Listener
                 foreach (CooldownManager::getCooldowns() as $cooldown) {
                     if ($cooldown->getItem()->equals($event->getPlayer()->getInventory()->getItemInHand())) {
                         if ($cooldown->has($event->getPlayer())) {
-                            $event->setCancelled(true);
+                            $event->setCancelled();
                         } else {
                             $cooldown->set($event->getPlayer());
                             Core::getInstance()->getScheduler()->scheduleRepeatingTask(new EnderPearlCooldownTask($cooldown, $event->getPlayer()), 1);
@@ -92,7 +96,7 @@ final class PlayerInteractEvent implements Listener
 
             if (!is_null($duel?->started)) {
                 if (!in_array($event->getBlock()->getId(), $duel?->getArena()?->getBlocks() ?? [])) {
-                    $event->setCancelled(true);
+                    $event->setCancelled();
                 }
             }
         }

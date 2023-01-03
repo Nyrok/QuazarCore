@@ -25,7 +25,7 @@ abstract class EventsManager
     /**
      * @var array
      */
-    private static array $task = [];
+    public static array $task = [];
 
     /**
      * @var int[]
@@ -39,16 +39,7 @@ abstract class EventsManager
     {
         return self::$events;
     }
-    
-    /**
-     * @param string $name
-     * @return Event
-     */
-    public static function getEvent(string $name): Event
-    {
-        return self::$events[$name];
-    }
-    
+
     /**
      * @param Event $event
      * @return void
@@ -291,7 +282,7 @@ abstract class EventsManager
         return $fighters;
     }
 
-    public static function removePlayer(Player $player, bool $teleport = false): void
+    public static function removePlayer(Player $player, bool $teleport = false, bool $message = false): void
     {
         $event = self::getEventByPlayer($player);
 
@@ -299,15 +290,21 @@ abstract class EventsManager
 
             $event->removePlayer($player->getName());
 
-            $message = LanguageProvider::getLanguageMessage("messages.events.event-quit", PlayerProvider::toQuazarPlayer($player), true);
-            $player->sendMessage($message);
+            if($message) {
 
-            foreach ($event->getPlayers() as $pName)
-            {
-                $p = Server::getInstance()->getPlayerExact($pName);
-                $message = LanguageProvider::getLanguageMessage("messages.events.event-player-quit", PlayerProvider::toQuazarPlayer($p), true);
-                $message = str_replace("{player}", $player->getName(),$message);
-                $p->sendMessage($message);
+                if($player->isOnline()) {
+
+                    $message = LanguageProvider::getLanguageMessage("messages.events.event-quit", PlayerProvider::toQuazarPlayer($player), true);
+                    $player->sendMessage($message);
+                }
+
+                foreach ($event->getPlayers() as $pName)
+                {
+                    $p = Server::getInstance()->getPlayerExact($pName);
+                    $message = LanguageProvider::getLanguageMessage("messages.events.event-player-quit", PlayerProvider::toQuazarPlayer($p), true);
+                    $message = str_replace("{player}", $player->getName(),$message);
+                    $p->sendMessage($message);
+                }
             }
         }
 

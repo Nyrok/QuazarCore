@@ -41,7 +41,7 @@ final class PlayerQuitEvent implements Listener
 
             $tournament = EventsManager::getEventByPlayer($event->getPlayer());
 
-            EventsManager::removePlayer($event->getPlayer());
+            EventsManager::removePlayer($event->getPlayer(), false, true);
 
             if(in_array($event->getPlayer()->getName(), $tournament->getFighters())) {
 
@@ -59,11 +59,20 @@ final class PlayerQuitEvent implements Listener
                     $p->sendMessage($message);
                 }
 
+                if(!$tournament->getFightStart()) {
+
+                    EventsManager::$task[$tournament->getName()]->cancel();
+                    $killer->setImmobile(false);
+                    $killer->sendTitle(" ");
+                }
+
                 EventsManager::teleportPlayerToEvent($killer, $tournament);
                 $killer->removeAllEffects();
                 $killer->getInventory()->clearAll();
                 $killer->getArmorInventory()->clearAll();
                 $killer->setHealth(20);
+
+                EventsManager::startFights($tournament);
             }
         }
 

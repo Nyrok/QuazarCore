@@ -72,8 +72,8 @@ final class NickCommand extends QuazarCommands
 
     public static function setNick(Player $player, ?string $nick): void
     {
+        $player->setNameTag(str_replace($player->getDisplayName(), $nick ?? $player->getName(), $player->getNameTag()));
         $player->setDisplayName($nick ?? $player->getName());
-        $player->setNameTag(str_replace($player->getName(), $nick ?? $player->getName(), $player->getNameTag()));
         PlayerProvider::toQuazarPlayer($player)->setData("nick", $nick ?? "off", false, PlayerProvider::TYPE_STRING);
     }
 
