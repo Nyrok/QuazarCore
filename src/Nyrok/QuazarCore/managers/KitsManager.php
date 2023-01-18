@@ -27,20 +27,21 @@ abstract class KitsManager
     {
         $provider = PlayerProvider::toQuazarPlayer($player);
         if (!isset($provider->getData()["kits"][$name])) return null;
-        $kit = $provider->getData()["kits"][$name];
-        $items = json_decode($kit["items"], true);
-        $armor = json_decode($kit["armor"], true);
+        $kitData = $provider->getData()["kits"][$name];
+        $items = json_decode($kitData["items"], true);
+        $armor = json_decode($kitData["armor"], true);
         foreach ($items as $slot => $item) {
             $items[$slot] = Item::jsonDeserialize($item);
         }
         foreach ($armor as $slot => $item) {
             $armor[$slot] = Item::jsonDeserialize($item);
         }
-        $return = new Kit("$name ({$provider->player->getName()})", Permission::DEFAULT_TRUE, 0.0, 0, $items, $armor);
-        $return->setDoOverride(true);
-        $return->setDoOverrideArmor(true);
-        $return->setAlwaysClaim(true);
-        return $return;
+        $kit = new Kit("$name ({$provider->player->getName()})", Permission::DEFAULT_TRUE, 0.0, 0, $items, $armor);
+        $kit->setDoOverride(true);
+        $kit->setDoOverrideArmor(true);
+        $kit->setAlwaysClaim(true);
+        $kit->setEffects(KitManager::get($kitData["effects"])?->getEffects() ?? []);
+        return $kit;
     }
 
     public static function formKits(Player $player): void
@@ -140,13 +141,14 @@ abstract class KitsManager
                 51 => Item::get(0),
             ];
             $current_armor = array_filter($inventory->getContents(), function ($item, $slot) {
-                    return $item->getNamedTag()->getByte("immobile", 0) !== 1 and
-                        $item->getNamedTag()->getByte("reset", 0) !== 1 and
-                        in_array($slot, [47, 48, 50, 51]);
-                }, ARRAY_FILTER_USE_BOTH);
+                return $item->getNamedTag()->getByte("immobile", 0) !== 1 and
+                    $item->getNamedTag()->getByte("reset", 0) !== 1 and
+                    in_array($slot, [47, 48, 50, 51]);
+            }, ARRAY_FILTER_USE_BOTH);
             $armor = $current_armor + $base_armor;
             ksort($armor);
             $kits[$name]["armor"] = json_encode(array_values($armor));
+            $kits[$name]["effects"] = $name;
             PlayerProvider::toQuazarPlayer($player)->setData("kits", $kits, false, PlayerProvider::TYPE_ARRAY);
             LobbyManager::load($player);
         });

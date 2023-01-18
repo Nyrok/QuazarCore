@@ -13,6 +13,7 @@ ffas:
     min-z: 328
     max-z: 345
     kit: ffa-practice
+    texture: textures/items/diamond_sword
 
 positions:
   spawn:

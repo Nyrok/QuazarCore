@@ -25,13 +25,14 @@ abstract class FFAManager
         foreach (Core::getInstance()->getConfig()->get('ffas', []) as $world => $data) {
             $name = $data["name"];
             $kit = $data["kit"];
+            $texture = $data["texture"];
             $x = [$data["min-x"], $data["max-x"]];
             $y = $data["y"];
             $z = [$data["min-z"], $data["max-z"]];
-            Core::getInstance()->getScheduler()->scheduleTask(new ClosureTask(function (int $currentTick) use ($name, $world, $kit, $x, $y, $z): void {
+            Core::getInstance()->getScheduler()->scheduleTask(new ClosureTask(function (int $currentTick) use ($name, $world, $kit, $texture, $x, $y, $z): void {
                 $world = Server::getInstance()->getLevelByName($world);
                 if ($world) {
-                    self::$ffas[$name] = new FFA($name, $world, $kit, $x, $y, $z);
+                    self::$ffas[$name] = new FFA($name, $world, $kit, $texture, $x, $y, $z);
                 }
             }));
             Core::getInstance()->getLogger()->notice("[FFAS] FFA: $name Loaded");
@@ -74,8 +75,8 @@ abstract class FFAManager
     {
         $form = new SimpleForm("§m§a" . "§fFFA");
         foreach (self::getAllFFAS() as $ffa) {
-            $form->addButton(new Button($ffa->getName(), new ButtonIcon("textures/ui/sword"), function (Player $player) use ($ffa): void {
-                $ffa?->start($player);
+            $form->addButton(new Button($ffa->getName(), new ButtonIcon($ffa->getTexture(), ButtonIcon::TYPE_PATH), function (Player $player) use ($ffa): void {
+                $ffa->start($player);
             }));
         }
         AntiSpamForm::sendForm($player, $form);
