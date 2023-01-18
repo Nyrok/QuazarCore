@@ -28,7 +28,7 @@ class DeadZoneTask extends Task
             {
                 if($deadZone instanceof DeadZone) {
 
-                    if ($player->getLevel()->getName() == $deadZone->getWorld()) {
+                    if ($player->getLevel()->getName() == $deadZone->getWorld()->getName()) {
 
                         $first = $deadZone->getFirst();
                         $second = $deadZone->getSecond();

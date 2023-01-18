@@ -88,6 +88,7 @@ messages:
     invalid-argument: "This value is invalid"
     duel-dont-exists: "This duel does not exist"
     duel-not-opponent: "No opponent found"
+    cosmetics-not-permission: "You do not have permission"
     
   events:
     event-ndb-created: "A nodebuff event has been launched"

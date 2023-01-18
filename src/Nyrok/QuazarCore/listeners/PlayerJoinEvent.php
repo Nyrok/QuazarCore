@@ -32,6 +32,6 @@ final class PlayerJoinEvent implements Listener
         $nick = PlayerProvider::toQuazarPlayer($event->getPlayer())->getData()["nick"] ?? null;
         NickCommand::setNick($event->getPlayer(), ($nick !== "off" and !empty($nick)) ? $nick : null);
         CosmeticsManager::saveSkin($event->getPlayer()->getSkin(), $event->getPlayer()->getName());
-        Core::getInstance()->getScheduler()->scheduleTask(new DeadZoneTask($event->getPlayer()->getName()));
+        if(Core::getInstance()->getScheduler()->scheduleRepeatingTask(new DeadZoneTask($event->getPlayer()->getName()), 1)) Core::getInstance()->getLogger()->info("[Dead zones] Loaded");
     }
 }
